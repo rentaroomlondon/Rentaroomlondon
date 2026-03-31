@@ -26,13 +26,13 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
     setFilters((prev) => ({
       ...prev,
       search: value,
-      lat: "", // reset geo
+      lat: "",
       lng: "",
     }));
 
     clearTimeout(debounceRef.current);
 
-    if (value.length < 3) {
+    if (value.length < 2) { // 👈 allow NW typing
       setSuggestions([]);
       setShowHint(true);
       return;
@@ -45,11 +45,28 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
         setLoadingSuggestions(true);
 
         const res = await fetch(
-          `https://api.locationiq.com/v1/autocomplete.php?key=${API_KEY}&q=${value}&format=json&limit=5&countrycodes=gb`
+          `https://api.locationiq.com/v1/autocomplete.php?key=${API_KEY}&q=${value}&format=json&limit=10&countrycodes=gb`
         );
 
         const data = await res.json();
-        setSuggestions(data);
+
+        // ✅ FORMAT + DEDUP HERE
+        const seen = new Set();
+        const unique = [];
+
+        data.forEach((place) => {
+          const formatted = formatLocation(place);
+
+          if (!seen.has(formatted)) {
+            seen.add(formatted);
+            unique.push({
+              ...place,
+              formatted,
+            });
+          }
+        });
+
+        setSuggestions(unique);
       } catch (err) {
         console.log("Autocomplete error:", err);
       } finally {
@@ -60,9 +77,12 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
 
   // 📍 SELECT LOCATION
   const handleSelect = (place) => {
+    const a = place.address || {};
+    const prefix = getPostcodePrefix(a.postcode);
+
     setFilters((prev) => ({
       ...prev,
-      search: place.display_name,
+      search: prefix || place.formatted || "", // ✅ clean value
       lat: place.lat,
       lng: place.lon,
     }));
@@ -83,6 +103,25 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
+
+  const getPostcodePrefix = (postcode) => {
+    if (!postcode) return null;
+    return postcode.split(" ")[0]; // NW2 1LX → NW2
+  };
+
+  const formatLocation = (place) => {
+    const a = place.address || {};
+    const prefix = getPostcodePrefix(a.postcode);
+
+    // 🎯 PRIORITY: postcode prefix
+    if (prefix) return prefix;
+
+    if (a.suburb && a.city) return `${a.suburb}, ${a.city}`;
+    if (a.city) return a.city;
+
+    return place.display_name.split(",")[0];
+  };
+
 
   return (
     <header className="w-full font-sans">
@@ -121,7 +160,7 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
                 <input
                   value={filters.search}
                   onChange={handleLocationChange}
-                  placeholder="Place, Area, or Postcode..."
+                  placeholder="Enter Postcode..."
                   className="w-full bg-[#2a3645] border border-gray-700 rounded-lg py-3 pl-11 pr-4 text-white"
                 />
 
@@ -131,7 +170,7 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
 
                     {showHint && (
                       <div className="p-3 text-sm text-gray-500">
-                        Enter at least 3 characters
+                        Enter at least 2 characters
                       </div>
                     )}
 
@@ -149,7 +188,7 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
                           onClick={() => handleSelect(place)}
                           className="p-3 hover:bg-gray-100 cursor-pointer text-sm"
                         >
-                          {place.display_name}
+                          {place.formatted}
                         </div>
                       ))}
                   </div>
@@ -266,7 +305,7 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
             <input
                 value={filters.search}
                 onChange={handleLocationChange}
-                placeholder="Place or postcode..."
+                placeholder="Enter postcode..."
                 className="w-full bg-[#1b2a3d] rounded-xl py-4 pl-10 text-white"
             />
 
@@ -276,7 +315,7 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
 
                 {showHint && (
                     <div className="p-3 text-sm text-gray-500">
-                    Enter at least 3 characters
+                    Enter at least 2 characters
                     </div>
                 )}
 
@@ -294,7 +333,7 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
                         onClick={() => handleSelect(place)}
                         className="p-3 hover:bg-gray-100 cursor-pointer text-sm"
                     >
-                        {place.display_name}
+                        {place.formatted}
                     </div>
                     ))}
                 </div>

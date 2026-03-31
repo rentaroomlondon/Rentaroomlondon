@@ -259,50 +259,99 @@ export const searchListings = async (req, res) => {
     let query = {};
     let andConditions = [];
 
-    // ===============================
-    // ✅ HELPER: EXTRACT UK POSTCODE
-    // ===============================
     const extractPostcode = (text) => {
       if (!text) return null;
 
-      const match = text.toUpperCase().match(
-        /[A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2}/
-      );
+      const clean = text.toUpperCase().trim();
 
-      return match ? match[0].replace(/\s+/g, "") : null;
+      const full = clean.match(/[A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2}/);
+      if (full) return full[0].replace(/\s+/g, "");
+
+      const prefix = clean.match(/^[A-Z]{1,2}\d{1,2}[A-Z]?/);
+      if (prefix) return prefix[0];
+
+      return null;
     };
 
+    const normalizePostcode = (postcode) =>
+      postcode.replace(/\s+/g, "").toUpperCase();
+
     // ===============================
-    // ✅ 1. TEXT / POSTCODE SEARCH
+    // ✅ SEARCH
     // ===============================
+    let isPostcodeSearch = false;
+
     if (search && search.trim() !== "") {
       const clean = search.trim();
-
-      // 🔥 extract postcode from full string
       const extractedPostcode = extractPostcode(clean);
 
       if (extractedPostcode) {
-        // ✅ STRICT postcode match (START WITH)
-        andConditions.push({
-          "location.postcode": {
-            $regex: "^" + extractedPostcode,
-            $options: "i",
-          },
-        });
+        isPostcodeSearch = true;
+
+        if (extractedPostcode.length > 4) {
+          // FULL postcode (normalized match)
+          andConditions.push({
+            $expr: {
+              $eq: [
+                {
+                  $replaceAll: {
+                    input: "$location.postcode",
+                    find: " ",
+                    replacement: "",
+                  },
+                },
+                extractedPostcode,
+              ],
+            },
+          });
+        } else {
+          // PREFIX search (NW2)
+          andConditions.push({
+            "location.postcode": {
+              $regex: "^" + extractedPostcode,
+              $options: "i",
+            },
+          });
+        }
       } else {
-        // ✅ NORMAL TEXT SEARCH
+        // TEXT SEARCH
+        const searchRegex = new RegExp(clean, "i");
+
         andConditions.push({
           $or: [
-            { title: { $regex: clean, $options: "i" } },
-            { "location.address": { $regex: clean, $options: "i" } },
-            { "location.city": { $regex: clean, $options: "i" } },
+            { title: searchRegex },
+            { "location.address": searchRegex },
+            { "location.city": searchRegex },
+            { "location.postcode": searchRegex },
           ],
         });
       }
     }
 
     // ===============================
-    // ✅ 2. PRICE FILTER
+    // ✅ GEO (ONLY if NOT postcode)
+    // ===============================
+    if (
+      lat &&
+      lng &&
+      !isNaN(lat) &&
+      !isNaN(lng) &&
+      !isPostcodeSearch
+    ) {
+      andConditions.push({
+        location: {
+          $geoWithin: {
+            $centerSphere: [
+              [Number(lng), Number(lat)],
+              Number(radius) / 6378.1,
+            ],
+          },
+        },
+      });
+    }
+
+    // ===============================
+    // ✅ OTHER FILTERS
     // ===============================
     if (minPrice || maxPrice) {
       let priceQuery = {};
@@ -318,62 +367,30 @@ export const searchListings = async (req, res) => {
       andConditions.push({ monthlyPrice: priceQuery });
     }
 
-    // ===============================
-    // ✅ 3. ROOM TYPE
-    // ===============================
     if (roomType) {
       andConditions.push({ roomType });
     }
 
-    // ===============================
-    // ✅ 4. OCCUPANCY
-    // ===============================
     if (occupancy) {
       andConditions.push({ occupancy });
     }
 
-    // ===============================
-    // ✅ 5. FURNISHED
-    // ===============================
     if (furnished !== undefined) {
-      andConditions.push({ furnished: furnished === "true" });
+      andConditions.push({
+        furnished: furnished === "true",
+      });
     }
 
-    // ===============================
-    // ✅ 6. DATE FILTER
-    // ===============================
     if (date) {
       andConditions.push({
         availableFrom: { $lte: new Date(date) },
       });
     }
 
-    // ===============================
-    // ✅ 7. GEO SEARCH (SAFE MERGE)
-    // ===============================
-    if (lat && lng) {
-      andConditions.push({
-        location: {
-          $geoWithin: {
-            $centerSphere: [
-              [Number(lng), Number(lat)],
-              Number(radius) / 6378.1,
-            ],
-          },
-        },
-      });
-    }
-
-    // ===============================
-    // ✅ FINAL QUERY BUILD
-    // ===============================
     if (andConditions.length > 0) {
       query.$and = andConditions;
     }
 
-    // ===============================
-    // ✅ EXECUTE QUERY
-    // ===============================
     const listings = await Listing.find(query)
       .sort({ createdAt: -1 })
       .limit(50);
@@ -383,15 +400,15 @@ export const searchListings = async (req, res) => {
       count: listings.length,
       listings,
     });
-
   } catch (error) {
+    console.error("Search Error:", error);
+
     res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
-
 // ============================================
 // ⭐ FEATURED LISTINGS (CACHED)
 // ============================================

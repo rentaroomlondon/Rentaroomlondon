@@ -6,6 +6,10 @@ const Searchbar = () => {
     const API_KEY = process.env.NEXT_PUBLIC_LOCATIONIQ_KEY;
       const [price, setPrice] = useState(800);
       const [activeTab, setActiveTab] = useState('location');
+      const [suggestions, setSuggestions] = useState([]);
+      const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+      const [loading, setLoading] = useState(false);
+      const [showHint, setShowHint] = useState(false);
       const router = useRouter();
 
 
@@ -19,8 +23,7 @@ const Searchbar = () => {
         maxPrice: "",
     });
 
-    const [suggestions, setSuggestions] = useState([]);
-    const [loading, setLoading] = useState(false);
+    
 
     const debounceRef = useRef(null);
 
@@ -34,60 +37,94 @@ const Searchbar = () => {
 
     // 🔍 HANDLE LOCATION INPUT
     const handleLocationChange = (e) => {
-        const value = e.target.value;
+      const value = e.target.value;
 
-        setFilters((prev) => ({
+      setFilters((prev) => ({
         ...prev,
         search: value,
         lat: "",
         lng: "",
-        }));
+      }));
 
-        clearTimeout(debounceRef.current);
+      clearTimeout(debounceRef.current);
 
-        if (value.length < 3) {
+      if (value.length < 2) { // 👈 allow NW typing
         setSuggestions([]);
+        setShowHint(true);
         return;
-        }
+      }
 
-        debounceRef.current = setTimeout(async () => {
+      setShowHint(false);
+
+      debounceRef.current = setTimeout(async () => {
         try {
-            setLoading(true);
+          setLoadingSuggestions(true);
 
-            const res = await fetch(
-            `https://api.locationiq.com/v1/autocomplete.php?key=${API_KEY}&q=${value}&format=json&limit=5&countrycodes=gb`
-            );
+          const res = await fetch(
+            `https://api.locationiq.com/v1/autocomplete.php?key=${API_KEY}&q=${value}&format=json&limit=10&countrycodes=gb`
+          );
 
-            const data = await res.json();
+          const data = await res.json();
 
-            // ✅ STRICT FILTER (postcode + place only)
-            const filtered = data.filter(
-            (item) =>
-                item.type === "postcode" ||
-                item.type === "city" ||
-                item.type === "suburb"
-            );
+          // ✅ FORMAT + DEDUP HERE
+          const seen = new Set();
+          const unique = [];
 
-            setSuggestions(filtered);
+          data.forEach((place) => {
+            const formatted = formatLocation(place);
+
+            if (!seen.has(formatted)) {
+              seen.add(formatted);
+              unique.push({
+                ...place,
+                formatted,
+              });
+            }
+          });
+
+          setSuggestions(unique);
         } catch (err) {
-            console.log(err);
+          console.log("Autocomplete error:", err);
         } finally {
-            setLoading(false);
+          setLoadingSuggestions(false);
         }
-        }, 400);
+      }, 400);
     };
 
     // 📍 SELECT SUGGESTION
     const handleSelect = (place) => {
-        setFilters((prev) => ({
+      const a = place.address || {};
+      const prefix = getPostcodePrefix(a.postcode);
+
+      setFilters((prev) => ({
         ...prev,
-        search: place.display_name,
+        search: prefix || place.formatted || "", // ✅ clean value
         lat: place.lat,
         lng: place.lon,
-        }));
+      }));
 
-        setSuggestions([]);
+      setSuggestions([]);
+      setShowHint(false);
+      // handleSearch(); // 👉 wait for user to click search
     };
+
+  const getPostcodePrefix = (postcode) => {
+    if (!postcode) return null;
+    return postcode.split(" ")[0]; // NW2 1LX → NW2
+  };
+
+  const formatLocation = (place) => {
+    const a = place.address || {};
+    const prefix = getPostcodePrefix(a.postcode);
+
+    // 🎯 PRIORITY: postcode prefix
+    if (prefix) return prefix;
+
+    if (a.suburb && a.city) return `${a.suburb}, ${a.city}`;
+    if (a.city) return a.city;
+
+    return place.display_name.split(",")[0];
+  };
 
     // 🔍 SEARCH BUTTON CLICK
     const handleSearch = () => {
@@ -143,14 +180,23 @@ const Searchbar = () => {
                         value={filters.search}
                         onChange={handleLocationChange} 
                         type="text" 
-                        placeholder="Place, Area, or Postcode..." 
+                        placeholder="Enter Postcode..." 
                         className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] focus:outline-none focus:border-[#F68B51] bg-[#F9F9F9] md:bg-transparent" 
                       />
-                        {(loading || suggestions.length > 0) && (
+                        {(filters.search.length > 0 &&
+                          (showHint || loadingSuggestions || suggestions.length > 0)) && (
                             <div className="absolute top-full left-0 w-full bg-white shadow rounded-lg z-50 mt-1">
 
-                            {loading && (
-                                <div className="p-2 text-sm">Searching...</div>
+                            {showHint && (
+                              <div className="p-2 text-sm text-gray-500">
+                                Enter at least 2 characters
+                              </div>
+                            )}
+
+                            {loadingSuggestions && (
+                              <div className="p-2 text-sm text-gray-500">
+                                Searching...
+                              </div>
                             )}
 
                             {suggestions.map((place, i) => (
@@ -159,7 +205,7 @@ const Searchbar = () => {
                                 onClick={() => handleSelect(place)}
                                 className="p-2 hover:bg-gray-100 cursor-pointer text-sm"
                                 >
-                                {place.display_name}
+                                {place.formatted}
                                 </div>
                             ))}
                             </div>
