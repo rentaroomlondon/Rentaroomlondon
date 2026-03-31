@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import PropertySearch from "./components/PropertySearch";
-
+ 
 const page = () => {
   return (
     <div>
