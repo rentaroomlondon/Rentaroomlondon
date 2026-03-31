@@ -53,6 +53,7 @@ const areas = [
   },
 ];
 
+
 export default function AreaGuides() {
   return (
     <section className="bg-[#FFFFFF] py-14 sm:py-20">
