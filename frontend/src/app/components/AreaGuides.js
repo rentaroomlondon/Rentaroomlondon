@@ -1,52 +1,61 @@
 "use client";
 import { MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const areas = [
   {
     name: "Shoreditch",
+    postcode: "E1",
     rooms: 34,
     image:
       "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=800",
   },
   {
     name: "Marylebone",
+    postcode: "W1",
     rooms: 28,
     image:
       "https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?auto=format&fit=crop&q=80&w=800",
   },
   {
     name: "Canary Wharf",
+    postcode: "E14",
     rooms: 41,
     image:
       "https://images.unsplash.com/photo-1486299267070-83823f5448dd?q=80&w=1200&auto=format&fit=crop",
   },
   {
     name: "Dalston",
+    postcode: "E8",
     rooms: 19,
     image:
       "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1200&auto=format&fit=crop",
   },
   {
     name: "Greenwich",
+    postcode: "SE10",
     rooms: 22,
     image:
       "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=800",
   },
   {
     name: "Stratford",
+    postcode: "E15",
     rooms: 37,
     image:
       "https://images.unsplash.com/photo-1486299267070-83823f5448dd?q=80&w=1200&auto=format&fit=crop",
   },
   {
     name: "Hoxton",
+    postcode: "N1",
     rooms: 15,
     image:
       "https://images.unsplash.com/photo-1529655683826-aba9b3e77383?q=80&w=1200&auto=format&fit=crop",
   },
   {
     name: "Mile End",
+    postcode: "E3",
     rooms: 26,
     image:
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop",
@@ -55,6 +64,17 @@ const areas = [
 
 
 export default function AreaGuides() {
+  
+  const router = useRouter();
+
+  const handleAreaClick = (area) => {
+    const query = new URLSearchParams({
+      search: area.postcode, // ✅ use postcode
+      label: area.name,      // optional (for UI)
+    }).toString();
+
+    router.push(`/find-a-room?${query}`);
+  };
   return (
     <section className="bg-[#FFFFFF] py-14 sm:py-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
@@ -75,6 +95,7 @@ export default function AreaGuides() {
           {areas.map((area, index) => (
             <div
               key={index}
+              onClick={() => handleAreaClick(area)}
               className="relative h-[170px] sm:h-[420px] rounded-[14px] sm:rounded-[18px] overflow-hidden group cursor-pointer transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
             >
 
