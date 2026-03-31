@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import { ArrowRight, Heart } from "lucide-react";
 import Link from "next/link";
 import { useWishlist } from "../utils/useWishlist";
@@ -17,6 +18,7 @@ const PropertyCard = ({
   const shortDescription = description.split(" ").slice(0, 5).join(" ") + "...";
 
   const { isSaved, toggleWishlist, isLoaded } = useWishlist();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -42,11 +44,23 @@ const PropertyCard = ({
         
         {/* IMAGE SECTION */}
         <div className="relative h-[240px] lg:h-[270px] w-full overflow-hidden">
-          <img
-            src={imageUrl}
-            alt={title}
-            className="w-full h-full object-cover"
-          />
+           {/* Skeleton Loader (Airbnb style) */}
+            {!imageLoaded && (
+              <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+            )}
+
+            {/* Image */}
+            <img
+              src={imageUrl}
+              alt={title}
+              loading="eager"          // 🔥 load immediately
+              fetchPriority="high"     // 🔥 boost LCP (very important)
+              decoding="async"
+              onLoad={() => setImageLoaded(true)}
+              className={`w-full h-full object-cover transition-opacity duration-500 ${
+                imageLoaded ? "opacity-100" : "opacity-0"
+              }`}
+            />
 
           {/* Desktop Badge (Top Left) */}
           <div className="hidden lg:block absolute top-4 left-4 bg-[#0a1e35]/90 backdrop-blur-sm text-white px-3 py-1.5 rounded-sm text-xs font-bold tracking-wider">
