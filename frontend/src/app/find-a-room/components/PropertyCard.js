@@ -1,12 +1,10 @@
-"use client"
-import React, { useState } from 'react';
-import { Heart, ArrowRight, Check } from 'lucide-react';
+import React from 'react';
+import { MapPin, Heart, ArrowRight, Check } from 'lucide-react';
 import { useWishlist } from '@/app/utils/useWishlist';
 import Link from 'next/link';
 
 const PropertyCard = ({ data }) => {
    const { isSaved, toggleWishlist,isLoaded } = useWishlist();
-   const [imageLoaded, setImageLoaded] = useState(false);
 
   // 🔥 Auto-generate tags from real DB fields
   const generatedTags = [
@@ -47,30 +45,7 @@ const PropertyCard = ({ data }) => {
     <div className="w-full bg-white border border-gray-100 rounded-[24px] overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
       <div className="flex flex-col md:flex-row">
         <div className="relative w-full md:w-[320px] h-[240px] md:h-auto overflow-hidden">
-          {/* Airbnb Skeleton */}
-          {!imageLoaded && (
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="w-full h-full bg-gray-200" />
-              <div className="absolute inset-0 animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
-            </div>
-          )}
-
-          {/* Image */}
-          <img
-            src={image}
-            alt={data.title}
-            loading="eager"          // 🔥 load immediately
-            fetchPriority="high"    // 🔥 boost LCP (very important)
-            decoding="async"
-            onLoad={() => setImageLoaded(true)}
-            onError={(e) => {
-              e.target.src = "/placeholder.png";
-              setImageLoaded(true);
-            }}
-            className={`w-full h-full object-cover transition-all duration-700 ${
-              imageLoaded ? "opacity-100 blur-0" : "opacity-0 blur-sm"
-            }`}
-          />
+          <img src={image} alt={data.title} className="w-full h-full object-cover" />
 
           {data.monthlyPrice && (
             <div className="absolute top-4 left-4 bg-[#FF7A45] text-white px-2.5 py-1.5 rounded-lg font-bold text-[11px] md:text-[12px] shadow-lg">
