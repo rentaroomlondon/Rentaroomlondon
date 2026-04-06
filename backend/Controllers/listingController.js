@@ -465,30 +465,51 @@ export const getListingMeta = async (req, res) => {
   try {
     const cacheKey = "listings:meta";
 
-    const cached = await redis.get(cacheKey);
+    // 🔹 Check cache
+    let cached = await redis.get(cacheKey);
 
     if (cached) {
-      return res.json({
+      let listings;
+
+      try {
+        // ✅ Handle both string + object cases (fix your error)
+        listings =
+          typeof cached === "string" ? JSON.parse(cached) : cached;
+      } catch (err) {
+        console.error("Cache parse error:", err);
+        listings = [];
+      }
+
+      return res.status(200).json({
         success: true,
         source: "cache",
-        listings: JSON.parse(cached),
+        listings,
       });
     }
 
+    // 🔹 Fetch from DB
     const listings = await Listing.find()
       .select("title description slug createdAt updatedAt")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean(); // ✅ better performance
 
-    await redis.set(cacheKey, JSON.stringify(listings));
+    // 🔹 Store in Redis (stringify ONLY here)
+    await redis.set(cacheKey, JSON.stringify(listings), "EX", 60 * 10); 
+    // expires in 10 minutes (optional but recommended)
 
-    res.json({
+    return res.status(200).json({
       success: true,
       source: "db",
       listings,
     });
 
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("getListingMeta error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Server Error",
+    });
   }
 };
 

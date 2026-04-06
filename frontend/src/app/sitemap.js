@@ -1,11 +1,16 @@
+export const dynamic = "force-dynamic";
+
 export default async function sitemap() {
   const baseUrl = "https://rentaroomlondon.co.uk";
 
-  // Fetch your properties
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/meta`, {
-    cache: "no-store", // always fresh
+    cache: "no-store",
   });
-  const properties = await res.json();
+
+  const data = await res.json();
+
+  // ✅ FIX HERE
+  const properties = data.listings || [];
 
   const propertyUrls = properties.map((property) => ({
     url: `${baseUrl}/property/${property.slug}`,
@@ -40,7 +45,6 @@ export default async function sitemap() {
       lastModified: new Date(),
       priority: 0.5,
     },
-
     ...propertyUrls,
   ];
 }

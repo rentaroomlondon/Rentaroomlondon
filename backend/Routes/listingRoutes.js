@@ -15,9 +15,9 @@ const router = express.Router();
 
 router.post("/", createListing);
 router.get("/", getAllListings);
+router.get("/meta", getListingMeta);
 router.get("/search", searchListings);
 router.get("/featured", getFeaturedListings);
-router.get("/meta", getListingMeta);
 router.get("/nearby", getNearbyListings);
 router.get("/:slug", getListingBySlug);
 router.put("/:slug", updateListing);
