@@ -3,13 +3,13 @@ import React from "react";
 
 const PropertyCardSkeleton = () => {
   return (
-    <div className="w-full bg-white border border-gray-100 rounded-[24px] overflow-hidden shadow-sm animate-pulse">
+    <div className="w-full bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm animate-pulse">
       
       {/* FLEX WRAPPER → switches layout automatically */}
       <div className="flex flex-col md:flex-row">
 
         {/* LEFT IMAGE (desktop) / TOP IMAGE (mobile) */}
-        <div className="w-full md:w-[320px] h-[240px] md:h-auto bg-gray-200" />
+        <div className="w-full md:w-[320px] h-60 md:h-auto bg-gray-200" />
 
         {/* RIGHT CONTENT */}
         <div className="flex-1 p-5 md:p-6 flex flex-col justify-between">

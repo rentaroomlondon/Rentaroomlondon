@@ -8,31 +8,82 @@ import { sendEmail } from "../utils/sendEmail.js";
 // ============================
 export const createBooking = async (req, res) => {
   try {
-    const { listingId, viewingDate, viewingSlot, message, userId } = req.body;
+    const {
+      listingId,
+      viewingDate,
+      viewingSlot,
+      message,
+      userId,
+      guestName,
+      guestEmail,
+      guestPhone,
+    } = req.body;
 
     console.log("📩 Incoming Booking Request:", req.body);
 
-    // ✅ VALIDATION
-    if (!listingId || !viewingDate || !viewingSlot || !userId) {
-      return res.status(400).json({ message: "All fields are required" });
+    // ============================
+    // ✅ BASIC VALIDATION
+    // ============================
+    if (!listingId || !viewingDate || !viewingSlot) {
+      return res.status(400).json({
+        message: "Listing, date and time slot are required",
+      });
     }
 
+    // ============================
     // 🔹 FETCH LISTING
+    // ============================
     const listing = await Listing.findById(listingId);
-    if (!listing) return res.status(404).json({ message: "Listing not found" });
-
-    // 🔹 FETCH USER
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    // ❌ PREVENT PAST DATE
-    if (new Date(viewingDate) < new Date()) {
-      return res.status(400).json({ message: "Cannot book past dates" });
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
     }
 
+    let user = null;
+
+    // ============================
+    // 👤 LOGGED-IN USER FLOW
+    // ============================
+    if (userId) {
+      user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+    }
+
+    // ============================
+    // 🧍 GUEST FLOW VALIDATION
+    // ============================
+    if (!userId) {
+      if (!guestName || !guestEmail || !guestPhone) {
+        return res.status(400).json({
+          message: "Name, email and phone are required",
+        });
+      }
+    }
+
+    // ============================
+    // ❌ PREVENT PAST DATE
+    // ============================
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const selectedDate = new Date(viewingDate);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+      return res.status(400).json({
+        message: "Cannot book past dates",
+      });
+    }
+
+    // ============================
     // 🔹 CREATE BOOKING
+    // ============================
     const booking = await Booking.create({
-      user: userId,
+      user: userId || null,
+      guestName: user ? null : guestName,
+      guestEmail: user ? null : guestEmail,
+      guestPhone: user ? null : guestPhone,
       listing: listingId,
       viewingDate,
       viewingSlot,
@@ -57,9 +108,17 @@ export const createBooking = async (req, res) => {
     });
 
     // ============================
+    // 📧 COMMON EMAIL DATA
+    // ============================
+    const userEmail = user?.email || guestEmail;
+    const userName =
+      user?.firstName || guestName || "User";
+    const userPhone =
+      user?.phone || guestPhone || "-";
+
+    // ============================
     // 📧 EMAIL TEMPLATES
     // ============================
-
     const userHtml = `
     <div style="font-family:Arial;background:#f5f5f5;padding:40px">
       <div style="max-width:700px;margin:auto;background:white;border-radius:12px;overflow:hidden">
@@ -70,7 +129,7 @@ export const createBooking = async (req, res) => {
 
         <div style="padding:30px">
 
-          <p>Hello ${user.firstName || "User"},</p>
+          <p>Hello ${userName},</p>
 
           <p>Your viewing request is currently <strong style="color:#F47C3C;">Pending</strong>.</p>
 
@@ -115,9 +174,9 @@ export const createBooking = async (req, res) => {
         <div style="padding:30px">
 
           <h3 style="color:#F47C3C">👤 User Info</h3>
-          <p><strong>Name:</strong> ${user.firstName} ${user.surname}</p>
-          <p><strong>Email:</strong> ${user.email}</p>
-          <p><strong>Phone:</strong> ${user.phone || "-"}</p>
+          <p><strong>Name:</strong> ${userName}</p>
+          <p><strong>Email:</strong> ${userEmail}</p>
+          <p><strong>Phone:</strong> ${userPhone}</p>
 
           <hr/>
 
@@ -146,10 +205,9 @@ export const createBooking = async (req, res) => {
     // ============================
     setImmediate(() => {
       try {
-        // USER EMAIL
-        if (user.email) {
+        if (userEmail) {
           sendEmail(
-            user.email,
+            userEmail,
             "📅 Viewing Request Received - RENTAROOMLONDON",
             userHtml
           ).catch((err) =>
@@ -157,7 +215,6 @@ export const createBooking = async (req, res) => {
           );
         }
 
-        // ADMIN EMAIL
         sendEmail(
           "info@rentaroomlondon.co.uk",
           "📢 New Viewing Request",

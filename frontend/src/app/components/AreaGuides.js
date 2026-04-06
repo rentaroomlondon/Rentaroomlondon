@@ -77,7 +77,7 @@ export default function AreaGuides() {
   };
   return (
     <section className="bg-[#FFFFFF] py-14 sm:py-20">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
         {/* Header */}
         <div className="text-left sm:text-center mb-10 sm:mb-14">
@@ -85,7 +85,7 @@ export default function AreaGuides() {
             Area <span className="text-[#F47C3C]">Guides</span>
           </h2>
 
-          <p className="mt-2 sm:mt-4 text-[14px] sm:text-[16.5px] text-[#888888] sm:max-w-[560px] sm:mx-auto">
+          <p className="mt-2 sm:mt-4 text-[14px] sm:text-[16.5px] text-[#888888] sm:max-w-140 sm:mx-auto">
             Click any neighbourhood to find available rooms nearby.
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function AreaGuides() {
             <div
               key={index}
               onClick={() => handleAreaClick(area)}
-              className="relative h-[170px] sm:h-[420px] rounded-[14px] sm:rounded-[18px] overflow-hidden group cursor-pointer transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              className="relative h-42.5 sm:h-105 rounded-[14px] sm:rounded-[18px] overflow-hidden group cursor-pointer transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
             >
 
               {/* Image */}
@@ -107,10 +107,10 @@ export default function AreaGuides() {
               />
 
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent group-hover:from-black/90 transition-all duration-500" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent group-hover:from-black/90 transition-all duration-500" />
 
               {/* Content */}
-              <div className="absolute bottom-3 sm:bottom-5 left-3 sm:left-5 text-white transition-all duration-300 group-hover:translate-y-[-5px]">
+              <div className="absolute bottom-3 sm:bottom-5 left-3 sm:left-5 text-white transition-all duration-300 group-hover:-translate-y-1.25">
 
                 {/* Pin */}
                 <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-[#F47C3C] flex items-center justify-center mb-1 sm:mb-2 shadow-md transition-transform duration-300 group-hover:scale-110">
@@ -131,7 +131,7 @@ export default function AreaGuides() {
 
         {/* Mobile Button */}
         <div className="mt-8 sm:hidden">
-          <button className="w-full border border-[#0F253B] text-[#0F253B] py-3 rounded-[12px] font-semibold tracking-wide hover:bg-[#0F253B] hover:text-white transition">
+          <button className="w-full border border-[#0F253B] text-[#0F253B] py-3 rounded-xl font-semibold tracking-wide hover:bg-[#0F253B] hover:text-white transition">
             VIEW ALL AREAS
           </button>
         </div>

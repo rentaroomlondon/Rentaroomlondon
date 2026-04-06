@@ -120,7 +120,7 @@ const handleWhatsApp = () => {
 
   return (
     <>
-    <div className="sticky top-10 bg-white rounded-[22px] shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden border border-[#E2E7EE] w-full max-w-[380px]">
+    <div className="sticky top-10 bg-white rounded-[22px] shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden border border-[#E2E7EE] w-full max-w-95">
       
       {/* Dark Header Section */}
       <div className="bg-[#11273C] p-8 text-white relative overflow-hidden">
@@ -153,16 +153,16 @@ const handleWhatsApp = () => {
         </div>
 
         {/* Decorative Circle Overlay */}
-        <div className="absolute -bottom-10 -right-10 w-44 h-44 bg-white/[0.03] rounded-full"></div>
+        <div className="absolute -bottom-10 -right-10 w-44 h-44 bg-white/3 rounded-full"></div>
       </div>
 
       {/* Details List Section */}
       <div className="p-7 px-8 space-y-4">
         <div className="space-y-4 pb-2">
           <DetailRow label="Room Type" value={getRoomTypeLabel(listing?.roomType) || "Double Room"} />
-          <div className="h-[1px] bg-[#E2E7EE] w-full"></div>
+          <div className="h-px bg-[#E2E7EE] w-full"></div>
           <DetailRow label="Min Tenancy" value={`${listing?.minTenancy || ''} months`} />
-          <div className="h-[1px] bg-[#E2E7EE] w-full"></div>
+          <div className="h-px bg-[#E2E7EE] w-full"></div>
           <DetailRow
             label="Move In"
             value={
@@ -174,21 +174,21 @@ const handleWhatsApp = () => {
             }
             color="text-[#0F9455]"
           />
-          <div className="h-[1px] bg-[#E2E7EE] w-full"></div>
+          <div className="h-px bg-[#E2E7EE] w-full"></div>
           <DetailRow
             label="Bills"
             value={getBillsText(listing?.billsIncluded)}
             check={getBillsText(listing?.billsIncluded) === "All Included"}
             color="text-[#0F9455]"
           />
-          <div className="h-[1px] bg-[#E2E7EE] w-full"></div>
+          <div className="h-px bg-[#E2E7EE] w-full"></div>
           <DetailRow label="Property Ref" value={listing?.listingId || "THECI_010073"} />
-          <div className="h-[1px] bg-[#E2E7EE] w-full"></div>
+          <div className="h-px bg-[#E2E7EE] w-full"></div>
         </div>
 
         {/* Action Buttons */}
         <div className="pt-4 space-y-3">
-          <button onClick={() => setIsBookingOpen(true)} className="w-full bg-gradient-to-r from-[#F28241] to-[#EB6B2A] text-white py-4 rounded-2xl font-semibold font-sans text-base shadow-[0_10px_20px_rgba(235,107,42,0.3)] flex items-center justify-center gap-2 hover:opacity-95 transition-all">
+          <button onClick={() => setIsBookingOpen(true)} className="w-full bg-linear-to-r from-[#F28241] to-[#EB6B2A] text-white py-4 rounded-2xl font-semibold font-sans text-base shadow-[0_10px_20px_rgba(235,107,42,0.3)] flex items-center justify-center gap-2 hover:opacity-95 transition-all">
             <span className="text-lg">🗓️</span> Book a Viewing
           </button>
           

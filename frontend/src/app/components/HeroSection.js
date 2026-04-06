@@ -2,6 +2,7 @@
 import { Star } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import Searchbar from './Searchbar';
+import Image from 'next/image';
 
 const HeroSection = () => {
   const [currentBg, setCurrentBg] = useState(0);
@@ -27,13 +28,21 @@ const HeroSection = () => {
     <>
       <section 
         className="relative min-h-200 md:min-h-150 h-200 md:h-162.5 w-full flex flex-col items-center justify-start pt-10 md:pt-20 bg-cover bg-center transition-all duration-1000 ease-in-out" 
-        style={{ backgroundImage: `url('${bgImages[currentBg]}')` }}
+        // style={{ backgroundImage: `url('${bgImages[currentBg]}')` }}
       >
+        <Image
+          src={bgImages[currentBg]}
+          alt="Room rental in London"
+          fill
+          priority={currentBg === 0} // only first image preload
+          sizes="100vw"
+          className="object-cover transition-opacity duration-1000"
+        />
         {/* Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/40 z-0"></div>
 
         {/* HERO CONTENT */}
-        <div className="relative z-10 w-full max-w-[1140px] mx-auto text-center text-white px-6">
+        <div className="relative z-10 w-full max-w-285 mx-auto text-center text-white px-6">
           <div className="flex flex-col items-center">
             
             {/* Trophy Icon */}
@@ -88,7 +97,7 @@ const HeroSection = () => {
         <Searchbar />
       </section>
       
-      <div className="hidden md:block h-[150px] bg-white"></div>
+      <div className="hidden md:block h-37.5 bg-white"></div>
     </>
   );
 };

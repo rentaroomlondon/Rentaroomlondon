@@ -9,7 +9,7 @@ const stats = [
 
 const Stats = () => {
   return (
-    <section className="w-full bg-[#0F253B] flex justify-center py-10 px-4 sm:px-6 lg:px-[80px]">
+    <section className="w-full bg-[#0F253B] flex justify-center py-10 px-4 sm:px-6 lg:px-20">
       
       <div className="flex justify-between items-center w-full max-w-7xl">
         

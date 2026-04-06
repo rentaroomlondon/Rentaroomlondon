@@ -3,6 +3,23 @@ import Hero from './components/Hero'
 import Complaint from './components/Complaint'
 import Testimonial from '../Shared/Testimonial'
 
+export const metadata = {
+  title: "Customer Complaints - RENTAROOMLONDON",
+
+  description:
+    "Raise a complaint with Rent a Room London. We are committed to resolving issues professionally and efficiently.",
+
+  robots: {
+    index: false,
+    follow: true, // allow SEO value to pass through links
+    nocache: true,
+  },
+
+  alternates: {
+    canonical: "https://rentaroomlondon.co.uk/raise-a-complain",
+  },
+};
+
 const page = () => {
   return (
     <div>

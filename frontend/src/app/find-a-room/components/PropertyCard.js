@@ -44,14 +44,14 @@ const PropertyCard = ({ data }) => {
   };
 
   return (
-    <div className="w-full bg-white border border-gray-100 rounded-[24px] overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+    <div className="w-full bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
       <div className="flex flex-col md:flex-row">
-        <div className="relative w-full md:w-[320px] h-[240px] md:h-auto overflow-hidden">
+        <div className="relative w-full md:w-[320px] h-60 md:h-auto overflow-hidden">
           {/* Airbnb Skeleton */}
           {!imageLoaded && (
             <div className="absolute inset-0 overflow-hidden">
               <div className="w-full h-full bg-gray-200" />
-              <div className="absolute inset-0 animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+              <div className="absolute inset-0 animate-[shimmer_1.5s_infinite] bg-linear-to-r from-transparent via-white/60 to-transparent" />
             </div>
           )}
 

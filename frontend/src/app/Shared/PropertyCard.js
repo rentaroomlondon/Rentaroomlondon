@@ -41,13 +41,13 @@ const PropertyCard = ({
   return (
     <Link href={`/listings/${slug}`} className="block group">
       {/* Container: Mobile (rounded-3xl) vs Desktop (max-w-380, rounded-2xl) */}
-      <div className="w-full max-w-[320px] lg:max-w-[420px] bg-white rounded-[20px] lg:rounded-2xl overflow-hidden shadow-sm lg:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 lg:hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 lg:border-none">
+      <div className="w-full max-w-[320px] lg:max-w-105 bg-white rounded-[20px] lg:rounded-2xl overflow-hidden shadow-sm lg:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 lg:hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 lg:border-none">
         
         {/* IMAGE SECTION */}
-        <div className="relative h-[240px] lg:h-[270px] w-full overflow-hidden">
+        <div className="relative h-60 lg:h-67.5 w-full overflow-hidden">
            {/* Skeleton Loader (Airbnb style) */}
             {!imageLoaded && (
-              <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+              <div className="absolute inset-0 animate-pulse bg-linear-to-r from-gray-200 via-gray-300 to-gray-200" />
             )}
 
             {/* Image */}
@@ -77,7 +77,7 @@ const PropertyCard = ({
           </div>
 
           {/* Desktop Price Badge (Top Right) */}
-          <div className="hidden lg:block absolute top-4 right-4 bg-[#ff8c42] text-white p-3 rounded-lg text-center min-w-[90px] shadow-lg">
+          <div className="hidden lg:block absolute top-4 right-4 bg-[#ff8c42] text-white p-3 rounded-lg text-center min-w-22.5 shadow-lg">
             <div className="text-lg font-bold leading-none">{price} PM</div>
             <div className="text-[10px] mt-1 opacity-90 font-medium">Tenancy Info</div>
           </div>
@@ -145,7 +145,7 @@ const PropertyCard = ({
             </div>
             <p className="text-gray-500 text-[14px] leading-relaxed">
               {shortDescription}
-              <button type="button" className="ml-1 text-[#ff8c42] font-bold text-sm tracking-wide hover:underline">
+              <button type="button" aria-label={`Read more about ${title}`} className="ml-1 text-[#ff8c42] font-bold text-sm tracking-wide hover:underline">
                 READ MORE
               </button>
             </p>

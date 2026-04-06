@@ -1,11 +1,64 @@
 import Maintenance from "../Models/Maintenance.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import { sendWhatsApp } from "../utils/sendWhatsApp.js";
 
 const STAFF_CC = [
   "info@rentaroomlondon.co.uk",
-//   "saba@roomflog.co.uk"
+  "Saima@roomflog.co.uk",
+  "Saba@roomflog.co.uk",
+  "Imran.shafique7861978@gmail.com"
 ];
 
+// 🔥 3 ADMIN NUMBERS
+const ADMIN_WHATSAPP_NUMBERS = [
+  "+447832166994",
+  "+447463494058",
+  "+447588590232",
+];
+
+// helper
+const buildAdminMessage = (m) => {
+  return `
+🚨 *New Maintenance Request*
+
+━━━━━━━━━━━━━━━
+👤 *Tenant Info*
+• Name: ${m.firstName || "-"} ${m.lastName || ""}
+• Email: ${m.email || "-"}
+• Phone: +${m.phone || "-"}
+• Address: ${m.address || "-"}
+
+━━━━━━━━━━━━━━━
+🛠️ *Issue Details*
+• Category: ${m.category || "-"}
+• Priority: ${m.priority || "-"}
+• Description: ${m.description || "-"}
+• Issue Started: ${
+    m.issueStarted
+      ? new Date(m.issueStarted).toLocaleDateString()
+      : "-"
+  }
+• Status: ${m.status || "-"}
+
+━━━━━━━━━━━━━━━
+📅 *Access*
+• Contact Time: ${m.contactTime || "-"}
+• Access: ${m.access || "-"}
+
+━━━━━━━━━━━━━━━
+📷 *Photos*
+${
+  m.photos && m.photos.length > 0
+    ? m.photos.slice(0, 3).join("\n") + (m.photos.length > 3 ? `\n+${m.photos.length - 3} more` : "")
+    : "No photos"
+}
+
+━━━━━━━━━━━━━━━
+⏱️ Created At: ${new Date().toLocaleString()}
+
+⚡ Action required.
+`;
+};
 
 // ================= CREATE MAINTENANCE =================
 export const createMaintenance = async (req, res) => {
@@ -94,6 +147,19 @@ export const createMaintenance = async (req, res) => {
         STAFF_CC
       );
     }
+
+    // ================= WHATSAPP TO 3 ADMINS =================
+    const message = buildAdminMessage(maintenance);
+
+    await Promise.all(
+      ADMIN_WHATSAPP_NUMBERS.map(async (number) => {
+        try {
+          await sendWhatsApp(number, message);
+        } catch (err) {
+          console.error(`WhatsApp failed for ${number}:`, err.message);
+        }
+      })
+    );
 
     res.status(201).json({
       success: true,

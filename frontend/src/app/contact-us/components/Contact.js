@@ -83,7 +83,7 @@ const Contact = () => {
       </div>
 
       {/* CONTENT */}
-      <div className="max-w-[1440px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2">
+      <div className="max-w-360 mx-auto w-full grid grid-cols-1 lg:grid-cols-2">
         
         {/* LEFT SECTION (Office Info) */}
         <div className="text-white px-6 py-12 md:px-12 md:py-16 flex flex-col gap-8">
@@ -125,7 +125,7 @@ const Contact = () => {
               <p className="text-[11px] uppercase tracking-widest text-gray-400 mb-3 font-bold">
                 Opening Hours
               </p>
-              <div className="grid grid-cols-2 gap-y-2 text-[15px] text-gray-300 max-w-[280px]">
+              <div className="grid grid-cols-2 gap-y-2 text-[15px] text-gray-300 max-w-70">
                 <span>Mon–Fri:</span>
                 <span>10:00 – 6:00</span>
                 <span>Saturday:</span>
@@ -138,7 +138,7 @@ const Contact = () => {
 
           {/* MAP */}
           <div className="mt-4">
-            <div className="w-full h-[220px] md:h-[350px] rounded-xl overflow-hidden border border-white/10">
+            <div className="w-full h-55 md:h-87.5 rounded-xl overflow-hidden border border-white/10">
               <iframe
                 title="Office Location"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.6377353916!2d-0.0465!3d51.52!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTHCsDMxJzEyLjAiTiAwwrAwMiczNy40Ilc!5e0!3m2!1sen!2suk!4v1620000000000"
