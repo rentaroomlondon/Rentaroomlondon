@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 
-const faqContent = {
+export const faqContent = {
   All: [
     { question: "How do I rent a room?", answer: "Browse our listings and click 'Book Now'." },
     { question: "When do I get my deposit back?", answer: "Usually within 10-14 days of move-out." },
@@ -87,7 +87,7 @@ export default function DynamicFaq() {
           <button
             key={cat}
             onClick={() => handleCategoryChange(cat)}
-            className={`flex-shrink-0 px-6 py-2 rounded-full border text-sm font-medium transition-all duration-200 ${
+            className={`shrink-0 px-6 py-2 rounded-full border text-sm font-medium transition-all duration-200 ${
               activeCategory === cat
                 ? "bg-[#FF6B35] border-[#FF6B35] text-white"
                 : "bg-white border-[#E8E4DF] text-[#6B7280] hover:border-[#FF7A50] hover:text-[#FF7A50]"

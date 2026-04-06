@@ -4,7 +4,7 @@ import React from 'react';
 const Office = () => {
   return (
     <section className="w-full bg-white py-16 px-6 sm:px-10 lg:px-24">
-      <div className="mx-auto flex flex-col lg:flex-row items-start lg:items-center max-w-[1280px] md:gap-10">
+      <div className="mx-auto flex flex-col lg:flex-row items-start lg:items-center max-w-7xl md:gap-10">
         {/* Left Side: Contact Info */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center gap-4">
           {/* Heading */}
@@ -30,7 +30,7 @@ const Office = () => {
           <h3 className="text-[13px] font-bold text-gray-400 uppercase tracking-wider my-1">
             Opening Hours
           </h3>
-          <div className="flex flex-col gap-2 sm:gap-2 text-[14px] sm:text-[15.45px] max-w-[680px]">
+          <div className="flex flex-col gap-2 sm:gap-2 text-[14px] sm:text-[15.45px] max-w-170">
             <div className="flex justify-between">
               <span>Mon–Fri</span>
               <span>10:00 – 6:00</span>
@@ -47,7 +47,7 @@ const Office = () => {
         </div>
 
         {/* Right Side: Map */}
-        <div className="w-full lg:w-1/2 h-[320px] sm:h-[360px] relative rounded-xl overflow-hidden border border-gray-200 mt-1 lg:mt-0">
+        <div className="w-full lg:w-1/2 h-80 sm:h-90 relative rounded-xl overflow-hidden border border-gray-200 mt-1 lg:mt-0">
           <iframe
             title="Stepney Green Office Map"
             src="https://www.google.com/maps?q=3-5+Globe+Road,+London+E1+4DT&output=embed"

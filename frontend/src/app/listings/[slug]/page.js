@@ -1,14 +1,14 @@
 import { notFound } from "next/navigation";
 import Client from "./client";
+import ListingSchema from "./component/ListingSchema";
 
-// 🔥 Fetch Listing (SSR)
+// 🔥 Fetch Listing (ISR for SEO + performance)
 const getListing = async (slug) => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/listings/${slug}`,
       {
-        cache: "no-store", // SSR
-        // OR: next: { revalidate: 60 }
+        next: { revalidate: 60 }, // ✅ BEST PRACTICE
       }
     );
 
@@ -22,42 +22,114 @@ const getListing = async (slug) => {
   }
 };
 
-// 🔥 SEO Metadata
+// 🔥 SEO METADATA
 export async function generateMetadata({ params }) {
-  const { slug } = await params; // ✅ FIX
+  const { slug } = await params;
 
   const listing = await getListing(slug);
 
+  const baseUrl = "https://rentaroomlondon.co.uk";
+
+  // ❌ Not found → noindex
   if (!listing) {
     return {
-      title: "Listing Not Found",
-      description: "Property not found",
+      title: "Listing Not Found | Rent a Room London",
+      description: "This property is not available.",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
-  return {
-    title: `${listing.title} - RENTAROOMLONDON`,
-    description:
-      listing.description?.slice(0, 150) ||
-      "View this listing",
+  // 🔥 Dynamic Fields
+  const city = listing.location?.city || "London";
+  const postcode = listing.location?.postcode || "";
+  const roomType = listing.roomType || "room";
 
-    openGraph: {
-      title: listing.title,
-      description: listing.description,
-      images: [listing.images?.[0]],
+  const url = `${baseUrl}/listings/${slug}`;
+
+  const image =
+    listing.images?.[0] ||
+    `${baseUrl}/default-property.jpg`;
+
+  // 🔥 Smart Description
+  const description = listing.description
+    ? `${listing.description.slice(0, 120)}... ${roomType} in ${city}. £${listing.monthlyPrice}/month. Book now.`
+    : `${roomType} for rent in ${city}. £${listing.monthlyPrice}/month. Fully furnished property in London.`;
+
+  // 🔥 SEO Title (HIGH CTR)
+  const title = `${listing.title} in ${city} ${postcode} | £${listing.monthlyPrice} PCM`;
+
+  return {
+    metadataBase: new URL(baseUrl),
+
+    title,
+    description,
+
+    // ✅ Canonical
+    alternates: {
+      canonical: url,
     },
+
+    // ✅ Robots
+    robots: {
+      index: true,
+      follow: true,
+    },
+
+    // ✅ OpenGraph
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "RENTAROOMLONDON",
+      type: "article",
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: listing.title,
+        },
+      ],
+    },
+
+    // ✅ Twitter
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+
+    // ⚠️ Optional (low impact but safe)
+    keywords: [
+      listing.title,
+      "rooms for rent London",
+      `${roomType} in ${city}`,
+      `cheap ${roomType} London`,
+    ],
   };
 }
 
-// 🔥 SSR Page
+// 🔥 PAGE (SSR)
 const Page = async ({ params }) => {
-  const { slug } = await params; // ✅ FIX
+  const { slug } = await params;
 
   const listing = await getListing(slug);
 
   if (!listing) return notFound();
 
-  return <Client listing={listing} />;
+  return (
+    <>
+      {/* ✅ Structured Data (clean & separate) */}
+      <ListingSchema listing={listing} />
+
+      {/* UI */}
+      <Client listing={listing} />
+    </>
+  );
 };
 
 export default Page;

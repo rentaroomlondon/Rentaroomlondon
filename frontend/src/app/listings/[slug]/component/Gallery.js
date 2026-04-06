@@ -84,7 +84,7 @@ const Gallery = ({ images = [], available = false }) => {
 
       {/* ================= MOBILE ================= */}
       <div
-        className="relative block md:hidden w-full aspect-[4/3] bg-black"
+        className="relative block md:hidden w-full aspect-4/3 bg-black"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -136,7 +136,7 @@ const Gallery = ({ images = [], available = false }) => {
       </div>
 
       {/* ================= DESKTOP ================= */}
-      <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-[500px] max-w-[1440px] mx-auto">
+      <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-125 max-w-360 mx-auto">
 
         {/* Main Image */}
         <div

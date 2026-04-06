@@ -10,6 +10,8 @@ import {
 import { useAuth } from "@/app/Context/AuthContext";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const BookingModal = ({ isOpen, onClose, listing }) => {
   const { user, fetchUser } = useAuth();
@@ -24,6 +26,9 @@ const BookingModal = ({ isOpen, onClose, listing }) => {
     date: "",
     timeSlot: "",
     message: "",
+    name: "",
+    email: "",
+    phone: "",
   });
 
   // ============================
@@ -34,7 +39,7 @@ const BookingModal = ({ isOpen, onClose, listing }) => {
       setTimeout(() => {
         setStep(1);
         setAuthMode("login");
-        setBookingData({ date: "", timeSlot: "", message: "" });
+        setBookingData({ date: "", timeSlot: "", message: "", name: "", email: "", phone: "", });
         setErrors({});
         hasBookedRef.current = false;
       }, 300);
@@ -68,6 +73,14 @@ const BookingModal = ({ isOpen, onClose, listing }) => {
       newErrors.timeSlot = "Please select a time slot";
     }
 
+    // 👇 Guest validation
+    if (!user) {
+    if (!bookingData.name.trim()) newErrors.name = "Name is required";
+    if (!bookingData.email.trim()) newErrors.email = "Email is required";
+    if (!bookingData.phone || bookingData.phone.length < 8)
+      newErrors.phone = "Valid phone required";
+    }
+
     if (bookingData.message.length > 300) {
       newErrors.message = "Max 300 characters allowed";
     }
@@ -84,11 +97,7 @@ const BookingModal = ({ isOpen, onClose, listing }) => {
 
     if (!validateForm()) return;
 
-    if (user) {
-      submitFinalBooking();
-    } else {
-      setStep(2);
-    }
+    submitFinalBooking();
   };
 
   // ============================
@@ -114,7 +123,12 @@ const BookingModal = ({ isOpen, onClose, listing }) => {
             viewingDate: bookingData.date,
             viewingSlot: bookingData.timeSlot,
             message: bookingData.message,
-            userId: user?._id,
+            userId: user?._id || null,
+
+            // 👇 guest fields
+            guestName: !user ? bookingData.name : null,
+            guestEmail: !user ? bookingData.email : null,
+            guestPhone: !user ? bookingData.phone : null,
           }),
         }
       );
@@ -127,7 +141,7 @@ const BookingModal = ({ isOpen, onClose, listing }) => {
     } catch (error) {
       console.error(error);
       alert(error.message);
-      hasBookedRef.current = false; // allow retry
+      hasBookedRef.current = false;
     } finally {
       setLoading(false);
     }
@@ -141,9 +155,9 @@ const BookingModal = ({ isOpen, onClose, listing }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-[#0a192f]/60 backdrop-blur-sm transition-all duration-300">
+    <div className="fixed inset-0 z-100 flex items-end sm:items-center justify-center bg-[#0a192f]/60 backdrop-blur-sm transition-all duration-300">
       
-      <div className="bg-white w-full h-[95%] sm:h-auto sm:max-h-[90vh] sm:max-w-[500px] sm:rounded-[32px] rounded-t-[32px] shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom duration-300">
+      <div className="bg-white w-full h-[95%] sm:h-auto sm:max-h-[90vh] sm:max-w-125 sm:rounded-4xl rounded-t-4xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom duration-300">
         
         {/* HEADER */}
         <div className="flex items-center justify-between p-6 border-b border-gray-50">
@@ -187,6 +201,79 @@ const BookingModal = ({ isOpen, onClose, listing }) => {
           {/* STEP 1 */}
           {step === 1 && (
             <form onSubmit={handleNextStep} className="space-y-6">
+
+              {/* 👤 Guest Info */}
+              {!user && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-2">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Full Name"
+                      className={`w-full p-4 bg-gray-50 border rounded-2xl focus:ring-2 focus:ring-orange-500/20 ${
+                        errors.name ? "border-red-400" : "border-gray-100"
+                      }`}
+                      value={bookingData.name}
+                      onChange={(e) =>
+                        setBookingData({ ...bookingData, name: e.target.value })
+                      }
+                    />
+                    {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-2">
+                     Email Address
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="Email Address"
+                      className={`w-full p-4 bg-gray-50 border rounded-2xl focus:ring-2 focus:ring-orange-500/20 ${
+                        errors.email ? "border-red-400" : "border-gray-100"
+                      }`}
+                      value={bookingData.email}
+                      onChange={(e) =>
+                        setBookingData({ ...bookingData, email: e.target.value })
+                      }
+                    />
+                    {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-2">
+                      Phone Number
+                    </label>
+
+                    <div
+                      className={`rounded-2xl border bg-gray-50 focus-within:ring-2 focus-within:ring-orange-500/20 ${
+                        errors.phone ? "border-red-400" : "border-gray-100"
+                      }`}
+                    >
+                      <PhoneInput
+                        country={"gb"} // default (change if needed)
+                        value={bookingData.phone}
+                        onChange={(phone) => {
+                          setBookingData((prev) => ({
+                            ...prev,
+                            phone: phone || "",
+                          }));
+                        }}
+                        inputClass="!w-full !bg-transparent !border-none !py-6 !pl-14 !text-sm"
+                        buttonClass="!border-none !bg-transparent"
+                        containerClass="!w-full"
+                        dropdownClass="!text-black"
+                        enableSearch
+                      />
+                    </div>
+
+                    {errors.phone && (
+                      <p className="text-red-500 text-xs">{errors.phone}</p>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* DATE */}
               <div>
@@ -284,14 +371,19 @@ const BookingModal = ({ isOpen, onClose, listing }) => {
               {/* BUTTON */}
               <button
                 type="submit"
-                disabled={!bookingData.date || !bookingData.timeSlot || loading}
+                disabled={
+                  loading ||
+                  !bookingData.date ||
+                  !bookingData.timeSlot ||
+                  (!user &&
+                    (!bookingData.name || !bookingData.email || !bookingData.phone))
+                }
                 className="w-full bg-[#e36b2c] hover:bg-[#c95a1f] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50 shadow-lg shadow-orange-500/20"
               >
                 {loading
                   ? "Processing..."
-                  : user
-                  ? "Confirm Booking"
-                  : "Continue to Login"}
+                  : "Confirm Booking"
+                  }
                 {!loading && <ArrowRight size={18} />}
               </button>
             </form>

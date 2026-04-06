@@ -131,7 +131,7 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
 
         {/* TOP BAR */}
         <div className="bg-[#0f172a] py-5 px-12">
-          <div className="max-w-[1400px] mx-auto flex gap-10 text-[10px] font-black text-[#94a3b8] uppercase">
+          <div className="max-w-350 mx-auto flex gap-10 text-[10px] font-black text-[#94a3b8] uppercase">
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-red-500" />
               All Properties
@@ -149,9 +149,9 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
 
         {/* SEARCH AREA */}
         <div className="bg-[#1e293b] py-8 px-12">
-          <div className="max-w-[1400px] mx-auto flex items-center justify-between">
+          <div className="max-w-350 mx-auto flex items-center justify-between">
 
-            <div className="flex gap-3 flex-grow max-w-[1100px]">
+            <div className="flex gap-3 grow max-w-275">
 
               {/* LOCATION */}
               <div className="relative flex-[1.5]">
@@ -371,7 +371,7 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
 
           <button
             onClick={onSearch}
-            className="bg-[#FF7A45] min-w-[48px] h-[48px] flex items-center justify-center rounded-xl text-white"
+            className="bg-[#FF7A45] min-w-12 h-12 flex items-center justify-center rounded-xl text-white"
             >
             <Search size={20} />
           </button>

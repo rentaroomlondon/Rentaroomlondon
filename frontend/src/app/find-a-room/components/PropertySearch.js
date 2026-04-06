@@ -31,6 +31,13 @@ export default function PropertySearchPage() {
     date: "",
     minPrice: "",
     maxPrice: "",
+
+    // ✅ ADD THIS
+    start: "",
+    travelLat: "",
+    travelLng: "",
+    maxTime: "",
+    transport: "",
   });
 
   // ===============================
@@ -48,6 +55,13 @@ export default function PropertySearchPage() {
       date: params.date || "",
       minPrice: params.minPrice || "",
       maxPrice: params.maxPrice || "",
+
+      // ✅ ADD
+      start: params.start || "",
+      travelLat: params.travelLat || "",
+      travelLng: params.travelLng || "",
+      maxTime: params.maxTime || "",
+      transport: params.transport || "",
     };
 
     setFilters(newFilters);
@@ -104,7 +118,7 @@ export default function PropertySearchPage() {
 
       <div className="flex flex-col lg:flex-row">
         <div className="w-full lg:w-[65%] p-4 lg:p-8">
-          <div className="max-w-[950px] mx-auto">
+          <div className="max-w-237.5 mx-auto">
 
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-xl lg:text-2xl font-bold text-[#111827]">
@@ -119,7 +133,7 @@ export default function PropertySearchPage() {
               </button>
             </div>
 
-            <div className="block lg:hidden w-full h-[300px] mb-5">
+            <div className="block lg:hidden w-full h-75 mb-5">
               <MapView listings={rooms} />
             </div>
 
@@ -147,7 +161,7 @@ export default function PropertySearchPage() {
           </div>
         </div>
 
-        <div className="hidden lg:block lg:flex-1 h-[calc(100vh-120px)] sticky top-[120px]">
+        <div className="hidden lg:block lg:flex-1 h-[calc(100vh-120px)] sticky top-30">
           <MapView listings={rooms} />
         </div>
       </div>

@@ -3,6 +3,23 @@ import Hero from '../Shared/Hero'
 import LegalFooter from '../Shared/LegalFooter'
 import PaymentForm from './components/PaymentForm'
 
+export const metadata = {
+  title: "Secure Payment - RENTAROOMLONDON",
+
+  description:
+    "Make secure rent payments online using your debit or credit card.",
+
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
+
+  alternates: {
+    canonical: "https://rentaroomlondon.co.uk/make-a-payment",
+  },
+};
+
 const page = () => {
   return (
     <div>

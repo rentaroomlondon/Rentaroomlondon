@@ -82,7 +82,7 @@ const Client = ({ listing }) => {
         available={listing?.availableImmediately}
       />
 
-      <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-2">
+      <div className="max-w-300 mx-auto px-4 md:px-6 py-2">
         <div className="flex flex-col lg:flex-row gap-10">
 
           {/* LEFT */}
@@ -167,7 +167,7 @@ const Client = ({ listing }) => {
                 </div>
 
                 {/* Desktop View: Single unified horizontal bar */}
-                <div className="hidden md:flex bg-white border border-gray-200 rounded-[24px] shadow-sm overflow-hidden">
+                <div className="hidden md:flex bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
                     {stats.map((item, idx) => (
                     <InfoCard 
                         key={idx} 
@@ -203,7 +203,7 @@ const Client = ({ listing }) => {
           </div>
 
           {/* RIGHT */}
-          <div className="hidden lg:block w-[380px]">
+          <div className="hidden lg:block w-95">
             <PricingCard
               listing={listing}
               monthlyPrice={monthlyPrice}

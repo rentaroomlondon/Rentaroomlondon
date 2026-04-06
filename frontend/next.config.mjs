@@ -15,6 +15,7 @@ const nextConfig = {
   // ✅ IMAGES (ONLY Cloudinary)
   images: {
     domains: ["res.cloudinary.com"],
+    domains: ['images.unsplash.com'],
     minimumCacheTTL: 31536000,
   },
 

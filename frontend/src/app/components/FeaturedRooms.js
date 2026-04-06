@@ -78,7 +78,7 @@ const FeaturedRooms = () => {
 
   return (
     <section className="bg-[#F47C3C0D] md:py-20 py-10">
-      <div className="max-w-[1280px] mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
 
         {/* Header */}
         <div className="text-left lg:text-center mb-12">
@@ -98,7 +98,7 @@ const FeaturedRooms = () => {
               {Array(4)
                 .fill()
                 .map((_, i) => (
-                  <div key={i} className=" snap-start flex-shrink-0 w-[380px]">
+                  <div key={i} className=" snap-start shrink-0 w-95">
                     <PropertyCardSkeleton />
                   </div>
                 ))}
@@ -128,7 +128,7 @@ const FeaturedRooms = () => {
             {properties.map((prop) => (
               <div
                 key={prop.id}
-                className="flex-shrink-0"
+                className="shrink-0"
               >
                 <PropertyCard {...prop} />
               </div>

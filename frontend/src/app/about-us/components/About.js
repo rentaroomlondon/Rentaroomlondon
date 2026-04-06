@@ -51,7 +51,7 @@ const About = () => {
             ${section.reverse ? "md:flex-row-reverse" : ""}`}
           >
             {/* Image */}
-            <div className="w-full md:w-1/2 relative min-h-[320px]">
+            <div className="w-full md:w-1/2 relative min-h-80">
               <Image
                 src={section.image}
                 alt={section.title}

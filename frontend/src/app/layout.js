@@ -5,6 +5,7 @@ import { ToastContainer } from "./Shared/Nexttoast";
 import LayoutWrapper from "./Shared/LayoutWrapper";
 import { AdminAuthProvider } from "./Context/AdminAuthContext";
 import "leaflet/dist/leaflet.css";
+import CrispChat from "./Shared/CrispChat";
 
 // DM Sans - body text
 const dmSans = DM_Sans({
@@ -21,8 +22,55 @@ const playfair = Playfair_Display({
 });
 
 export const metadata = {
-  title: "RENTAROOMLONDON",
-  description: "RENTAROOMLONDON - Affordable London Rooms",
+  metadataBase: new URL("https://rentaroomlondon.co.uk"),
+
+  title: {
+    default: "RENTAROOMLONDON | Rooms, Flatshares & Apartments",
+    template: "%s | RENTAROOMLONDON",
+  },
+
+  description:
+    "Find rooms for rent in London. Browse affordable rooms, flatshares, and apartments with verified listings across all London areas.",
+
+  keywords: [
+    "rent a room london",
+    "rooms for rent london",
+    "flatshare london",
+    "cheap rooms london",
+    "apartments london rent",
+  ],
+
+  alternates: {
+    canonical: "https://rentaroomlondon.co.uk",
+  },
+
+  openGraph: {
+    title: "RENTAROOMLONDON",
+    description:
+      "Browse rooms, flatshares, and rental properties across London.",
+    url: "https://rentaroomlondon.co.uk",
+    siteName: "Rent a Room London",
+    locale: "en_GB",
+    type: "website",
+    // optional fallback image
+    // images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+  },
+
+  twitter: {
+    card: "summary",
+    title: "RENTAROOMLONDON",
+    description:
+      "Find affordable rooms and flatshares in London.",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
+
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -43,6 +91,7 @@ export default function RootLayout({ children }) {
           </LayoutWrapper>
           </AdminAuthProvider>
         </AuthProvider>
+        <CrispChat />
       </body>
     </html>
   );

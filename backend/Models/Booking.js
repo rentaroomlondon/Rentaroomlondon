@@ -6,7 +6,23 @@ const bookingSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false, // ✅ IMPORTANT
+    },
+
+    // 👤 Guest info (if not logged in)
+    guestName: {
+      type: String,
+      trim: true,
+    },
+    guestEmail: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      match: [/^\S+@\S+\.\S+$/, "Please use a valid email"],
+    },
+    guestPhone: {
+      type: String,
+      trim: true,
     },
     // 🏠 The Specific Property (Room) being viewed
     listing: {

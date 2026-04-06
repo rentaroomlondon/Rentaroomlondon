@@ -4,6 +4,23 @@ import Testimonial from '../Shared/Testimonial'
 import LegalFooter from '../Shared/LegalFooter'
 import Emergency from './components/Emergency'
 
+export const metadata = {
+  title: "Emergency Contact - RENTAROOMLONDON",
+
+  description:
+    "Out of office emergency contact information for Rent a Room London tenants and customers.",
+
+  robots: {
+    index: false,
+    follow: true, // allow link equity to flow
+    nocache: true,
+  },
+
+  alternates: {
+    canonical: "https://rentaroomlondon.co.uk/out-of-office-emergencies",
+  },
+};
+
 const page = () => {
   return (
     <div>

@@ -3,6 +3,24 @@ import Hero from '../Shared/Hero'
 import Testimonial from '../Shared/Testimonial'
 import CareersIntro from './components/CareersIntro'
 
+export const metadata = {
+  title: "Careers at Rent a Room London - Work With Us",
+
+  description:
+    "Explore career opportunities at Rent a Room London. Join our team and grow your career in the property rental industry.",
+
+  robots: {
+    index: false,
+    follow: true,
+    nocache: true,
+  },
+
+  alternates: {
+    canonical: "https://rentaroomlondon.co.uk/work-for-us",
+  },
+};
+
+
 const page = () => {
   return (
     <div>
