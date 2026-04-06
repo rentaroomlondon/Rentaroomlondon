@@ -16,7 +16,7 @@ const CrispChat = () => {
 
       if (!window.CRISP_WEBSITE_ID) {
         window.$crisp = window.$crisp || [];
-        window.CRISP_WEBSITE_ID = "96d592bd-8911-4ce6-b2a0-40c901708912";
+        window.CRISP_WEBSITE_ID = "c6c79154-2e83-4096-9c65-a75de7642ab2";
 
         const script = document.createElement("script");
         script.src = "https://client.crisp.chat/l.js";
