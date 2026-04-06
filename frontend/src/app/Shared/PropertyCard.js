@@ -37,6 +37,7 @@ const PropertyCard = ({
     });
   };
 
+  
   return (
     <Link href={`/listings/${slug}`} className="block group">
       {/* Container: Mobile (rounded-3xl) vs Desktop (max-w-380, rounded-2xl) */}
