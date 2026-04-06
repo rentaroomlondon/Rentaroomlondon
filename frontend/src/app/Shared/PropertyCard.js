@@ -36,7 +36,6 @@ const PropertyCard = ({
       imageUrl,
     });
   };
-
   
   return (
     <Link href={`/listings/${slug}`} className="block group">
