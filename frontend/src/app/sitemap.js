@@ -41,6 +41,21 @@ export default async function sitemap() {
       priority: 0.7,
     },
     {
+      url: `${baseUrl}/about-us`,
+      lastModified: new Date(),
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/contact-us`,
+      lastModified: new Date(),
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/faqs`,
+      lastModified: new Date(),
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/privacy-policy`,
       lastModified: new Date(),
       priority: 0.5,
