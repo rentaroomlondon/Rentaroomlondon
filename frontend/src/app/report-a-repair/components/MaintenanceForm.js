@@ -34,12 +34,21 @@ export default function MaintenanceForm() {
     try {
       setLoading(true);
 
+      const cleanedPhotos = (formData.photos || []).map((p) =>
+        typeof p === "string" ? p : p.url
+      );
+
+      const payload = {
+        ...formData,
+        photos: cleanedPhotos,
+      };
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/maintenance`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();

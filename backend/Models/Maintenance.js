@@ -35,6 +35,11 @@ const maintenanceSchema = new mongoose.Schema(
       type: String,
       enum: ["Pending", "Assigned", "Completed"],
       default: "Pending"
+    },
+    // ✅ ADD THIS
+    lastReminderSent: {
+      type: Date,
+      default: null
     }
 
   },

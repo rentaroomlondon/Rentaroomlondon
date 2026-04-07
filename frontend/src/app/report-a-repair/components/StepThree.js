@@ -117,12 +117,12 @@ export default function StepThree({ formData = {}, setFormData, onBack, onSubmit
             <SectionWrapper title="Photos Attached">
               <div className="flex flex-col gap-4 py-2">
 
-                <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 md:gap-3">
 
                   {formData.photos?.map((photo, index) => (
                     <div
                       key={index}
-                      className="relative w-32 h-32 rounded-xl overflow-hidden border border-gray-200 group"
+                      className="relative w-full aspect-square rounded-xl overflow-hidden border border-gray-200 group"
                     >
                       <img
                         src={typeof photo === "string" ? photo : photo.url}
@@ -139,7 +139,8 @@ export default function StepThree({ formData = {}, setFormData, onBack, onSubmit
                     </div>
                   ))}
 
-                  <label className="w-32 h-32 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center text-gray-300 text-xl cursor-pointer hover:border-orange-400 hover:text-orange-400 transition">
+                  {/* Upload Box */}
+                  <label className="w-full aspect-square border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center text-gray-300 text-xl cursor-pointer hover:border-orange-400 hover:text-orange-400 transition">
                     +
                     <input
                       type="file"
@@ -186,12 +187,27 @@ export default function StepThree({ formData = {}, setFormData, onBack, onSubmit
               <button 
                 onClick={onSubmit}
                 disabled={loading || (formData.photos?.length || 0) < 10}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-[12px] md:text-[16px] font-sans text-white font-bold py-5 rounded-xl shadow-lg shadow-orange-200 transition-all flex items-center justify-center gap-1 uppercase tracking-wide">
-                {loading ? "Submitting..." : "🔧 SUBMIT REPAIR REQUEST"}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
+                className={`w-full text-[12px] md:text-[16px] font-sans text-white font-bold py-5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 uppercase tracking-wide
+                  ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-orange-500 hover:bg-orange-600 shadow-orange-200"}
+                `}
+              >
+
+                {loading ? (
+                  <>
+                    {/* 🔥 Spinner */}
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    🔧 SUBMIT REPAIR REQUEST
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </>
+                )}
+
               </button>
               
               {/* MOBILE ONLY FOOTER */}
