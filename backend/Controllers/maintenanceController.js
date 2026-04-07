@@ -1,72 +1,42 @@
 import Maintenance from "../Models/Maintenance.js";
 import { sendEmail } from "../utils/sendEmail.js";
-import { sendWhatsApp } from "../utils/sendWhatsApp.js";
+// import { sendWhatsApp } from "../utils/sendWhatsApp.js";
 
 const STAFF_CC = [
   "info@rentaroomlondon.co.uk",
-  "Saima@roomflog.co.uk",
-  "Saba@roomflog.co.uk",
-  "Imran.shafique7861978@gmail.com"
+  // "Saima@roomflog.co.uk",
+  // "Saba@roomflog.co.uk",
+  // "Imran.shafique7861978@gmail.com"
 ];
 
-// 🔥 3 ADMIN NUMBERS
-const ADMIN_WHATSAPP_NUMBERS = [
-  "+447832166994",
-  "+447463494058",
-  "+447588590232",
-];
-
-// helper
-const buildAdminMessage = (m) => {
-  return `
-🚨 *New Maintenance Request*
-
-━━━━━━━━━━━━━━━
-👤 *Tenant Info*
-• Name: ${m.firstName || "-"} ${m.lastName || ""}
-• Email: ${m.email || "-"}
-• Phone: +${m.phone || "-"}
-• Address: ${m.address || "-"}
-
-━━━━━━━━━━━━━━━
-🛠️ *Issue Details*
-• Category: ${m.category || "-"}
-• Priority: ${m.priority || "-"}
-• Description: ${m.description || "-"}
-• Issue Started: ${
-    m.issueStarted
-      ? new Date(m.issueStarted).toLocaleDateString()
-      : "-"
-  }
-• Status: ${m.status || "-"}
-
-━━━━━━━━━━━━━━━
-📅 *Access*
-• Contact Time: ${m.contactTime || "-"}
-• Access: ${m.access || "-"}
-
-━━━━━━━━━━━━━━━
-📷 *Photos*
-${
-  m.photos && m.photos.length > 0
-    ? m.photos.slice(0, 3).join("\n") + (m.photos.length > 3 ? `\n+${m.photos.length - 3} more` : "")
-    : "No photos"
-}
-
-━━━━━━━━━━━━━━━
-⏱️ Created At: ${new Date().toLocaleString()}
-
-⚡ Action required.
-`;
-};
 
 // ================= CREATE MAINTENANCE =================
 export const createMaintenance = async (req, res) => {
   try {
+    // ✅ FIX: ensure photos are strings (avoid mongoose error)
+    const cleanedPhotos = (req.body.photos || []).map((p) =>
+      typeof p === "string" ? p : p.url
+    );
 
-    const maintenance = await Maintenance.create(req.body);
+    const payload = {
+      ...req.body,
+      photos: cleanedPhotos,
+    };
 
-    const html = `
+    // ✅ Save to DB
+    const maintenance = await Maintenance.create(payload);
+
+    // ✅ SEND RESPONSE IMMEDIATELY (FAST ⚡)
+    res.status(201).json({
+      success: true,
+      message: "Maintenance request submitted",
+      maintenance,
+    });
+
+    // ✅ BACKGROUND EMAIL (NON-BLOCKING)
+    setImmediate(async () => {
+      try {
+        const html = `
     <div style="font-family:Arial;background:#f5f5f5;padding:40px">
 
       <div style="max-width:800px;margin:auto;background:white;border-radius:10px;overflow:hidden">
@@ -138,36 +108,22 @@ export const createMaintenance = async (req, res) => {
     </div>
     `;
 
-    // send email
-    if (maintenance.email) {
-      await sendEmail(
-        maintenance.email,
-        "Maintenance Request Received",
-        html,
-        STAFF_CC
-      );
-    }
-
-    // ================= WHATSAPP TO 3 ADMINS =================
-    const message = buildAdminMessage(maintenance);
-
-    await Promise.all(
-      ADMIN_WHATSAPP_NUMBERS.map(async (number) => {
-        try {
-          await sendWhatsApp(number, message);
-        } catch (err) {
-          console.error(`WhatsApp failed for ${number}:`, err.message);
+        if (maintenance.email) {
+          await sendEmail(
+            maintenance.email,
+            "Maintenance Request Received",
+            html,
+            STAFF_CC
+          );
         }
-      })
-    );
 
-    res.status(201).json({
-      success: true,
-      message: "Maintenance request submitted",
-      maintenance
+      } catch (err) {
+        console.error("❌ Email failed:", err.message);
+      }
     });
 
   } catch (error) {
+    console.error("❌ Error:", error.message);
     res.status(500).json({ message: error.message });
   }
 };

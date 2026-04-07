@@ -59,17 +59,36 @@ export default function StepTwo({ formData, setFormData, onNext, onBack }) {
       setUploading(true);
 
       for (const file of files) {
-        const result = await uploadToCloudinary(file);
+        // 👇 temporary preview (instant UI)
+        const tempUrl = URL.createObjectURL(file);
 
+        const tempId = Date.now() + Math.random();
+
+        // add temporary loading image
         setFormData((prev) => ({
           ...prev,
-          photos: [...(prev.photos || []), result.url],
+          photos: [
+            ...(prev.photos || []),
+            { url: tempUrl, loading: true, id: tempId },
+          ],
+        }));
+
+        // upload to cloudinary
+        const result = await uploadToCloudinary(file);
+
+        // replace temp with real image
+        setFormData((prev) => ({
+          ...prev,
+          photos: prev.photos.map((p) =>
+            p.id === tempId
+              ? { url: result.url, loading: false, id: tempId }
+              : p
+          ),
         }));
       }
-
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      toast.error("Upload failed");
     } finally {
       setUploading(false);
     }
@@ -319,19 +338,31 @@ export default function StepTwo({ formData, setFormData, onNext, onBack }) {
                     {formData.photos.map((photo, index) => (
                       <div key={index} className="relative group">
 
+                        {/* Image */}
                         <img
-                          src={photo}
+                          src={photo.url || photo}
                           alt="uploaded"
-                          className="w-full h-24 object-cover rounded-lg"
+                          className={`w-full h-24 object-cover rounded-lg transition 
+                            ${photo.loading ? "opacity-50 blur-sm" : "opacity-100"}`}
                         />
 
-                        <button
-                          type="button"
-                          onClick={() => removePhoto(index)}
-                          className="absolute top-1 right-1 bg-black/70 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
-                        >
-                          ✕
-                        </button>
+                        {/* 🔥 Loading overlay */}
+                        {photo.loading && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-lg">
+                            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          </div>
+                        )}
+
+                        {/* Remove button */}
+                        {!photo.loading && (
+                          <button
+                            type="button"
+                            onClick={() => removePhoto(index)}
+                            className="absolute top-1 right-1 bg-black/70 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                          >
+                            ✕
+                          </button>
+                        )}
 
                       </div>
                     ))}

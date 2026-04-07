@@ -13,11 +13,15 @@ import { connectRedis } from "./utils/redis.js";
 import listingRoutes from "./Routes/listingRoutes.js";
 import bookingRoutes from "./Routes/bookingRoutes.js";
 import contactRoutes from "./Routes/contactRoutes.js";
+import { startMaintenanceReminder } from "./utils/maintenanceReminder.js";
 
 dotenv.config();
 
 const app = express();
 const Port = process.env.Port || 8000;
+
+// Start maintenance reminder
+startMaintenanceReminder();
 
 // Body parser
 app.use(bodyParser.json({ limit: '10mb' }));
