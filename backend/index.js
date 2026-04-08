@@ -14,6 +14,7 @@ import listingRoutes from "./Routes/listingRoutes.js";
 import bookingRoutes from "./Routes/bookingRoutes.js";
 import contactRoutes from "./Routes/contactRoutes.js";
 import { startMaintenanceReminder } from "./utils/maintenanceReminder.js";
+import staffRoutes from "./Routes/staffRoutes.js";
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ const app = express();
 const Port = process.env.Port || 8000;
 
 // Start maintenance reminder
-startMaintenanceReminder();
+// startMaintenanceReminder();
 
 // Body parser
 app.use(bodyParser.json({ limit: '10mb' }));
@@ -53,6 +54,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/listings", listingRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/staff", staffRoutes);
 
 // Test route
 app.get('/', (req, res) => {

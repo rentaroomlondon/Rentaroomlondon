@@ -6,6 +6,7 @@ import LayoutWrapper from "./Shared/LayoutWrapper";
 import { AdminAuthProvider } from "./Context/AdminAuthContext";
 import "leaflet/dist/leaflet.css";
 import CrispChat from "./Shared/CrispChat";
+import { StaffAuthProvider } from "./Context/StaffAuthContext";
 
 // DM Sans - body text
 const dmSans = DM_Sans({
@@ -79,6 +80,7 @@ export default function RootLayout({ children }) {
       <body className="antialiased">
         <AuthProvider>
           <AdminAuthProvider>
+          <StaffAuthProvider>
           <LayoutWrapper>
           {children}
           <ToastContainer 
@@ -89,6 +91,7 @@ export default function RootLayout({ children }) {
             pauseOnHover={false} 
           />
           </LayoutWrapper>
+          </StaffAuthProvider>
           </AdminAuthProvider>
         </AuthProvider>
         <CrispChat />

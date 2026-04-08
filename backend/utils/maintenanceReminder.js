@@ -5,11 +5,11 @@ import { sendEmail } from "./sendEmail.js";
 const ADMIN_EMAIL = "Hamzabashir2001@hotmail.com";
 
 export const startMaintenanceReminder = () => {
-  cron.schedule("*/5 * * * *", async () => {
+  cron.schedule("0 */6 * * *", async () => {
     console.log("⏰ Running maintenance reminder job...");
 
     try {
-      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+      const fiveMinutesAgo = new Date(Date.now() - 6 * 60 * 60 * 1000); // 6 hours ago
 
       const tasks = await Maintenance.find({
         status: { $ne: "Completed" },

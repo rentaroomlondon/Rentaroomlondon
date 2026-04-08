@@ -36,6 +36,20 @@ const maintenanceSchema = new mongoose.Schema(
       enum: ["Pending", "Assigned", "Completed"],
       default: "Pending"
     },
+
+    // ⭐ NEW — Assigned Staff
+    assignedStaff: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Staff",
+      default: null
+    },
+
+    // ⭐ NEW — Deadline date
+    deadline: {
+      type: Date,
+      default: null
+    },
+    
     // ✅ ADD THIS
     lastReminderSent: {
       type: Date,
