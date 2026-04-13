@@ -7,6 +7,8 @@ import AreaGuides from './components/AreaGuides';
 import FeaturedRooms from './components/FeaturedRooms';
 import HowItWorks from './components/HowItWorks';
 import HeroSection from './components/HeroSection';
+import Eeat from './components/Eeat';
+import DynamicFaq from './faqs/components/faqContent';
 
 export const metadata = {
   title: "Rooms for Rent in London | Rent a Room London",
@@ -85,15 +87,19 @@ export default function Home() {
       />
 
       <HeroSection />
-      <HowItWorks />
-      <FeaturedRooms />
       <AreaGuides />
-      <Testimonials />
+      <Eeat />
       <Stats />
+      <FeaturedRooms />
+      <HowItWorks />
+      <Testimonials />  
+      <DynamicFaq />
       <Office />
       <div className="hidden lg:block">
         <TrustBadges />
       </div>
+
+      
     </div>
   );
 }

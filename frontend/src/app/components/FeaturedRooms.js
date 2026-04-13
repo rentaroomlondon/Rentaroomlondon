@@ -76,6 +76,9 @@ const FeaturedRooms = () => {
     fetchFeatured();
   }, []);
 
+  // ✅ LIMIT TO 3 (GLOBAL)
+  const limitedProperties = properties.slice(0, 3);
+
   return (
     <section className="bg-[#F47C3C0D] md:py-20 py-10">
       <div className="max-w-7xl mx-auto px-4">
@@ -95,7 +98,7 @@ const FeaturedRooms = () => {
           <>
             {/* 📱 Mobile Skeleton Slider */}
             <div className="flex gap-3 overflow-x-scroll lg:hidden pb-6 pr-4 no-scrollbar">
-              {Array(4)
+              {Array(3)
                 .fill()
                 .map((_, i) => (
                   <div key={i} className=" snap-start shrink-0 w-95">
@@ -116,16 +119,16 @@ const FeaturedRooms = () => {
         )}
 
         {/* ❌ Empty */}
-        {!loading && properties.length === 0 && (
+        {!loading && limitedProperties.length === 0 && (
           <div className="text-center text-gray-500">
             No featured listings available
           </div>
         )}
 
         {/* 📱 Mobile Slider */}
-        {!loading && properties.length > 0 && (
+        {!loading && limitedProperties.length > 0 && (
           <div className="flex gap-4 overflow-x-scroll snap-x snap-mandatory lg:hidden pb-6 pr-4 no-scrollbar">
-            {properties.map((prop) => (
+            {limitedProperties.map((prop) => (
               <div
                 key={prop.id}
                 className="shrink-0"
@@ -137,9 +140,9 @@ const FeaturedRooms = () => {
         )}
 
         {/* 💻 Desktop Grid */}
-        {!loading && properties.length > 0 && (
+        {!loading && limitedProperties.length > 0 && (
           <div className="hidden lg:grid lg:grid-cols-3 gap-6">
-            {properties.map((prop) => (
+            {limitedProperties.map((prop) => (
               <PropertyCard key={prop.id} {...prop} />
             ))}
           </div>
