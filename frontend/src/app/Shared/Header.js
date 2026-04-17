@@ -24,7 +24,7 @@ const navLinks = [
   {
     label: "ABOUT US",
     dropdown: [
-      { label: "About Us", href: "/about-us" },
+      { label: "About Us", href: "/affordable-rental-room-uk" },
       { label: "Privacy Policy", href: "/privacy-policy" },
     ],
   },

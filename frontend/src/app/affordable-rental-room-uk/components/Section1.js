@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from 'next/link';
 
 const Section1 = () => {
   return (
@@ -45,9 +46,9 @@ const Section1 = () => {
 
             {/* H4 Button - Explore rooms */}
             <div className="pt-4">
-              <button className="bg-[#FF6B35] text-white px-10 py-4 rounded-full font-bold text-[13px] uppercase tracking-[2px] hover:bg-[#e55a2a] transition-all hover:shadow-xl hover:-translate-y-1 duration-300 shadow-lg shadow-[#FF6B3533]">
+              <Link href="find-a-room" className="bg-[#FF6B35] text-white px-10 py-4 rounded-full font-bold text-[13px] uppercase tracking-[2px] hover:bg-[#e55a2a] transition-all hover:shadow-xl hover:-translate-y-1 duration-300 shadow-lg shadow-[#FF6B3533]">
                 Explore rooms
-              </button>
+              </Link>
             </div>
           </div>
 

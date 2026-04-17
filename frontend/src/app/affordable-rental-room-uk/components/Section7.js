@@ -1,5 +1,6 @@
 import React from "react";
-import { HelpCircle, ChevronRight, ShieldAlert, Users, Receipt } from "lucide-react";
+import { HelpCircle, ShieldAlert, Users, Receipt } from "lucide-react";
+import Link from "next/link";
 
 const Section7 = () => {
   const faqData = [
@@ -109,9 +110,9 @@ const Section7 = () => {
         {/* Final CTA Tip */}
         <div className="mt-12 text-center p-8 bg-[#1A2332] rounded-[32px] text-white">
           <p className="text-lg font-playfair italic mb-4">Still have questions about renting in London?</p>
-          <button className="bg-[#FF6B35] text-white px-10 py-3 rounded-full font-bold uppercase tracking-widest text-sm hover:scale-105 transition-transform">
+          <Link href="contact-us" className="bg-[#FF6B35] text-white px-10 py-3 rounded-full font-bold uppercase tracking-widest text-sm hover:scale-105 transition-transform">
             Contact Our Support Team
-          </button>
+          </Link>
         </div>
 
       </div>

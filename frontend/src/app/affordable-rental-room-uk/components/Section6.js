@@ -1,8 +1,8 @@
 import React from "react";
 import { 
-  Bed, Bath, Shield, Tv, Utensils, 
-  Wind, Lock, Camera, Car, CheckCircle2 
+  Bed, Shield, Utensils, CheckCircle2 
 } from "lucide-react";
+import Link from 'next/link';
 
 const Section6 = () => {
   const categories = [
@@ -78,9 +78,9 @@ const Section6 = () => {
             <h4 className="text-xl font-bold">Weekly Communal Clean Included</h4>
             <p className="opacity-90 font-light">We keep the shared spaces sparkling so you don't have to.</p>
           </div>
-          <button className="bg-white text-[#FF6B35] px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider hover:bg-[#1A2332] hover:text-white transition-all">
+          <Link href="#" className="bg-white text-[#FF6B35] px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider hover:bg-[#1A2332] hover:text-white transition-all">
             View All Features
-          </button>
+          </Link>
         </div>
 
       </div>

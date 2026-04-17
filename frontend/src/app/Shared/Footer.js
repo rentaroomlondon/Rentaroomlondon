@@ -14,7 +14,7 @@ const tenantLinks = [
 ];
 
 const aboutLinks = [
-  { label: "About Us", href: "/about-us" },
+  { label: "About Us", href: "/affordable-rental-room-uk" },
   // { label: "Work For Us", href: "/careers" },
   { label: "Raise a Complaint", href: "/raise-a-complain" },
   { label: "Privacy Policy", href: "/privacy-policy" },
