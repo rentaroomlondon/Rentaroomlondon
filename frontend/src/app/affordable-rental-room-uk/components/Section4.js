@@ -64,12 +64,10 @@ const Section4 = () => {
               <h5 className="text-white text-xl font-bold font-sans">
                 Ready to move to the UK?
               </h5>
-              <Link href="find-a-room" className="w-full bg-[#FF6B35] text-white px-8 py-4 rounded-xl font-bold text-[14px] uppercase tracking-widest hover:bg-[#e55a2a] transition-all transform hover:scale-105 shadow-xl shadow-[#0000004D]">
+              <Link href="/find-a-room" className="w-full bg-[#FF6B35] text-white px-8 py-4 rounded-xl font-bold text-[14px] uppercase tracking-widest hover:bg-[#e55a2a] transition-all transform hover:scale-105 shadow-xl shadow-[#0000004D]">
                 Get the Rental Room offer
               </Link>
-              <p className="text-[#FFFFFFA6] text-xs">
-                *Terms and conditions apply to international offers.
-              </p>
+              
             </div>
           </div>
 
