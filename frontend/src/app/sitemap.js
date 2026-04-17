@@ -84,11 +84,10 @@ export default async function sitemap() {
         ],
       },
       {
-        url: `${baseUrl}/about-us`,
+        url: `${baseUrl}/affordable-rental-room-uk`,
         lastModified: new Date(),
         changeFrequency: "monthly",
         priority: 0.7,
-        images: [`${baseUrl}/About.avif`],
       },
       {
         url: `${baseUrl}/contact-us`,

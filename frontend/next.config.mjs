@@ -19,6 +19,17 @@ const nextConfig = {
     minimumCacheTTL: 31536000,
   },
 
+  // ✅ 301 REDIRECTS (VERY IMPORTANT)
+  async redirects() {
+    return [
+      {
+        source: "/about-us",
+        destination: "/affordable-rental-room-uk", // 👈 change if your new slug is different
+        permanent: true, // ✅ 301
+      },
+    ];
+  },
+
   // ✅ SECURITY HEADERS
   async headers() {
     return [
