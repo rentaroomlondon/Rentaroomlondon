@@ -112,7 +112,7 @@ const Section7 = () => {
           <p className="text-base sm:text-lg font-playfair italic mb-4 sm:mb-6">
             Still have questions about renting in London?
           </p>
-
+  
           <Link
             href="/contact-us"
             className="
