@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const Section1 = () => {
   return (
-    <section className="py-12 md:py-24 px-5 md:px-12 bg-white">
+    <section className="py-8 md:py-18 px-5 md:px-12 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row items-center gap-10 md:gap-20">
           

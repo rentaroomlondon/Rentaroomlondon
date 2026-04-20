@@ -21,7 +21,7 @@ const Section3 = () => {
   ];
 
   return (
-    <section className="py-16 md:py-24 px-5 md:px-12 bg-[#FAF5F0]">
+    <section className="py-8 md:py-18 px-5 md:px-12 bg-[#FAF5F0]">
       <div className="max-w-5xl mx-auto">
         
         {/* Header Section */}

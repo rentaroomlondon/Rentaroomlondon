@@ -1,6 +1,5 @@
 import React from "react";
 import { PlaneTakeoff, Globe, BadgePercent } from "lucide-react"; // Using subtle icons for the list
-import Link from 'next/link';
 
 const Section4 = () => {
   const perks = [
@@ -19,7 +18,7 @@ const Section4 = () => {
   ];
 
   return (
-    <section className="py-16 md:py-24 px-5 md:px-12 bg-white overflow-hidden">
+    <section className="py-8 md:py-18 px-5 md:px-12 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="bg-[#1A2332] rounded-[40px] overflow-hidden flex flex-col lg:flex-row shadow-2xl">
           
@@ -57,17 +56,43 @@ const Section4 = () => {
             {/* Decorative element */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF6B3514] rounded-full -mr-16 -mt-16" />
             
-            <div className="relative z-10 space-y-6">
-              <div className="w-20 h-20 bg-[#FF6B35] rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-                <Globe className="text-white w-10 h-10" />
+            <div className="relative z-10 space-y-6 px-4 sm:px-0">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#FF6B35] rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                <Globe className="text-white w-8 h-8 sm:w-10 sm:h-10" />
               </div>
-              <h5 className="text-white text-xl font-bold font-sans">
+
+              <h5 className="text-white text-lg sm:text-xl font-bold font-sans text-center">
                 Ready to move to the UK?
               </h5>
-              <Link href="/find-a-room" className="w-full bg-[#FF6B35] text-white px-8 py-4 rounded-xl font-bold text-[14px] uppercase tracking-widest hover:bg-[#e55a2a] transition-all transform hover:scale-105 shadow-xl shadow-[#0000004D]">
-                Get the Rental Room offer
-              </Link>
-              
+
+              <button
+                className="
+                  w-full
+                  bg-[#FF6B35]
+                  text-white
+                  px-4 sm:px-6 md:px-8
+                  py-3 sm:py-4
+                  rounded-lg sm:rounded-xl
+                  font-bold
+                  text-[12px] sm:text-[14px]
+                  uppercase
+                  tracking-wide sm:tracking-widest
+                  hover:bg-[#e55a2a]
+                  transition-all
+                  duration-300
+                  hover:scale-[1.02]
+                  shadow-lg sm:shadow-xl
+                  shadow-[#00000033]
+                  text-center
+                  leading-snug
+                "
+              >
+                Get the Rental Room Offer
+              </button>
+
+              <p className="text-[#FFFFFFA6] text-xs text-center">
+                *Terms and conditions apply to international offers.
+              </p>
             </div>
           </div>
 

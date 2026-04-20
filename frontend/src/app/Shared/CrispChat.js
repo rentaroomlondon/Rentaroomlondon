@@ -11,7 +11,7 @@ const CrispChat = () => {
     setTimeout(() => { // ⏳ Delay Crisp load by 5s
       // Update button position for mobile
       if (window.innerWidth < 768) {
-        setButtonStyle({ bottom: "80px", right: "10px" });
+        setButtonStyle({ bottom: "60px", right: "10px" });
       }
 
       if (!window.CRISP_WEBSITE_ID) {
@@ -78,7 +78,7 @@ const CrispChat = () => {
           onClick={toggleCrispChat}
           style={{
             position: "fixed",
-            backgroundColor: "#00947c",
+            backgroundColor: "#0F253B",
             color: "white",
             border: "none",
             borderRadius: "50%",

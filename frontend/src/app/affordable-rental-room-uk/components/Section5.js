@@ -10,7 +10,7 @@ const Section5 = () => {
   ];
 
   return (
-    <section className="py-20 px-5 md:px-12 bg-white">
+    <section className="py-14 px-5 md:px-12 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
           

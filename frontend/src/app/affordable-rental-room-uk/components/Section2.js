@@ -26,7 +26,7 @@ const Section2 = () => {
   ];
 
   return (
-    <section className="py-16 md:py-24 px-5 md:px-12 bg-white">
+    <section className="py-8 md:py-18 px-5 md:px-12 bg-white">
       <div className="max-w-7xl mx-auto">
         
         {/* Header Content */}

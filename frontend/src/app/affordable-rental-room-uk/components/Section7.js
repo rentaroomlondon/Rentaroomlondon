@@ -71,7 +71,7 @@ const Section7 = () => {
   ];
 
   return (
-    <section className="py-20 px-5 md:px-12 bg-[#FAF9F6]">
+    <section className="py-14 px-5 md:px-12 bg-[#FAF9F6]">
       <div className="max-w-4xl mx-auto">
         
         {/* Header */}
@@ -108,9 +108,33 @@ const Section7 = () => {
         </div>
 
         {/* Final CTA Tip */}
-        <div className="mt-12 text-center p-8 bg-[#1A2332] rounded-[32px] text-white">
-          <p className="text-lg font-playfair italic mb-4">Still have questions about renting in London?</p>
-          <Link href="contact-us" className="bg-[#FF6B35] text-white px-10 py-3 rounded-full font-bold uppercase tracking-widest text-sm hover:scale-105 transition-transform">
+        <div className="mt-12 text-center p-6 sm:p-8 bg-[#1A2332] rounded-[24px] sm:rounded-[32px] text-white">
+          <p className="text-base sm:text-lg font-playfair italic mb-4 sm:mb-6">
+            Still have questions about renting in London?
+          </p>
+
+          <Link
+            href="/contact-us"
+            className="
+              inline-block
+              bg-[#FF6B35]
+              text-white
+              px-5 sm:px-8 md:px-10
+              py-3
+              rounded-full
+              font-bold
+              uppercase
+              tracking-wide sm:tracking-widest
+              text-[12px] sm:text-sm
+              hover:bg-[#e55a2a]
+              hover:scale-[1.02]
+              transition-all
+              duration-300
+              shadow-lg
+              text-center
+              leading-snug
+            "
+          >
             Contact Our Support Team
           </Link>
         </div>

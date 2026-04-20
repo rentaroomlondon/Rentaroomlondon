@@ -24,7 +24,7 @@ const Section6 = () => {
   ];
 
   return (
-    <section className="py-20 px-5 md:px-12 bg-[#1A2332]">
+    <section className="py-14 px-5 md:px-12 bg-[#1A2332]">
       <div className="max-w-7xl mx-auto">
         
         {/* Header - White text to contrast dark background */}
