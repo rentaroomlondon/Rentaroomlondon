@@ -85,7 +85,7 @@ const PrivacyPolicy = () => {
               Managing Director of Rentaroomlondon
             </h4>
             <p className="text-[18px] text-[#6B7280]">
-              118 Cricklewood Broadway, NW2 3EJ
+            
             </p>
           </div>
         </footer>

@@ -8,11 +8,11 @@ const Office = () => {
         {/* Left Side: Contact Info */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center gap-4">
           {/* Heading */}
-          {/*
+        
           <h2 className="text-2xl sm:text-[24.28px] font-extrabold font-sans text-[#2C3E50] flex items-center gap-2 sm:gap-3 pb-2">
-            📍 Stepney Green Office
+            📍 Office
           </h2>
-          */}
+          
           {/* Address & Contact */}
           <p className="text-[15px] sm:text-[15.45px] text-gray-500">
             118 Cricklewood Broadway, NW2 3EJ
@@ -61,9 +61,9 @@ const Office = () => {
           ></iframe>
 
           {/* Centered Marker Overlay */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FF7E45] text-white px-3 sm:px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-lg whitespace-nowrap">
+          {/* <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FF7E45] text-white px-3 sm:px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-lg whitespace-nowrap">
             📍 NestFinder — Stepney Green, E1
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
