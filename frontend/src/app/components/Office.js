@@ -8,13 +8,14 @@ const Office = () => {
         {/* Left Side: Contact Info */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center gap-4">
           {/* Heading */}
+          {/*
           <h2 className="text-2xl sm:text-[24.28px] font-extrabold font-sans text-[#2C3E50] flex items-center gap-2 sm:gap-3 pb-2">
             📍 Stepney Green Office
           </h2>
-
+          */}
           {/* Address & Contact */}
           <p className="text-[15px] sm:text-[15.45px] text-gray-500">
-            First Floor 3-5, Globe Road, London E1 4DT
+            118 Cricklewood Broadway, NW2 3EJ
           </p>
 
           <div className="flex flex-col gap-2 mt-2">
@@ -49,8 +50,8 @@ const Office = () => {
         {/* Right Side: Map */}
         <div className="w-full lg:w-1/2 h-80 sm:h-90 relative rounded-xl overflow-hidden border border-gray-200 mt-1 lg:mt-0">
           <iframe
-            title="Stepney Green Office Map"
-            src="https://www.google.com/maps?q=3-5+Globe+Road,+London+E1+4DT&output=embed"
+            title="Cricklewood Office Map"
+            src="https://www.google.com/maps?q=118+Cricklewood+Broadway,+NW2+3EJ&output=embed"
             width="100%"
             height="100%"
             style={{ border: 0 }}

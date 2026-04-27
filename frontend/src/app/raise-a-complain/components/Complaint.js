@@ -69,8 +69,8 @@ const Complaint = () => {
 
           {/* Steps List - Desktop */}
         <div className="hidden md:block md:pl-6">
-            <SidebarStep step="1" title="Manager" email="cs@cityrooms.com" />
-            <SidebarStep step="2" title="Managing Director" email="md@cityrooms.com" />
+            <SidebarStep step="1" title="Manager" email="info@rentaroomlondon.co.uk" />
+            <SidebarStep step="2" title="Managing Director" email="info@rentaroomlondon.co.uk" />
             <SidebarStep step="3" title="PRS" link="https://www.theprs.co.uk" />
         </div>
 
@@ -78,13 +78,13 @@ const Complaint = () => {
           <ProcessCard 
             step="1" 
             title="Write to the Manager" 
-            email="cs@cityrooms.com" 
+            email="info@rentaroomlondon.co.uk" 
             detail="Response within 15 working days." 
           />
           <ProcessCard 
             step="2" 
             title="Escalate to Managing Director" 
-            email="md@cityrooms.com" 
+            email="info@rentaroomlondon.co.uk" 
             detail="or write to 1st Floor, 3-5 Globe Road, E1 4DT." 
           />
           <ProcessCard 
@@ -116,15 +116,11 @@ const Complaint = () => {
 
             <div className="space-y-4 mt-4">
               <p>
-                <span className="font-bold text-[#1A2332]">Step 1:</span> In the first instance you should write to the Manager of the office at <a href="mailto:cs@cityrooms.com" className="text-[#FF7A45] underline">cs@cityrooms.com</a>, giving full details of your complaint. Once your complaint has been received, we will acknowledge receipt within 3 working days. An investigation will then be undertaken and you will receive a response to your complaint within 15 working days.
+                <span className="font-bold text-[#1A2332]">Step 1:</span> In the first instance you should write to the Manager of the office at <a href="mailto:info@rentaroomlondon.co.uk" className="text-[#FF7A45] underline">info@rentaroomlondon.co.uk</a>, giving full details of your complaint. Once your complaint has been received, we will acknowledge receipt within 3 working days. An investigation will then be undertaken and you will receive a response to your complaint within 15 working days.
               </p>
 
               <p>
-                <span className="font-bold text-[#1A2332]">Step 2:</span> If you are not satisfied with the response given by the Manager, or the matter remains unresolved, you can escalate your complaint to the Managing Director via <a href="mailto:md@cityrooms.com" className="text-[#FF7A45] underline">md@cityrooms.com</a> or write to them at First floor, 3-5 Globe Road, London E1 4DT. A written response will be sent to you within 15 working days detailing our company's final viewpoint.
-              </p>
-
-              <p>
-                <span className="font-bold text-[#1A2332]">Step 3:</span> If you remain dissatisfied with our company's final viewpoint you can then refer your case to PRS for their independent review. Details of their complaints procedure can be found at <a href="https://www.theprs.co.uk" className="text-[#FF7A45] underline">https://www.theprs.co.uk/</a>.
+                <span className="font-bold text-[#1A2332]">Step 2:</span> If you remain dissatisfied with our company's final viewpoint you can then refer your case to PRS for their independent review. Details of their complaints procedure can be found at <a href="https://www.theprs.co.uk" className="text-[#FF7A45] underline">https://www.theprs.co.uk/</a>.
               </p>
             </div>
 
@@ -139,8 +135,8 @@ const Complaint = () => {
               </p>
               
               <div className="text-[14px] text-gray-500 space-y-1">
-                <p>Rentaroomlondon is a trading name of Oliver Walton Limited.</p>
-                <p>Registered office: 1st floor, 3-5 Globe Road, London E1 4DT. No: 07075684</p>
+                <p>Rentaroomlondon</p>
+                <p>office: 118 Cricklewood Broadway, NW2 3EJ</p>
               </div>
             </div>
 
