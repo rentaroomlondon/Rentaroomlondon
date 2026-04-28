@@ -32,7 +32,7 @@ const page = () => {
       <PaymentForm />
       <LegalFooter
         items={[
-          "© {year} Oliver Walton Ltd T/A Rentaroomlondon",
+          "© {year} Rentaroomlondon",
           "Property Redress Scheme",
           "My Deposits Protection Scheme",
           "Client Money Protect",

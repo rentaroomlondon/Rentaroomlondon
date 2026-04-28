@@ -98,8 +98,8 @@ const Contact = () => {
                 Address
               </p>
               <p className="text-[15px] text-gray-300 leading-relaxed">
-                First Floor, 3–5 Globe Road <br />
-                London, E1 4DT
+                118 Cricklewoord Broadway <br />
+                London, NW2 3EJ
               </p>
             </div>
 
@@ -141,7 +141,7 @@ const Contact = () => {
             <div className="w-full h-55 md:h-87.5 rounded-xl overflow-hidden border border-white/10">
               <iframe
                 title="Office Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.6377353916!2d-0.0465!3d51.52!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTHCsDMxJzEyLjAiTiAwwrAwMiczNy40Ilc!5e0!3m2!1sen!2suk!4v1620000000000"
+                src="https://www.google.com/maps?q=118+Cricklewood+Broadway,+NW2+3EJ,+London&output=embed"
                 className="w-full h-full border-0 grayscale opacity-80"
                 loading="lazy"
               />

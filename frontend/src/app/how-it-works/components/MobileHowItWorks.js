@@ -66,7 +66,7 @@ export default function MobileHowItWorks() {
       {/* Footer & CTA */}
       <div className="mt-8 text-center space-y-6">
         <p className="text-gray-500 text-sm">
-          For assistance: <a href="mailto:info@cityrooms.com" className="text-[#f48142] underline">info@cityrooms.com</a>
+          For assistance: <a href="mailto:info@rentaroomlondon.co.uk" className="text-[#f48142] underline">info@rentaroomlondon.co.uk</a>
         </p>
         
         <button className="w-full bg-[#f48142] hover:bg-[#e06d2f] text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-colors uppercase tracking-wide text-sm">

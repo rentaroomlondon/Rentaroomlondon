@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 const slides = [
   {
-    text: "My experience has been very positive. The staff working at NestFinder have proved to be honest, reliable and the team ensured a stress-free rent. Good communication during the whole process and a fast response when problems arise.",
+    text: "My experience has been very positive. The staff working at RENTAROOMLONDON have proved to be honest, reliable and the team ensured a stress-free rent. Good communication during the whole process and a fast response when problems arise.",
     author: "Maria Ibañez, Madrid via Trustpilot",
   },
   {

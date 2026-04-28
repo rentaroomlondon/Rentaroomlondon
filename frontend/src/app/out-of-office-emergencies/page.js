@@ -42,7 +42,7 @@ const page = () => {
         />
         <LegalFooter
             items={[
-            "© {year} Oliver Walton Ltd T/A Rentaroomlondon",
+            "© {year} Rentaroomlondon",
             ]}
         /> 
       </div>

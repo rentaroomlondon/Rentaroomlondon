@@ -4,8 +4,8 @@ const PrivacyPolicy = () => {
   const sections = [
     {
       id: "1. ",
-      title: "About Oliver Walton Ltd",
-      content: "Oliver Walton Ltd is a private limited company, registered under Company Number 07075684. Our registered company address is First Floor, 3-5 Globe Road, London, England, E1 4DT. We specialise in residential lettings in London and operate the Rentaroomlondon website at www.cityrooms.com."
+      title: "About RENTAROOMLONDON",
+      content: "RENTAROOMLONDON is a private limited company. We specialise in residential lettings in London and operate the Rentaroomlondon website at RENTAROOMLONDON.co.uk."
     },
     {
       id: "2. ",
@@ -47,7 +47,7 @@ const PrivacyPolicy = () => {
         <header className="mb-16">
           <h2 className="text-[15px] font-bold text-gray-500 mb-6">Introduction</h2>
           <p className="text-[16px] leading-[1.8] text-gray-600">
-            This Privacy Policy outlines how Oliver Walton Ltd (trading as Rentaroomlondon) handles the personal data 
+            This Privacy Policy outlines how Rentaroomlondon handles the personal data 
             we collect and process in compliance with UK data protection laws and the General Data Protection 
             Regulation (GDPR).
           </p>
@@ -85,7 +85,7 @@ const PrivacyPolicy = () => {
               Managing Director of Rentaroomlondon
             </h4>
             <p className="text-[18px] text-[#6B7280]">
-              First Floor, 3-5 Globe Road, London, E1 4DT
+             118 Cricklewood Broadway, NW2 3EJ
             </p>
           </div>
         </footer>
