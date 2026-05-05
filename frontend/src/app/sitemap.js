@@ -55,7 +55,7 @@ export default async function sitemap() {
         changeFrequency: "daily",
         priority: 1,
         images: [
-          `${baseUrl}/logo.png`,
+          `${baseUrl}/rental-room-uk.jpeg`,
           `${baseUrl}/Hero.avif`,
           `${baseUrl}/trophy.avif`,
         ],

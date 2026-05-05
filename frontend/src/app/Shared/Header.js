@@ -5,9 +5,71 @@ import { useAuth } from "../Context/AuthContext";
 
 const navLinks = [
   {
-    label: "SEARCH",
-    href: "/find-a-room",
+    label: "FIND A ROOM",
+    megaMenu: {
+      columns: [
+        {
+          title: "North West London",
+          links: [
+            { label: "All NW London", href: "#" },
+            { label: "Cricklewood", href: "#" },
+            { label: "Harlesden", href: "#" },
+            { label: "Kingsbury", href: "#" },
+            { label: "West Hampstead", href: "#" },
+            { label: "Hendon", href: "#" },
+          ],
+        },
+        {
+          title: "South East London",
+          links: [
+            { label: "All SE London", href: "#" },
+            { label: "Plumstead", href: "#" },
+            { label: "Eltham", href: "#" },
+            { label: "Greenwich", href: "#" },
+            { label: "Stockwell", href: "#" },
+          ],
+        },
+        {
+          title: "East London",
+          links: [
+            { label: "All East London", href: "#" },
+            { label: "South Tottenham", href: "#" },
+            { label: "Leyton", href: "#" },
+            { label: "East Ham", href: "#" },
+          ],
+        },
+        {
+          title: "Out of London",
+          links: [
+            { label: "All out of London", href: "#" },
+            { label: "Birmingham", href: "#" },
+          ],
+        },
+      ],
+    },
   },
+
+  {
+    label: "PROPERTY TYPE",
+    dropdown: [
+      { label: "Single occupancy room", href: "#" },
+      { label: "Double room", href: "#" },
+      { label: "Studio room", href: "#" },
+      { label: "Flat share room", href: "#" },
+    ],
+  },
+
+  {
+    label: "STUDENT ACCOMMODATION",
+    dropdown: [
+      { label: "North West London", href: "#" },
+      { label: "South East London", href: "#" },
+      { label: "East London", href: "#" },
+      { label: "Birmingham", href: "#" },
+    ],
+  },
+
+  // KEEP YOUR OLD ONES
   {
     label: "TENANTS",
     dropdown: [
@@ -32,6 +94,10 @@ const navLinks = [
     label: "CONTACT",
     href: "/contact-us",
   },
+  {
+    label: "BOOK A ROOM",
+    href: "/book-a-room",
+  }
 ];
 
 const Header = () => {
@@ -81,11 +147,12 @@ const Header = () => {
                 className="flex items-center text-white text-[13px] font-medium tracking-wider uppercase hover:text-orange-400"
               >
                 {link.label}
-                {link.dropdown && (
+                {(link.dropdown || link.megaMenu) && (
                   <span className="ml-1 text-[10px] opacity-80">▾</span>
                 )}
               </a>
 
+              {/* ✅ NORMAL DROPDOWN */}
               {link.dropdown && (
                 <div className="absolute left-0 top-[40px] w-56 bg-white text-black rounded-b-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[60] border-t-2 border-orange-500">
                   {link.dropdown.map((item) => (
@@ -96,6 +163,32 @@ const Header = () => {
                     >
                       {item.label}
                     </Link>
+                  ))}
+                </div>
+              )}
+
+              {/* ✅ MEGA MENU */}
+              {link.megaMenu && (
+                <div className="absolute left-0 top-[40px] w-[900px] bg-white text-black shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[60] p-8 grid grid-cols-4 gap-8">
+
+                  {link.megaMenu.columns.map((col) => (
+                    <div key={col.title}>
+                      <h3 className="font-bold text-[13px] uppercase mb-3">
+                        {col.title}
+                      </h3>
+
+                      <div className="flex flex-col gap-2 text-[13px]">
+                        {col.links.map((item) => (
+                          <Link
+                            key={item.label}
+                            href={item.href}
+                            className="hover:text-orange-500"
+                          >
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   ))}
 
                 </div>
@@ -294,6 +387,67 @@ const Header = () => {
               <ChevronRight />
             </Link>
             </div>
+          </section>
+
+          <section className="mb-8">
+            <p className="text-[10px] text-[#FFFFFF4D] font-bold tracking-[0.15em] mb-4">
+              FIND A ROOM
+            </p>
+
+            {navLinks.find((l) => l.label === "FIND A ROOM")?.megaMenu.columns.map((col) => (
+              <div key={col.title} className="mb-4">
+                <p className="text-orange-400 text-[12px] font-bold mb-2">
+                  {col.title}
+                </p>
+
+                {col.links.map((item) => (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className="block text-[13px] text-white/80 py-1"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </section>
+
+          <section className="mb-8">
+            <p className="text-[10px] text-[#FFFFFF4D] font-bold tracking-[0.15em] mb-4">
+              PROPERTY TYPE
+            </p>
+
+            {navLinks.find((l) => l.label === "PROPERTY TYPE")?.dropdown.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className="flex items-center justify-between py-3 border-b border-white/5"
+              >
+                <span className="text-[14px] text-white/80">{item.label}</span>
+                <ChevronRight />
+              </Link>
+            ))}
+          </section>
+
+          <section className="mb-8">
+            <p className="text-[10px] text-[#FFFFFF4D] font-bold tracking-[0.15em] mb-4">
+              STUDENT ACCOMMODATION
+            </p>
+
+            {navLinks.find((l) => l.label === "STUDENT ACCOMMODATION")?.dropdown.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className="flex items-center justify-between py-3 border-b border-white/5"
+              >
+                <span className="text-[14px] text-white/80">{item.label}</span>
+                <ChevronRight />
+              </Link>
+            ))}
           </section>
 
           {/* TENANTS */}

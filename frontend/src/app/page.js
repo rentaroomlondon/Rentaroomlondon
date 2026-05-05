@@ -58,7 +58,7 @@ export default function Home() {
       "@type": "Organization",
       name: "Rent a Room London",
       url: "https://rentaroomlondon.co.uk",
-      logo: "https://rentaroomlondon.co.uk/logo.png",
+      logo: "https://rentaroomlondon.co.uk/rental-room-uk.jpeg",
     },
 
     // Website Schema (Search box in Google)
