@@ -10,7 +10,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => (
   <aside className="w-64 bg-[#0B1727] text-[#64748B] flex flex-col h-screen sticky top-0 font-sans">
 
     <div className="p-5 pb-2">
-      <img src="/logo.png" className="w-18 h-auto mb-2" />
+      <img src="/logos.png" className="w-18 h-auto mb-2" />
       <div className="inline-block px-3 py-0.5 rounded-full border border-[#F47C3C33] bg-[#F47C3C2E]">
         <span className="text-[10px] text-[#F9A370] font-bold tracking-widest uppercase">
           Admin Portal
