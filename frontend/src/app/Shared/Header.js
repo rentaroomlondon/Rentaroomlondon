@@ -325,7 +325,7 @@ const Header = () => {
           {/* Logo */}
           <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center">
             <div className="w-12 h-10 flex items-center justify-center mr-2">
-              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+              <img src="/logo1.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <span className="text-white text-[12px] font-semibold uppercase tracking-wider">
               RentaRoomLondon
