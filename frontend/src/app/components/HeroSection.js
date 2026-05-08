@@ -9,9 +9,18 @@ const HeroSection = () => {
 
   // Background images for the auto-slider
   const bgImages = [
-    '/Hero.avif',      // Ensure these exist in your /public folder
-    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?q=80&w=1200&auto=format&fit=crop', 
-    'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop'
+    {
+      src: "/rent-room-london.webp",
+      alt: "Rent a room in London affordable and comfortable"
+    },
+    {
+      src: "/cheap-rooms-rent-london.webp",
+      alt: "Cheap rooms to rent in London for students and professionals"
+    },
+    {
+      src: "/student-rooms-london.webp",
+      alt: "Student rooms to rent in London close to universities"
+    }
   ];
 
   
@@ -31,10 +40,10 @@ const HeroSection = () => {
         // style={{ backgroundImage: `url('${bgImages[currentBg]}')` }}
       >
         <Image
-          src={bgImages[currentBg]}
-          alt="Room rental in London"
+          src={bgImages[currentBg].src}
+          alt={bgImages[currentBg].alt}
           fill
-          priority={currentBg === 0} // only first image preload
+          priority={currentBg === 0}
           sizes="100vw"
           className="object-cover transition-opacity duration-1000"
         />
@@ -70,13 +79,13 @@ const HeroSection = () => {
             </div>
 
             <h1 className="text-[34px] md:text-[55px] font-sans font-bold leading-[1.1] mb-5">
-                Find Your <span className="text-[#F47C3C]">Perfect </span>
-                <span className="text-[#F47C3C]">Room</span> <br className="hidden md:block" /> in the City
+                Find  <span className="text-[#F47C3C]"> Affordable  </span>
+                <span className="text-[#F47C3C]">Rooms</span> <br className="hidden md:block" />for Room Rent in London
             </h1>
             
             {/* Description Text */}
             <p className="text-[14px] md:text-lg font-light font-sans opacity-90 max-w-82 md:max-w-lg mx-auto leading-relaxed">
-              Explore the world with care, enriched by culture and confidence.
+              Browse verified room listings across London's top neighborhoods. Short-term, long-term, bills included — your perfect room is one search away.
             </p>
             
             {/* Slider Dots */}

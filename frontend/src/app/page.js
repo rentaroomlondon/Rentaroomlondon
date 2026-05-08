@@ -9,11 +9,17 @@ import HowItWorks from './components/HowItWorks';
 import HeroSection from './components/HeroSection';
 import Eeat from './components/Eeat';
 import DynamicFaq from './faqs/components/faqContent';
+import RoomTypeSection from './components/RoomTypeSection';
+import RoomRentalServices from './components/RoomRentalServices';
+import LocationDirectory from './components/LocationDirectory';
+import RentalProcess from './components/RentalProcess';
+import RentalFAQ from './components/RentalFAQ';
+import GallerySection from './components/GallerySection';
 
 export const metadata = {
-  title: "Rooms for Rent in London | Rent a Room London",
+  title: "Best Rental Rooms For Students And Professionals In London",
   description:
-    "Find rooms for rent in London. Browse affordable rooms, flatshares, and apartments with verified listings across all London areas.",
+    "Find affordable accommodation in London, perfect for students and professionals with easy access to universities and city transport with bills included.",
 
   keywords: [
     "rent a room london",
@@ -87,17 +93,24 @@ export default function Home() {
       />
 
       <HeroSection />
-      <AreaGuides />
+      <RoomTypeSection />
+      <RoomRentalServices />
+      <LocationDirectory />
+      <RentalProcess />
+      <Testimonials />
+      <GallerySection />
+      <RentalFAQ />
+      {/* <AreaGuides />
       <Eeat />
       <Stats />
       <FeaturedRooms />
       <HowItWorks />
-      <Testimonials />  
+        
       <DynamicFaq />
       <Office />
       <div className="hidden lg:block">
         <TrustBadges />
-      </div>
+      </div> */}
 
       
     </div>
