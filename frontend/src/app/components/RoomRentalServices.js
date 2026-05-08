@@ -1,5 +1,6 @@
 import React from "react";
 import { Train, ShieldCheck, MapPin, Zap, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const RoomRentalServices = () => {
   const highlights = [
@@ -52,10 +53,16 @@ const RoomRentalServices = () => {
               Properties situated near train stations and city centers, making commuting simple and efficient for professionals and students alike.
             </p>
 
-            <button className="group flex items-center gap-3 bg-[#1A2332] text-white px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-[#FF6B35] transition-all duration-300">
+            <Link
+              href="/find-a-room"
+              className="group flex items-center gap-3 bg-[#1A2332] text-white px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-[#FF6B35] transition-all duration-300"
+            >
               Book a Room
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+              <ArrowRight
+                size={16}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </Link>
           </div>
 
           {/* Right Side: The Pillars */}

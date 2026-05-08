@@ -1,5 +1,6 @@
 import React from "react";
 import { Search, Heart, Eye, FileText, CheckCircle, Key, Home, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const RentalProcess = () => {
   const steps = [
@@ -105,10 +106,16 @@ const RentalProcess = () => {
 
           {/* Final CTA Button */}
           <div className="mt-10 flex justify-center">
-            <button className="group relative flex items-center gap-3 bg-[#FF6B35] text-white px-7 py-3.5 rounded-full font-bold uppercase tracking-widest text-[10px] hover:bg-[#1A2332] transition-all duration-500">
+            <Link
+              href="/find-a-room"
+              className="group relative flex items-center gap-3 bg-[#FF6B35] text-white px-7 py-3.5 rounded-full font-bold uppercase tracking-widest text-[10px] hover:bg-[#1A2332] transition-all duration-500"
+            >
               Start Your Search
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+              <ArrowRight
+                size={16}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </Link>
           </div>
 
         </div>

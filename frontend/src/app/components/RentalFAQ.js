@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import { Plus, Minus, HelpCircle, MapPin, GraduationCap, Zap, Eye, Globe, Train, FileCheck } from "lucide-react";
+import Link from "next/link";
 
 const RentalFAQ = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -68,9 +69,12 @@ const RentalFAQ = () => {
             <p className="text-gray-400 mb-8 max-w-sm">
               Everything you need to know about finding and securing your perfect shared room in the UK.
             </p>
-            <button className="bg-white text-[#1A2332] px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-all">
+            <Link
+              href="/contact-us"
+              className="bg-white text-[#1A2332] px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-all inline-block"
+            >
               Contact Support
-            </button>
+            </Link>
           </div>
         </div>
 
