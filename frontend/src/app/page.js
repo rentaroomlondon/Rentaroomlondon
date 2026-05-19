@@ -1,14 +1,6 @@
 import React from 'react';
-import TrustBadges from './components/TrustBadges';
-import Office from './components/Office';
-import Stats from './components/Stats';
 import Testimonials from './components/Testimonial';
-import AreaGuides from './components/AreaGuides';
-import FeaturedRooms from './components/FeaturedRooms';
-import HowItWorks from './components/HowItWorks';
 import HeroSection from './components/HeroSection';
-import Eeat from './components/Eeat';
-import DynamicFaq from './faqs/components/faqContent';
 import RoomTypeSection from './components/RoomTypeSection';
 import RoomRentalServices from './components/RoomRentalServices';
 import LocationDirectory from './components/LocationDirectory';
@@ -100,18 +92,6 @@ export default function Home() {
       <Testimonials />
       <GallerySection />
       <RentalFAQ />
-      {/* <AreaGuides />
-      <Eeat />
-      <Stats />
-      <FeaturedRooms />
-      <HowItWorks />
-        
-      <DynamicFaq />
-      <Office />
-      <div className="hidden lg:block">
-        <TrustBadges />
-      </div> */}
-
       
     </div>
   );

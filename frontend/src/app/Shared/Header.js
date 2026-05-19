@@ -15,7 +15,7 @@ const navLinks = [
             { label: "Cricklewood", href: "/rental-rooms-students-cricklewood-uk" },
             { label: "Harlesden", href: "/rooms-rent-harlesden-nw10-bills-included" },
             { label: "Kingsbury", href: "#" },
-            { label: "West Hampstead", href: "#" },
+            { label: "West Hampstead", href: "/rooms-rental-nw6-west-hampstead-london" },
             { label: "Hendon", href: "#" },
           ],
         },

@@ -49,7 +49,54 @@ const RentalFAQ = () => {
     },
   ];
 
+    // FAQ Schema
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "How can we rent a room safely?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Find out from your landlord whether you have to pay rent in advance and how much the deposit is. Request a receipt for any initial payments. Find out the requirements for receiving your deposit refunded. When you move in, take pictures of the room for possible damage so you won't be charged for it later.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What knowledge is required for renting properties?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Always seek clarification from the owner regarding all leasing terms and conditions, such as access to the kitchen and other spaces, whether or not you may have guests, and the amount of notice needed to quit.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Why can't my entire family be in the same room?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Landlords in the UK rent out individual rooms to single people or sometimes couples. A family sharing a room is not permitted by law or culture.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What bills can I expect to pay?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Council Tax, utility bills including water, electricity, gas, internet, TV licence, and sometimes additional charges such as parking permits or cleaners.",
+        },
+      },
+    ],
+  };
+
   return (
+    <>
+     <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(faqSchema),
+      }}
+    />
     <section className="w-full bg-[#1A2332] py-20 px-4 md:px-10 overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12">
         
@@ -122,6 +169,7 @@ const RentalFAQ = () => {
 
       </div>
     </section>
+    </>
   );
 };
 
