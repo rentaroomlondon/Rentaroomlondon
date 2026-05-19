@@ -89,7 +89,6 @@ const HeroSection = () => {
               <span className="text-[#FF6B35] italic font-playfair">
                 West Hampstead, London
               </span>{" "}
-              at Affordable Cost
             </h1>
 
             <p className="text-[#FFFFFFA6] font-sans font-light text-[16px] leading-7 md:text-[18px] mb-8">
