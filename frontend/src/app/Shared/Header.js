@@ -14,9 +14,9 @@ const navLinks = [
             { label: "All NW London", href: "#" },
             { label: "Cricklewood", href: "/rental-rooms-students-cricklewood-uk" },
             { label: "Harlesden", href: "/rooms-rent-harlesden-nw10-bills-included" },
-            { label: "Kingsbury", href: "#" },
+            { label: "Kingsbury", href: "/shared-rental-rooms-kingsbury-london-nw9" },
             { label: "West Hampstead", href: "/rooms-rental-nw6-west-hampstead-london" },
-            { label: "Hendon", href: "#" },
+            { label: "Hendon", href: "/cheap-rental-rooms-hendon-nw4-london" },
           ],
         },
         {
