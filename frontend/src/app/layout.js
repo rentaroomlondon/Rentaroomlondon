@@ -8,6 +8,7 @@ import "leaflet/dist/leaflet.css";
 import CrispChat from "./Shared/CrispChat";
 import { StaffAuthProvider } from "./Context/StaffAuthContext";
 import Script from "next/script";
+import FloatingWhatsApp from "./Shared/FloatingWhatsApp";
 
 // DM Sans - body text
 const dmSans = DM_Sans({
@@ -120,6 +121,7 @@ export default function RootLayout({ children }) {
           </StaffAuthProvider>
           </AdminAuthProvider>
         </AuthProvider>
+        <FloatingWhatsApp />
         <CrispChat />
       </body>
     </html>
