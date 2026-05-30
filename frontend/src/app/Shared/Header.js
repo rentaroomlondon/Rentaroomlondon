@@ -24,8 +24,8 @@ const navLinks = [
           links: [
             { label: "All SE London", href: "#" },
             { label: "Plumstead", href: "#" },
-            { label: "Eltham", href: "#" },
-            { label: "Greenwich", href: "#" },
+            { label: "Eltham", href: "/rental-rooms-eltham-london-se9-bills-included" },
+            { label: "Greenwich", href: "/best-rental-rooms-greenwich-university-se10-london" },
             { label: "Stockwell", href: "#" },
           ],
         },
