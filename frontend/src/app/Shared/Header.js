@@ -23,10 +23,10 @@ const navLinks = [
           title: "South East London",
           links: [
             { label: "All SE London", href: "#" },
-            { label: "Plumstead", href: "#" },
+            { label: "Plumstead", href: "/affordable-rental-rooms-se18-plumstead-bills-included" },
             { label: "Eltham", href: "/rental-rooms-eltham-london-se9-bills-included" },
             { label: "Greenwich", href: "/best-rental-rooms-greenwich-university-se10-london" },
-            { label: "Stockwell", href: "#" },
+            { label: "Stockwell", href: "/stockwell-sw9-student-housing-bills-included" },
           ],
         },
         {
@@ -42,7 +42,7 @@ const navLinks = [
           title: "Out of London",
           links: [
             { label: "All out of London", href: "#" },
-            { label: "Birmingham", href: "#" },
+            { label: "Birmingham", href: "/birmingham-city-centre-student-housing-bills-included" },
           ],
         },
       ],

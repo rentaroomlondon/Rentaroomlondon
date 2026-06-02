@@ -20,14 +20,14 @@ const locationLinks = [
   { label: "Rental Rooms in Kingsbury", href: "/shared-rental-rooms-kingsbury-london-nw9" },
   { label: "Rental Rooms in West Hampstead", href: "/rooms-rental-nw6-west-hampstead-london" },
   { label: "Rental Rooms in Hendon", href: "/cheap-rental-rooms-hendon-nw4-london" },
-  { label: "Rental Rooms in Plumstead", href: "/rental-rooms-in-plumstead" },
+  { label: "Rental Rooms in Plumstead", href: "/affordable-rental-rooms-se18-plumstead-bills-included" },
   { label: "Rental Rooms in Eltham", href: "/rental-rooms-eltham-london-se9-bills-included" },
   { label: "Rental Rooms in Greenwich", href: "/best-rental-rooms-greenwich-university-se10-london" },
-  { label: "Rental Rooms in Stockwell", href: "/rental-rooms-in-stockwell" },
+  { label: "Rental Rooms in Stockwell", href: "/stockwell-sw9-student-housing-bills-included" },
   { label: "Rental Rooms in South Tottenham", href: "/rental-rooms-in-south-tottenham" },
   { label: "Rental Rooms in Leyton", href: "/rental-rooms-in-leyton" },
   { label: "Rental Rooms in East Ham", href: "/rental-rooms-in-east-ham" },
-  { label: "Rental Rooms in Birmingham", href: "/rental-rooms-in-birmingham" },
+  { label: "Rental Rooms in Birmingham", href: "/birmingham-city-centre-student-housing-bills-included" },
 ];
 
 const Footer = () => {
