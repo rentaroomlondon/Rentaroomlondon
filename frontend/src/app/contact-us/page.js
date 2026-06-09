@@ -8,11 +8,11 @@ export const metadata = {
   metadataBase: new URL("https://rentaroomlondon.co.uk"),
 
   // 🔥 SEO TITLE (intent-based)
-  title: "Contact Rent a Room London - Get in Touch",
+  title: "Contact Us for Affordable Room Rentals in London",
 
   // 🔥 DESCRIPTION (conversion-focused)
   description:
-    "Contact Rent a Room London today. Visit our Stepney Green office or get in touch online to find affordable rooms and properties across London.",
+    "Speak with our team about available room rentals across London. Direct bookings, transparent pricing, and no hidden fees or broker commissions.",
 
   // ✅ CANONICAL
   alternates: {
@@ -23,31 +23,6 @@ export const metadata = {
   robots: {
     index: true,
     follow: true,
-  },
-
-  // ✅ OPEN GRAPH (SOCIAL SHARING)
-  openGraph: {
-    title: "Contact Rent a Room London",
-    description:
-      "Get in touch with our team. Visit our London office or contact us online for room rentals and property enquiries.",
-    url: "https://rentaroomlondon.co.uk/contact-us",
-    siteName: "RENTAROOMLONDON",
-    type: "website",
-    images: [
-      {
-        width: 1200,
-        height: 630,
-        alt: "Contact Rent a Room London",
-      },
-    ],
-  },
-
-  // ✅ TWITTER
-  twitter: {
-    card: "summary_large_image",
-    title: "Contact Rent a Room London",
-    description:
-      "Reach out to Rent a Room London. Visit our office or contact us online.",
   },
 
   // ⚠️ OPTIONAL
@@ -64,9 +39,9 @@ const page = () => {
     <div>
       <Hero
         badge="Contact us"
-        title="Where to "
+        title="Find Your Perfect Room in London — Direct & Hassle-Free "
         highlight="Find Us"
-        description="We'd love to hear from you. Visit us at our Stepney Green office or reach out online."
+        description="No brokers. No hidden fees. Just affordable rooms rented directly from trusted landlords."
       />
 
       <Contact />

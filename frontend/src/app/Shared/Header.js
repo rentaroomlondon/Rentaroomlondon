@@ -53,7 +53,7 @@ const navLinks = [
     label: "PROPERTY TYPE",
     dropdown: [
       { label: "Single occupancy room", href: "#" },
-      { label: "Double room", href: "#" },
+      { label: "Double room", href: "/affordable-double-rooms-rental-uk" },
       { label: "Studio room", href: "#" },
       { label: "Flat share room", href: "#" },
     ],
