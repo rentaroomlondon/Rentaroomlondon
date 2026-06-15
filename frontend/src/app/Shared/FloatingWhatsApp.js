@@ -1,7 +1,7 @@
 import React from "react";
 
 const FloatingActions = () => {
-  const PHONE_NUMBER = "447832166994";
+  const PHONE_NUMBER = "+447419990126";
   const WHATSAPP_MESSAGE = encodeURIComponent(
     "Hello! I am interested in booking a room."
   );
