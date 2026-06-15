@@ -35,7 +35,7 @@ const navLinks = [
             { label: "All East London", href: "#" },
             { label: "South Tottenham", href: "#" },
             { label: "Leyton", href: "#" },
-            { label: "East Ham", href: "#" },
+            { label: "East Ham", href: "/east-ham-e6-properties-rent-bills-included" },
           ],
         },
         {

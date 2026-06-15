@@ -1,0 +1,79 @@
+User-agent: *
+Allow: /
+
+Disallow: /login
+Disallow: /register-with-us
+Disallow: /admin
+Disallow: /admin/login
+Disallow: /staff/login
+Disallow: /staff
+Disallow: /staff/dashboard
+Disallow: /admin/dashboard
+Disallow: /forget-password
+Disallow: /dashboard
+Disallow: /make-a-payment
+Disallow: /saved
+Disallow: /raise-a-complain
+Disallow: /report-a-repair
+Disallow: /out-of-office-emergencies
+Disallow: /api
+
+Google
+
+User-agent: Googlebot
+Allow: /
+
+Bing & Microsoft AI
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: AdIdxBot
+Allow: /
+
+OpenAI
+
+User-agent: GPTBot
+Allow: /
+
+Anthropic
+
+User-agent: ClaudeBot
+Allow: /
+
+Perplexity
+
+User-agent: PerplexityBot
+Allow: /
+
+Common Crawl
+
+User-agent: CCBot
+Allow: /
+
+Apple
+
+User-agent: Applebot
+Allow: /
+
+Amazon
+
+User-agent: Amazonbot
+Allow: /
+
+Meta AI
+
+User-agent: FacebookBot
+Allow: /
+
+ByteDance / TikTok
+
+User-agent: Bytespider
+Allow: /
+
+OAI Search
+
+User-agent: OAI-SearchBot
+Allow: /
+
+Sitemap: https://rentaroomlondon.co.uk/sitemap.xml

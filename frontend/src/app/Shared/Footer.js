@@ -26,7 +26,7 @@ const locationLinks = [
   { label: "Rental Rooms in Stockwell", href: "/stockwell-sw9-student-housing-bills-included" },
   { label: "Rental Rooms in South Tottenham", href: "/rental-rooms-in-south-tottenham" },
   { label: "Rental Rooms in Leyton", href: "/rental-rooms-in-leyton" },
-  { label: "Rental Rooms in East Ham", href: "/rental-rooms-in-east-ham" },
+  { label: "Rental Rooms in East Ham", href: "/east-ham-e6-properties-rent-bills-included" },
   { label: "Rental Rooms in Birmingham", href: "/birmingham-city-centre-student-housing-bills-included" },
 ];
 
