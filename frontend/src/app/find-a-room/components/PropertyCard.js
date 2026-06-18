@@ -46,28 +46,29 @@ const PropertyCard = ({ data }) => {
   return (
     <div className="w-full bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
       <div className="flex flex-col md:flex-row">
-        <div className="relative w-full md:w-[320px] h-60 md:h-auto overflow-hidden">
+        {/* Image Container: Strict Fixed Width and Height */}
+        <div className="relative w-full md:w-[300px] h-[240px] md:h-[280px] flex-shrink-0 overflow-hidden">
           {/* Airbnb Skeleton */}
           {!imageLoaded && (
             <div className="absolute inset-0 overflow-hidden">
               <div className="w-full h-full bg-gray-200" />
-              <div className="absolute inset-0 animate-[shimmer_1.5s_infinite] bg-linear-to-r from-transparent via-white/60 to-transparent" />
+              <div className="absolute inset-0 animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
             </div>
           )}
 
-          {/* Image */}
+          {/* Image: Now strictly contained */}
           <img
             src={image}
             alt={data.title}
-            loading="eager"          // 🔥 load immediately
-            fetchPriority="high"    // 🔥 boost LCP (very important)
+            loading="eager"
+            fetchPriority="high"
             decoding="async"
             onLoad={() => setImageLoaded(true)}
             onError={(e) => {
               e.target.src = "/placeholder.png";
               setImageLoaded(true);
             }}
-            className={`w-full h-full object-cover transition-all duration-700 ${
+            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${
               imageLoaded ? "opacity-100 blur-0" : "opacity-0 blur-sm"
             }`}
           />
