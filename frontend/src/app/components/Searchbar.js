@@ -4,20 +4,11 @@ import React, { useRef, useState } from 'react'
 
 const Searchbar = () => {
     const API_KEY = process.env.NEXT_PUBLIC_LOCATIONIQ_KEY;
-      const [price, setPrice] = useState(800);
-      const [activeTab, setActiveTab] = useState('location');
-      const [suggestions, setSuggestions] = useState([]);
-      const [travelSuggestions, setTravelSuggestions] = useState([]);
-      const [loadingSuggestions, setLoadingSuggestions] = useState(false);
-      const [showHint, setShowHint] = useState(false);
-      const router = useRouter();
-
-
-      const handleTabChange = (tab) => {
-        setActiveTab(tab);
-        setSuggestions([]);
-        setTravelSuggestions([]);
-      };
+    const [price, setPrice] = useState(800);
+    const [suggestions, setSuggestions] = useState([]);
+    const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+    const [showHint, setShowHint] = useState(false);
+    const router = useRouter();
 
     const [filters, setFilters] = useState({
         search: "",
@@ -28,15 +19,6 @@ const Searchbar = () => {
         minPrice: "",
         maxPrice: "",
     });
-
-    const [travelFilters, setTravelFilters] = useState({
-      start: "",
-      travelLat: "",
-      travelLng: "",
-      maxTime: "30",
-      transport: "public",
-    });
-        
 
     const debounceRef = useRef(null);
 
@@ -61,7 +43,7 @@ const Searchbar = () => {
 
       clearTimeout(debounceRef.current);
 
-      if (value.length < 2) { // 👈 allow NW typing
+      if (value.length < 2) { 
         setSuggestions([]);
         setShowHint(true);
         return;
@@ -111,26 +93,24 @@ const Searchbar = () => {
 
       setFilters((prev) => ({
         ...prev,
-        search: prefix || place.formatted || "", // ✅ clean value
+        search: prefix || place.formatted || "", 
         lat: place.lat,
         lng: place.lon,
       }));
 
       setSuggestions([]);
       setShowHint(false);
-      // handleSearch(); // 👉 wait for user to click search
     };
 
   const getPostcodePrefix = (postcode) => {
     if (!postcode) return null;
-    return postcode.split(" ")[0]; // NW2 1LX → NW2
+    return postcode.split(" ")[0]; 
   };
 
   const formatLocation = (place) => {
     const a = place.address || {};
     const prefix = getPostcodePrefix(a.postcode);
 
-    // 🎯 PRIORITY: postcode prefix
     if (prefix) return prefix;
 
     if (a.suburb && a.city) return `${a.suburb}, ${a.city}`;
@@ -141,24 +121,11 @@ const Searchbar = () => {
 
     // 🔍 SEARCH BUTTON CLICK
     const handleSearch = () => {
-      let queryObj = {};
-
-      if (activeTab === "travel") {
-        queryObj = {
-          start: travelFilters.start,
-          travelLat: travelFilters.lat,
-          travelLng: travelFilters.lng,
-          maxTime: travelFilters.maxTime,
-          transport: travelFilters.transport,
-          maxPrice: price,
-        };
-      } else {
-        queryObj = {
-          ...filters,
-          minPrice: filters.minPrice || 0,
-          maxPrice: filters.maxPrice || price,
-        };
-      }
+      let queryObj = {
+        ...filters,
+        minPrice: filters.minPrice || 0,
+        maxPrice: filters.maxPrice || price,
+      };
 
       // remove empty values
       Object.keys(queryObj).forEach(
@@ -172,244 +139,97 @@ const Searchbar = () => {
       router.push(`/find-a-room?${query}`);
     };
 
-    const handleTravelLocationChange = (e) => {
-      const value = e.target.value;
-
-      setTravelFilters((prev) => ({
-        ...prev,
-        start: value,
-        lat: "",
-        lng: "",
-      }));
-
-      clearTimeout(debounceRef.current);
-
-      if (value.length < 2) return;
-
-      debounceRef.current = setTimeout(async () => {
-        try {
-          setLoadingSuggestions(true);
-
-          const res = await fetch(
-            `https://api.locationiq.com/v1/autocomplete.php?key=${API_KEY}&q=${value}&format=json&limit=10&countrycodes=gb`
-          );
-
-          const data = await res.json();
-
-          const formatted = data
-            .filter((place) => {
-              const name = place.display_name.toLowerCase();
-              return name.includes("university") || name.includes("college");
-            })
-            .map((place) => ({
-              ...place,
-              formatted: place.display_name.split(",")[0],
-            }))
-            .sort((a, b) =>
-              a.formatted.toLowerCase().includes(value.toLowerCase()) ? -1 : 1
-            );
-
-          setTravelSuggestions(formatted);
-        } catch (err) {
-          console.log(err);
-        } finally {
-          setLoadingSuggestions(false);
-        }
-      }, 400);
-    };
-
-    const handleTravelSelect = (place) => {
-      setTravelFilters((prev) => ({
-        ...prev,
-        start: place.display_name,
-        lat: place.lat,
-        lng: place.lon,
-      }));
-
-      setTravelSuggestions([]);
-    };
-
   return (
     <div className="relative md:absolute md:bottom-0 md:left-1/2 md:-translate-x-1/2 md:translate-y-1/2 w-full max-w-262.5 px-5 z-20 mt-10 md:mt-0">
           <div className="bg-white rounded-3xl shadow-2xl overflow-visible">
             
-            {/* Tabs */}
+            {/* Header Title instead of Tabs */}
             <div className="flex px-4 md:px-10 border-b border-gray-100">
-              <button 
-                onClick={() => handleTabChange('location')}
-                className={`flex-1 md:flex-none py-4 md:py-6 font-bold uppercase text-[10px] md:text-[13px] tracking-widest border-b-2 transition-all ${
-                  activeTab === 'location' ? 'text-[#F68B51] border-[#F68B51]' : 'text-[#B1B1B1] border-transparent'
-                }`}
-              >
-                By Location
-              </button>
-              <button 
-                onClick={() => handleTabChange('travel')}
-                className={`flex-1 md:flex-none py-4 md:py-6 font-bold uppercase text-[10px] md:text-[13px] tracking-widest border-b-2 transition-all md:ml-10 ${
-                  activeTab === 'travel' ? 'text-[#F68B51] border-[#F68B51]' : 'text-[#6B7280] border-transparent'
-                }`}
-              >
-                Travel Time
-              </button>
+              <span className="py-4 md:py-6 font-bold uppercase text-[10px] md:text-[13px] tracking-widest border-b-2 border-[#F68B51] text-[#F68B51]">
+                Search By Location
+              </span>
             </div>
 
             <div className="p-5 md:p-10">
               <div className="grid grid-cols-2 md:grid-cols-12 gap-4 items-end">
-                {activeTab === 'location' ? (
-                  <>
-                    <div className="col-span-2 md:col-span-3 relative z-50">
-                      <label htmlFor="location" className="flex items-center gap-1.5 text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">
-                        <span className="md:hidden text-[#E45D5D]">📍</span> WHERE ARE YOU LOOKING?
-                      </label>
-                      <input 
-                        id="location"
-                        value={filters.search}
-                        onChange={handleLocationChange} 
-                        type="text" 
-                        placeholder="Enter Postcode..." 
-                        className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] focus:outline-none focus:border-[#F68B51] bg-[#F9F9F9] md:bg-transparent" 
-                      />
-                        {(filters.search.length > 0 &&
-                          (showHint || loadingSuggestions || suggestions.length > 0)) && (
-                            <div className="absolute top-full left-0 w-full bg-white shadow rounded-lg z-50 mt-1">
+                <div className="col-span-2 md:col-span-3 relative z-50">
+                  <label htmlFor="location" className="flex items-center gap-1.5 text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">
+                    <span className="md:hidden text-[#E45D5D]">📍</span> WHERE ARE YOU LOOKING?
+                  </label>
+                  <input 
+                    id="location"
+                    value={filters.search}
+                    onChange={handleLocationChange} 
+                    type="text" 
+                    placeholder="Enter Postcode..." 
+                    className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] focus:outline-none focus:border-[#F68B51] bg-[#F9F9F9] md:bg-transparent" 
+                  />
+                    {(filters.search.length > 0 &&
+                      (showHint || loadingSuggestions || suggestions.length > 0)) && (
+                        <div className="absolute top-full left-0 w-full bg-white shadow rounded-lg z-50 mt-1">
 
-                            {showHint && (
-                              <div className="p-2 text-sm text-gray-500">
-                                Enter at least 2 characters
-                              </div>
-                            )}
-
-                            {loadingSuggestions && (
-                              <div className="p-2 text-sm text-gray-500">
-                                Searching...
-                              </div>
-                            )}
-
-                            {suggestions.map((place, i) => (
-                                <div
-                                key={i}
-                                onClick={() => handleSelect(place)}
-                                className="p-2 hover:bg-gray-100 cursor-pointer text-sm"
-                                >
-                                {place.formatted}
-                                </div>
-                            ))}
-                            </div>
+                        {showHint && (
+                          <div className="p-2 text-sm text-gray-500">
+                            Enter at least 2 characters
+                          </div>
                         )}
-                    </div>
-                    <div className="col-span-1 md:col-span-3">
-                      <label htmlFor="date" className="flex items-center gap-1.5 text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">
-                        <span className="md:hidden">📅</span> FROM DATE
-                      </label>
-                      <input 
-                        id="date"
-                        type="date" 
-                        onChange={(e) =>
-                            setFilters((prev) => ({
-                                ...prev,
-                                date: e.target.value,
-                            }))
-                            }
-                        className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] focus:outline-none focus:border-[#F68B51] bg-[#F9F9F9] md:bg-transparent" 
-                      />
-                    </div>
-                    <div className="col-span-1 md:col-span-3">
-                      <label htmlFor="roomType" className="flex items-center gap-1.5 text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">
-                        <span className="md:hidden">🛋️</span> ROOM TYPE
-                      </label>
-                      <select 
-                        id="roomType"
-                        onChange={(e) =>
-                            setFilters((prev) => ({
-                                ...prev,
-                                roomType: e.target.value,
-                            }))
-                        } 
-                        className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] text-gray-500 focus:outline-none focus:border-[#F68B51] bg-[#F9F9F9] md:bg-transparent"
-                      >
-                        <option>Any</option>
-                        {roomTypes.map((t) => (
-                            <option key={t} value={t}>
-                                {t}
-                            </option>
-                        ))}
-                      </select>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="col-span-2 md:col-span-3 relative">
-                      <label htmlFor="startPoint" className="flex items-center gap-1.5 text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">
-                        <span className="md:hidden text-[#E45D5D]">🚩</span> START POINT
-                      </label>
-                      <input 
-                        id="startPoint"
-                        type="text" 
-                        value={travelFilters.start}
-                        onChange={handleTravelLocationChange}
-                        placeholder="Work/University..." 
-                        className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] focus:outline-none focus:border-[#F68B51] bg-[#F9F9F9] md:bg-transparent" 
-                      />
-                      {travelFilters.start.length > 1 && (
-                        <div className="absolute top-full left-0 mt-1 w-full bg-white shadow rounded-lg z-50">
 
-                          {loadingSuggestions && (
-                            <div className="p-2 text-sm text-gray-500">Searching...</div>
-                          )}
+                        {loadingSuggestions && (
+                          <div className="p-2 text-sm text-gray-500">
+                            Searching...
+                          </div>
+                        )}
 
-                          {!loadingSuggestions && travelSuggestions.length === 0 && (
-                            <div className="p-2 text-sm text-gray-500">No results found</div>
-                          )}
-
-                          {travelSuggestions.map((place, i) => (
+                        {suggestions.map((place, i) => (
                             <div
-                              key={i}
-                              onClick={() => handleTravelSelect(place)}
-                              className="p-2 hover:bg-gray-100 cursor-pointer text-sm"
+                            key={i}
+                            onClick={() => handleSelect(place)}
+                            className="p-2 hover:bg-gray-100 cursor-pointer text-sm"
                             >
-                              {place.formatted}
+                            {place.formatted}
                             </div>
-                          ))}
-
+                        ))}
                         </div>
-                      )}
-                    </div>
-                    <div className="col-span-1 md:col-span-3">
-                      <label htmlFor="maxTime" className="block text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">MAX TIME</label>
-                      <select
-                        id="maxTime"
-                        value={travelFilters.maxTime}
-                        onChange={(e) =>
-                          setTravelFilters((prev) => ({
+                    )}
+                </div>
+                <div className="col-span-1 md:col-span-3">
+                  <label htmlFor="date" className="flex items-center gap-1.5 text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">
+                    <span className="md:hidden">📅</span> FROM DATE
+                  </label>
+                  <input 
+                    id="date"
+                    type="date" 
+                    onChange={(e) =>
+                        setFilters((prev) => ({
                             ...prev,
-                            maxTime: e.target.value,
-                          }))
-                        }
-                        className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] text-gray-500"
-                      >
-                        <option value="30">30 Mins</option>
-                        <option value="45">45 Mins</option>
-                      </select>
-                    </div>
-                    <div className="col-span-1 md:col-span-3">
-                      <label htmlFor="transport" className="block text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">TRANSPORT</label>
-                      <select
-                        id="transport"
-                        value={travelFilters.transport}
-                        onChange={(e) =>
-                          setTravelFilters((prev) => ({
+                            date: e.target.value,
+                        }))
+                    }
+                    className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] focus:outline-none focus:border-[#F68B51] bg-[#F9F9F9] md:bg-transparent" 
+                  />
+                </div>
+                <div className="col-span-1 md:col-span-3">
+                  <label htmlFor="roomType" className="flex items-center gap-1.5 text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">
+                    <span className="md:hidden">🛋️</span> ROOM TYPE
+                  </label>
+                  <select 
+                    id="roomType"
+                    onChange={(e) =>
+                        setFilters((prev) => ({
                             ...prev,
-                            transport: e.target.value,
-                          }))
-                        }
-                        className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] text-gray-500"
-                      >
-                        <option value="public">🚆 Public</option>
-                        <option value="cycling">🚲 Cycling</option>
-                      </select>
-                    </div>
-                  </>
-                )}
+                            roomType: e.target.value,
+                        }))
+                    } 
+                    className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] text-gray-500 focus:outline-none focus:border-[#F68B51] bg-[#F9F9F9] md:bg-transparent"
+                  >
+                    <option value="">Any</option>
+                    {roomTypes.map((t) => (
+                        <option key={t} value={t}>
+                            {t}
+                        </option>
+                    ))}
+                  </select>
+                </div>
 
                 <div className="hidden md:block md:col-span-3">
                   <button onClick={handleSearch} className="w-full bg-[#F68B51] hover:bg-[#e87a3e] text-white font-bold py-[13.5px] rounded-xl shadow-lg uppercase text-[11px] md:text-[15px] tracking-widest transition-colors">
@@ -475,7 +295,7 @@ const Searchbar = () => {
 
               {/* MOBILE SEARCH BUTTON */}
               <div className="md:hidden mt-6">
-                <button  onClick={handleSearch} className="w-full bg-[#F68B51] text-white font-bold py-4 rounded-xl shadow-lg uppercase text-[12px] tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-transform">
+                <button onClick={handleSearch} className="w-full bg-[#F68B51] text-white font-bold py-4 rounded-xl shadow-lg uppercase text-[12px] tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-transform">
                   <span className="text-lg">🔍</span> SEARCH ROOMS
                 </button>
               </div>

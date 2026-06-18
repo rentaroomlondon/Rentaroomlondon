@@ -33,8 +33,8 @@ const navLinks = [
           title: "East London",
           links: [
             { label: "All East London", href: "#" },
-            { label: "South Tottenham", href: "#" },
-            { label: "Leyton", href: "#" },
+            { label: "South Tottenham", href: "/Spare-rooms-rent-south-tottenham-n15-london" },
+            { label: "Leyton", href: "/rent-single-double-rooms-leyton-e10-london" },
             { label: "East Ham", href: "/east-ham-e6-properties-rent-bills-included" },
           ],
         },

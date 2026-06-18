@@ -61,6 +61,10 @@ const Contact = () => {
           phone: "",
           message: "",
         });
+
+        // Native browser redirect
+        window.location.href = "/thank-you-rental-room-london";
+        
       } else {
         toast.error(data.message || "Something went wrong");
       }

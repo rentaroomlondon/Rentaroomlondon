@@ -24,8 +24,8 @@ const locationLinks = [
   { label: "Rental Rooms in Eltham", href: "/rental-rooms-eltham-london-se9-bills-included" },
   { label: "Rental Rooms in Greenwich", href: "/best-rental-rooms-greenwich-university-se10-london" },
   { label: "Rental Rooms in Stockwell", href: "/stockwell-sw9-student-housing-bills-included" },
-  { label: "Rental Rooms in South Tottenham", href: "/rental-rooms-in-south-tottenham" },
-  { label: "Rental Rooms in Leyton", href: "/rental-rooms-in-leyton" },
+  { label: "Rental Rooms in South Tottenham", href: "/Spare-rooms-rent-south-tottenham-n15-london" },
+  { label: "Rental Rooms in Leyton", href: "/rent-single-double-rooms-leyton-e10-london" },
   { label: "Rental Rooms in East Ham", href: "/east-ham-e6-properties-rent-bills-included" },
   { label: "Rental Rooms in Birmingham", href: "/birmingham-city-centre-student-housing-bills-included" },
 ];
