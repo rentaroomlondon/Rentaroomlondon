@@ -148,7 +148,7 @@ const Client = ({ listing }) => {
                     </button>
                     
                     {/* Dark Navy Button */}
-                    <button className="flex-1 bg-[#101D2D] text-white py-2 rounded-[10px] font-bold flex items-center justify-center gap-2 hover:bg-[#1a2b40] transition-colors">
+                    <button onClick={() => window.open("tel:+447419990126")} className="flex-1 bg-[#101D2D] text-white py-2 rounded-[10px] font-bold flex items-center justify-center gap-2 hover:bg-[#1a2b40] transition-colors">
                     <span className="text-lg">📞</span>
                     <span className="text-[15px]">Call Agent</span>
                     </button>
@@ -197,7 +197,7 @@ const Client = ({ listing }) => {
 
             <Details listing={listing} />
 
-            <ConsultantCard />
+            {/* <ConsultantCard /> */}
 
             <SimilarRooms currentRoom={listing} />
           </div>
