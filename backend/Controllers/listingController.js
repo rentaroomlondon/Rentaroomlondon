@@ -4,13 +4,31 @@ import { redis } from "../utils/redis.js";
 import { clearListingCache } from "../utils/clearCache.js";
 
 // ============================================
-// 🔥 GENERATE UNIQUE SLUG
+// 🔥 CLEAN SEO SLUG
 // ============================================
-const generateUniqueSlug = async (title) => {
-  let baseSlug = slugify(title, {
+const cleanSlug = (title) => {
+  return slugify(title, {
     lower: true,
     strict: true,
-  });
+    trim: true,
+  })
+    .replace(/pound\d+/g, "")
+    .replace(/for-rent|to-rent/g, "")
+    .replace(/and|or/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .split("-")
+    .slice(0, 6)
+    .join("-");
+};
+
+// ============================================
+// 🔥 UNIQUE SLUG
+// ============================================
+const generateUniqueSlug = async (title) => {
+  let baseSlug = cleanSlug(title);
+
+  if (!baseSlug) baseSlug = "listing";
 
   let slug = baseSlug;
   let counter = 1;
@@ -24,7 +42,7 @@ const generateUniqueSlug = async (title) => {
 };
 
 // ============================================
-// 🔥 GENERATE IDs
+// 🔥 GENERATE LISTING ID
 // ============================================
 const generateListingId = () => {
   const random = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -50,6 +68,7 @@ export const createListing = async (req, res) => {
       listing,
     });
   } catch (error) {
+    console.error("CREATE ERROR:", error);
     res.status(500).json({
       success: false,
       message: error.message,
@@ -57,9 +76,6 @@ export const createListing = async (req, res) => {
   }
 };
 
-// ============================================
-// ✏️ UPDATE LISTING
-// ============================================
 export const updateListing = async (req, res) => {
   try {
     const { slug } = req.params;
@@ -73,9 +89,13 @@ export const updateListing = async (req, res) => {
       });
     }
 
-    if (req.body.title && req.body.title !== listing.title) {
-      req.body.slug = await generateUniqueSlug(req.body.title);
-    }
+    // ❌ REMOVE THIS BLOCK (IMPORTANT)
+    // if (req.body.title && req.body.title !== listing.title) {
+    //   req.body.slug = await generateUniqueSlug(req.body.title);
+    // }
+
+    // ✅ NEVER update slug
+    delete req.body.slug;
 
     listing = await Listing.findOneAndUpdate(
       { slug },
@@ -90,6 +110,7 @@ export const updateListing = async (req, res) => {
       listing,
     });
   } catch (error) {
+    console.error("UPDATE ERROR:", error);
     res.status(500).json({
       success: false,
       message: error.message,
@@ -160,77 +181,18 @@ export const getListingBySlug = async (req, res) => {
 // ============================================
 export const getAllListings = async (req, res) => {
   try {
-    // ✅ Safe parsing
-    const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.max(1, parseInt(req.query.limit) || 10);
+    const listings = await Listing.find()
+      .sort({ createdAt: -1 })
+      .lean();
 
-    const cacheKey = `listings:all:${page}:${limit}`;
-
-    // ============================================
-    // 🔥 CACHE GET
-    // ============================================
-    if (redis) {
-      const cached = await redis.get(cacheKey);
-
-      if (cached) {
-        console.log("⚡ CACHE HIT:", cacheKey);
-
-        try {
-          const parsed =
-            typeof cached === "string" ? JSON.parse(cached) : cached;
-
-          return res.json({
-            success: true,
-            source: "cache",
-            ...parsed,
-          });
-        } catch (err) {
-          console.error("❌ Cache parse error:", err);
-        }
-      } else {
-        console.log("❌ CACHE MISS:", cacheKey);
-      }
-    }
-
-    // ============================================
-    // 🔥 DB QUERY
-    // ============================================
-    const skip = (page - 1) * limit;
-
-    const [listings, total] = await Promise.all([
-      Listing.find()
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit)
-        .lean(),
-      Listing.countDocuments(),
-    ]);
-
-    const response = {
-      total,
-      page,
-      pages: Math.ceil(total / limit),
-      listings,
-    };
-
-    // ============================================
-    // 🔥 CACHE SET (24 HOURS)
-    // ============================================
-    if (redis) {
-      await redis.set(cacheKey, JSON.stringify(response), {
-        ex: 60 * 60 * 24, // ✅ 24 hours
-      });
-
-      console.log("💾 CACHE SET:", cacheKey);
-    }
+    const total = listings.length;
 
     return res.json({
       success: true,
-      source: "db",
-      ...response,
+      total,
+      listings,
     });
   } catch (error) {
-    console.error("❌ ERROR:", error);
     res.status(500).json({
       success: false,
       message: error.message,

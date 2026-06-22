@@ -59,16 +59,6 @@ const navLinks = [
     ],
   },
 
-  {
-    label: "STUDENT ACCOMMODATION",
-    dropdown: [
-      { label: "North West London", href: "#" },
-      { label: "South East London", href: "#" },
-      { label: "East London", href: "#" },
-      { label: "Birmingham", href: "#" },
-    ],
-  },
-
   // KEEP YOUR OLD ONES
   {
     label: "TENANTS",
