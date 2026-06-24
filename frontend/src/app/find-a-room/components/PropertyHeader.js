@@ -77,19 +77,79 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
 
   // 📍 SELECT LOCATION
   const handleSelect = (place) => {
+
     const a = place.address || {};
+
     const prefix = getPostcodePrefix(a.postcode);
 
-    setFilters((prev) => ({
-      ...prev,
-      search: prefix || place.formatted || "", // ✅ clean value
-      lat: place.lat,
-      lng: place.lon,
+    const isCity =
+        a.city ||
+        a.town ||
+        a.county;
+
+    setFilters(prev => ({
+
+        ...prev,
+
+        search:
+            prefix ||
+            a.city ||
+            a.town ||
+            place.formatted ||
+            "",
+
+
+        // only postcode gets geo
+
+        lat:
+            prefix
+                ? place.lat
+                : "",
+
+
+        lng:
+            prefix
+                ? place.lon
+                : ""
+
     }));
+
+
+    setSuggestions([]);
+
+    setShowHint(false);
+
+  };
+
+  const handleAllProperties = () => {
+
+    setFilters({
+        search: "",
+        lat: "",
+        lng: "",
+        minPrice: "",
+        maxPrice: "",
+        roomType: "",
+        occupancy: "",
+        furnished: "",
+        date: "",
+    });
 
     setSuggestions([]);
     setShowHint(false);
-    onSearch();
+
+    // fetch all listings
+    onSearch({
+        search: "",
+        lat: "",
+        lng: "",
+        minPrice: "",
+        maxPrice: "",
+        roomType: "",
+        occupancy: "",
+        furnished: "",
+        date: "",
+    });
   };
 
   // ❌ CLOSE DROPDOWN OUTSIDE
@@ -132,9 +192,12 @@ const PropertyHeader = ({ filters, setFilters, onSearch }) => {
         {/* TOP BAR */}
         <div className="bg-[#0f172a] py-5 px-12">
           <div className="max-w-350 mx-auto flex gap-10 text-[10px] font-black text-[#94a3b8] uppercase">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-red-500" />
-              All Properties
+            <div
+                onClick={handleAllProperties}
+                className="flex items-center gap-2 cursor-pointer hover:text-white transition"
+            >
+                <MapPin className="w-4 h-4 text-red-500" />
+                All Properties
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4" />

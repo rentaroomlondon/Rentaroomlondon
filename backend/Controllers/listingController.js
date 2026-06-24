@@ -214,7 +214,7 @@ export const searchListings = async (req, res) => {
       furnished,
       lat,
       lng,
-      radius = 5,
+      radius = 25,
       date,
     } = req.query;
 
@@ -276,8 +276,20 @@ export const searchListings = async (req, res) => {
           });
         }
       } else {
+
+        const cityAliases = {
+          "greater london": "London",
+          "greater manchester": "Manchester",
+          "west midlands": "Birmingham",
+          "west yorkshire": "Leeds",
+          "merseyside": "Liverpool",
+          "south yorkshire": "Sheffield",
+        };
         // TEXT SEARCH
-        const searchRegex = new RegExp(clean, "i");
+        const normalizedSearch =
+          cityAliases[clean.toLowerCase()] || clean;
+
+        const searchRegex = new RegExp(normalizedSearch, "i");
 
         andConditions.push({
           $or: [
@@ -298,7 +310,7 @@ export const searchListings = async (req, res) => {
       lng &&
       !isNaN(lat) &&
       !isNaN(lng) &&
-      !isPostcodeSearch
+      isPostcodeSearch
     ) {
       andConditions.push({
         location: {
