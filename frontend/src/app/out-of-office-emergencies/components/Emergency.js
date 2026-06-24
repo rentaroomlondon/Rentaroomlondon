@@ -30,7 +30,7 @@ const Emergency = () => {
             <p className="text-xs font-sans font-bold uppercase tracking-widest mb-2 flex justify-center items-center gap-2">
               🚨 Emergency Line
             </p>
-            <h2 className="text-[28px] font-playfair font-bold">020 4570 319</h2>
+            <h2 className="text-[28px] font-playfair font-bold">07419990126</h2>
           </div>
 
           {/* Sidebar Items */}
@@ -77,7 +77,7 @@ const Emergency = () => {
 including as many pictures as you can too. In the case of an emergency, you will be contacted within 30 minutes of logging your issue
 by text or phone by a member of our team with further instructions and advice.</li>
               <li>
-                If you are unable to use this link for any reason, then please call our dedicated property management line and our team will be able to assist you with the process. Please be aware that our new dedicated Property Management Number is: <span className="text-[#FF7A45] font-bold">020 4570 3191</span>.
+                If you are unable to use this link for any reason, then please call our dedicated property management line and our team will be able to assist you with the process. Please be aware that our new dedicated Property Management Number is: <span className="text-[#FF7A45] font-bold">07419990126</span>.
               </li>
             </ol>
 

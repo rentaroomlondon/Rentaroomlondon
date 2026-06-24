@@ -127,7 +127,7 @@ const RegisterPage = () => {
         <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-8 lg:p-12">
           <h2 className="text-[24px] font-bold text-[#1A2332] mb-2">Register with Us</h2>
           <p className="text-[#6B7280] text-sm mb-8">
-            Items marked with * are required. <a href="tel:02077905577" className="text-orange-500 underline underline-offset-4">Call us on 020 7790 5577</a> if you need help.
+            Items marked with * are required. <a href="tel:07419990126" className="text-orange-500 underline underline-offset-4">Call us on 07419990126</a> if you need help.
           </p>
 
           <form className="space-y-5" onSubmit={handleSubmit}>

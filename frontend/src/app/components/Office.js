@@ -20,7 +20,7 @@ const Office = () => {
 
           <div className="flex flex-col gap-2 mt-2">
             <div className="flex items-center gap-2 sm:gap-3 text-[#2C3E50] font-bold">
-              📞 020 7790 5577
+              📞 07419990126
             </div>
             <div className="flex items-center gap-2 sm:gap-3 text-gray-500">
               ✉️ info@rentaroomlondon.co.uk
