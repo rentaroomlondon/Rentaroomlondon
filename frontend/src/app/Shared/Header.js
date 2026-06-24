@@ -86,7 +86,7 @@ const navLinks = [
   },
   {
     label: "BOOK A ROOM",
-    href: "/book-a-room",
+    href: "/find-a-room",
   }
 ];
 
