@@ -15,6 +15,7 @@ import bookingRoutes from "./Routes/bookingRoutes.js";
 import contactRoutes from "./Routes/contactRoutes.js";
 import { startMaintenanceReminder } from "./utils/maintenanceReminder.js";
 import staffRoutes from "./Routes/staffRoutes.js";
+import LeadRoutes from "./Routes/LeadRoute.js";
 
 dotenv.config();
 
@@ -55,6 +56,7 @@ app.use("/api/listings", listingRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/staff", staffRoutes);
+app.use("/api/leads", LeadRoutes);
 
 // Test route
 app.get('/', (req, res) => {

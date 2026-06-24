@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import PropertySearch from "./components/PropertySearch";
+import LeadPopup from "./components/LeadPopup";
 
 export const metadata = {
   title: "Find a Room in London - Search Rooms & Flatshares",
@@ -50,6 +51,8 @@ const page = () => {
       <Suspense fallback={<div>Loading...</div>}>
         <PropertySearch />
       </Suspense>
+
+      <LeadPopup />
     </div>
   );
 };
