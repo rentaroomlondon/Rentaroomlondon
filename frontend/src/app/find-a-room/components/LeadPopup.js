@@ -74,7 +74,7 @@ const LeadPopup = () => {
 
         <div className="p-6 sm:p-8">
           <h3 className="text-2xl font-bold text-slate-900 tracking-tight">
-            Can't find the perfect room?
+            Search for your perfect room
           </h3>
           <p className="mt-2 text-sm text-gray-600">
             Leave your requirements and our London accommodation experts will scout matching properties for you completely free!
@@ -136,7 +136,7 @@ const LeadPopup = () => {
               disabled={loading || statusMsg.type === "success"}
               className="mt-2 w-full rounded-lg bg-slate-900 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-800 focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 active:scale-[0.99] disabled:bg-gray-400"
             >
-              {loading ? "Submitting Request..." : statusMsg.type === "success" ? "Submitted!" : "Find Me A Room"}
+              {loading ? "Submitting Request..." : statusMsg.type === "success" ? "Submitted!" : "search for room"}
             </button>
           </form>
         </div>
