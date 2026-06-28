@@ -2,6 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
+import Image from "next/image";
 
 const navLinks = [
   {
@@ -90,15 +91,16 @@ const navLinks = [
   }
 ];
 
+  // Helper for the small right arrow/chevron
+  const ChevronRight = () => (
+    <span className="text-[10px] opacity-30 font-light">›</span>
+  );
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const { user, loadingUser, logout } = useAuth();
 
-  // Helper for the small right arrow/chevron
-  const ChevronRight = () => (
-    <span className="text-[10px] opacity-30 font-light">›</span>
-  );
 
   return (
     <header className="w-full">
@@ -114,9 +116,13 @@ const Header = () => {
           className="flex items-center h-full md:bg-[#F47C3C] md:px-6 shrink-0 cursor-pointer"
         >
           <div className="w-17 h-12 flex items-center justify-center mr-2 md:mr-3">
-            <img
+            <Image
               src="/rental-room-uk.avif"
-              alt="Logo"
+              alt="Rent a Room London"
+              width={68}
+              height={48}
+              priority
+              quality={75}
               className="w-full h-full object-contain"
             />
           </div>
@@ -315,7 +321,14 @@ const Header = () => {
           {/* Logo */}
           <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center">
             <div className="w-12 h-10 flex items-center justify-center mr-2">
-              <img src="/rental-room-uk.avif" alt="Logo" className="w-full h-full object-contain" />
+              <Image
+                src="/rental-room-uk.avif"
+                alt="Rent a Room London"
+                width={48}
+                height={40}
+                quality={75}
+                className="w-full h-full object-contain"
+              />
             </div>
             <span className="text-white text-[12px] font-semibold uppercase tracking-wider">
               RentaRoomLondon

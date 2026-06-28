@@ -1,11 +1,7 @@
 "use client"
-import { Star } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import Searchbar from './Searchbar';
 import Image from 'next/image';
-
-const HeroSection = () => {
-  const [currentBg, setCurrentBg] = useState(0);
 
   // Background images for the auto-slider
   const bgImages = [
@@ -23,15 +19,20 @@ const HeroSection = () => {
     }
   ];
 
+const HeroSection = () => {
+  const [currentBg, setCurrentBg] = useState(0);
+
+
   
 
   // Auto-play logic for background slider
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentBg((prev) => (prev + 1) % bgImages.length);
-    }, 5000); // Changes every 5 seconds
+    }, 5000);
+
     return () => clearInterval(timer);
-  }, [bgImages.length]);
+  }, []);
 
   return (
     <>
@@ -46,6 +47,7 @@ const HeroSection = () => {
               src={image.src}
               alt={image.alt}
               fill
+              quality={75}
               sizes="100vw"
               priority={index === 0}
               loading={index === 0 ? "eager" : "lazy"}
@@ -82,11 +84,7 @@ const HeroSection = () => {
                 <span className="text-xl font-thin text-white">(</span>
 
                 <div className="flex items-center text-white gap-1">
-                    <Star size={12} fill="currentColor" />
-                    <Star size={12} fill="currentColor" />
-                    <Star size={12} fill="currentColor" />
-                    <Star size={12} fill="currentColor" />
-                    <Star size={12} fill="currentColor" />
+                    ★★★★★
                 </div>
 
                 <span className="text-xl font-thin text-white">)</span>
@@ -103,7 +101,7 @@ const HeroSection = () => {
             </p>
             
             {/* Slider Dots */}
-            <div className="flex gap-2.5 mt-8">
+            <div className="flex gap-2.5 mt-8" aria-hidden="true">
               {bgImages.map((_, idx) => (
                 <span 
                   key={idx}
