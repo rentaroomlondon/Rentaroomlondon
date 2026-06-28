@@ -2,6 +2,9 @@
 import React, { useState } from "react";
 import { ChevronRight, Building2, Train } from "lucide-react";
 
+const LocationDirectory = () => {
+  const [activeTab, setActiveTab] = useState("North West");
+
   const locations = {
     "North West": [
       { pc: "NW2", areas: "Cricklewood, Dollis Hill, Neasden", desc: "Well-connected with shopping at Brent Cross." },
@@ -25,10 +28,7 @@ import { ChevronRight, Building2, Train } from "lucide-react";
       { pc: "B24", areas: "Erdington, Birmingham", desc: "Quick access to Birmingham city centre." },
     ]
   };
-
-const LocationDirectory = () => {
-  const [activeTab, setActiveTab] = useState("North West");
-
+  
   return (
     <section className="py-24 px-5 md:px-12 bg-[#1A2332] overflow-hidden">
       <div className="max-w-7xl mx-auto">

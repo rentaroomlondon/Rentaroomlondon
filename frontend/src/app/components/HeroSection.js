@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import Searchbar from './Searchbar';
 import Image from 'next/image';
 
+const HeroSection = () => {
+  const [currentBg, setCurrentBg] = useState(0);
+
   // Background images for the auto-slider
   const bgImages = [
     {
@@ -18,12 +21,6 @@ import Image from 'next/image';
       alt: "Student rooms to rent in London close to universities"
     }
   ];
-
-const HeroSection = () => {
-  const [currentBg, setCurrentBg] = useState(0);
-
-
-  
 
   // Auto-play logic for background slider
   useEffect(() => {

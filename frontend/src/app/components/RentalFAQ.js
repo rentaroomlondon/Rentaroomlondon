@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { Plus, Minus, HelpCircle, MapPin, GraduationCap, Zap, Eye, Globe, Train, FileCheck } from "lucide-react";
 import Link from "next/link";
 
+const RentalFAQ = () => {
+  const [activeTab, setActiveTab] = useState(0);
+
   const faqs = [
     {
       question: "How can I find shared rental rooms in London and the UK?",
@@ -45,10 +48,7 @@ import Link from "next/link";
       icon: <FileCheck size={20} />,
     },
   ];
-
-const RentalFAQ = () => {
-  const [activeTab, setActiveTab] = useState(0);
-
+  
     // FAQ Schema
   const faqSchema = {
     "@context": "https://schema.org",
