@@ -3,11 +3,9 @@ import "./globals.css";
 import { AuthProvider } from "./Context/AuthContext";
 import { ToastContainer } from "./Shared/Nexttoast";
 import LayoutWrapper from "./Shared/LayoutWrapper";
-import { AdminAuthProvider } from "./Context/AdminAuthContext";
 import "leaflet/dist/leaflet.css";
-import { StaffAuthProvider } from "./Context/StaffAuthContext";
+import Script from "next/script";
 import FloatingWhatsApp from "./Shared/FloatingWhatsApp";
-import { GoogleTagManager } from "@next/third-parties/google";
 
 // DM Sans - body text
 const dmSans = DM_Sans({
@@ -78,13 +76,33 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${playfair.variable}`}>
-      
+      <head>
+        {/* ✅ Google Tag Manager Script */}
+        <Script id="gtm-script" strategy="afterInteractive">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];
+            w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+            var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+            j.async=true;
+            j.src='https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-TJ42Q4JG');
+          `}
+        </Script>
+      </head>
       <body className="antialiased">
-        {/* ✅ Google Tag Manager */}
-        <GoogleTagManager gtmId="GTM-TJ42Q4JG" />
+        {/* ✅ Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-TJ42Q4JG"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         <AuthProvider>
-          <AdminAuthProvider>
-          <StaffAuthProvider>
           <LayoutWrapper>
           {children}
           <ToastContainer 
@@ -95,8 +113,6 @@ export default function RootLayout({ children }) {
             pauseOnHover={false} 
           />
           </LayoutWrapper>
-          </StaffAuthProvider>
-          </AdminAuthProvider>
         </AuthProvider>
         <FloatingWhatsApp />
       </body>

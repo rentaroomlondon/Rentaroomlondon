@@ -39,14 +39,22 @@ const HeroSection = () => {
         className="relative min-h-200 md:min-h-150 h-200 md:h-162.5 w-full flex flex-col items-center justify-start pt-10 md:pt-20 bg-cover bg-center transition-all duration-1000 ease-in-out" 
         // style={{ backgroundImage: `url('${bgImages[currentBg]}')` }}
       >
-        <Image
-          src={bgImages[currentBg].src}
-          alt={bgImages[currentBg].alt}
-          fill
-          priority={currentBg === 0}
-          sizes="100vw"
-          className="object-cover transition-opacity duration-1000"
-        />
+        <div className="absolute inset-0">
+          {bgImages.map((image, index) => (
+            <Image
+              key={image.src}
+              src={image.src}
+              alt={image.alt}
+              fill
+              sizes="100vw"
+              priority={index === 0}
+              loading={index === 0 ? "eager" : "lazy"}
+              className={`object-cover transition-opacity duration-1000 ${
+                currentBg === index ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          ))}
+        </div>
         {/* Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/40 z-0"></div>
 
@@ -56,7 +64,13 @@ const HeroSection = () => {
             
             {/* Trophy Icon */}
             <div className="mb-3">
-              <img src="/trophy.avif" alt="Trophy" className="w-12 h-10 " />
+              <Image
+                src="/trophy.avif"
+                alt="Trophy"
+                width={48}
+                height={40}
+                className="object-contain"
+              />
             </div>
             
             <p className="uppercase tracking-[0.2em] text-[11px] font-sans md:text-[14px] font-normal mb-2 opacity-90">
