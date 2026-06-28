@@ -11,7 +11,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
   return (
     <aside className="w-64 bg-[#0F172A] text-white hidden md:flex flex-col h-screen sticky top-0">
       <div className="p-3">
-        <img src="/rental-room-uk.png" alt="Logo" className="h-14" />
+        <img src="/rental-room-uk.avif" alt="Logo" className="h-14" />
       </div>
       <nav className="flex-1 px-4 space-y-2 mt-4">
         {menuItems.map((item) => (
