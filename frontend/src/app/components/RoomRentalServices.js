@@ -2,7 +2,6 @@ import React from "react";
 import { Train, ShieldCheck, MapPin, Zap, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-const RoomRentalServices = () => {
   const highlights = [
     {
       title: "Prime Connectivity",
@@ -26,6 +25,7 @@ const RoomRentalServices = () => {
     },
   ];
 
+const RoomRentalServices = () => {
   return (
     <section className="py-24 px-5 md:px-12 bg-[#FAF9F6] relative overflow-hidden">
       {/* Decorative Transit Line Graphic */}

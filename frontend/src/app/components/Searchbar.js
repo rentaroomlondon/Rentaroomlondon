@@ -7,17 +7,10 @@ const Searchbar = () => {
       const [price, setPrice] = useState(1500);
       const [activeTab, setActiveTab] = useState('location');
       const [suggestions, setSuggestions] = useState([]);
-      const [travelSuggestions, setTravelSuggestions] = useState([]);
       const [loadingSuggestions, setLoadingSuggestions] = useState(false);
       const [showHint, setShowHint] = useState(false);
       const router = useRouter();
 
-
-      const handleTabChange = (tab) => {
-        setActiveTab(tab);
-        setSuggestions([]);
-        setTravelSuggestions([]);
-      };
 
     const [filters, setFilters] = useState({
         search: "",
@@ -29,13 +22,6 @@ const Searchbar = () => {
         maxPrice: "",
     });
 
-    const [travelFilters, setTravelFilters] = useState({
-      start: "",
-      travelLat: "",
-      travelLng: "",
-      maxTime: "30",
-      transport: "public",
-    });
         
 
     const debounceRef = useRef(null);
@@ -143,22 +129,13 @@ const Searchbar = () => {
     const handleSearch = () => {
       let queryObj = {};
 
-      if (activeTab === "travel") {
-        queryObj = {
-          start: travelFilters.start,
-          travelLat: travelFilters.lat,
-          travelLng: travelFilters.lng,
-          maxTime: travelFilters.maxTime,
-          transport: travelFilters.transport,
-          maxPrice: price,
-        };
-      } else {
+      
         queryObj = {
           ...filters,
           minPrice: filters.minPrice || 0,
           maxPrice: filters.maxPrice || price,
         };
-      }
+      
 
       // remove empty values
       Object.keys(queryObj).forEach(
@@ -170,63 +147,6 @@ const Searchbar = () => {
       const query = new URLSearchParams(queryObj).toString();
 
       router.push(`/find-a-room?${query}`);
-    };
-
-    const handleTravelLocationChange = (e) => {
-      const value = e.target.value;
-
-      setTravelFilters((prev) => ({
-        ...prev,
-        start: value,
-        lat: "",
-        lng: "",
-      }));
-
-      clearTimeout(debounceRef.current);
-
-      if (value.length < 2) return;
-
-      debounceRef.current = setTimeout(async () => {
-        try {
-          setLoadingSuggestions(true);
-
-          const res = await fetch(
-            `https://api.locationiq.com/v1/autocomplete.php?key=${API_KEY}&q=${value}&format=json&limit=10&countrycodes=gb`
-          );
-
-          const data = await res.json();
-
-          const formatted = data
-            .filter((place) => {
-              const name = place.display_name.toLowerCase();
-              return name.includes("university") || name.includes("college");
-            })
-            .map((place) => ({
-              ...place,
-              formatted: place.display_name.split(",")[0],
-            }))
-            .sort((a, b) =>
-              a.formatted.toLowerCase().includes(value.toLowerCase()) ? -1 : 1
-            );
-
-          setTravelSuggestions(formatted);
-        } catch (err) {
-          console.log(err);
-        } finally {
-          setLoadingSuggestions(false);
-        }
-      }, 400);
-    };
-
-    const handleTravelSelect = (place) => {
-      setTravelFilters((prev) => ({
-        ...prev,
-        start: place.display_name,
-        lat: place.lat,
-        lng: place.lon,
-      }));
-
-      setTravelSuggestions([]);
     };
 
     const dateRef = useRef(null);
@@ -244,14 +164,6 @@ const Searchbar = () => {
                 }`}
               >
                 By Location
-              </button>
-              <button 
-                onClick={() => handleTabChange('travel')}
-                className={`flex-1 md:flex-none py-4 md:py-6 font-bold uppercase text-[10px] md:text-[13px] tracking-widest border-b-2 transition-all md:ml-10 ${
-                  activeTab === 'travel' ? 'text-[#F68B51] border-[#F68B51]' : 'text-[#6B7280] border-transparent'
-                }`}
-              >
-                Travel Time
               </button>
             </div>
 
@@ -343,76 +255,7 @@ const Searchbar = () => {
                   </>
                 ) : (
                   <>
-                    <div className="col-span-2 md:col-span-3 relative">
-                      <label htmlFor="startPoint" className="flex items-center gap-1.5 text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">
-                        <span className="md:hidden text-[#E45D5D]">🚩</span> START POINT
-                      </label>
-                      <input 
-                        id="startPoint"
-                        type="text" 
-                        value={travelFilters.start}
-                        onChange={handleTravelLocationChange}
-                        placeholder="Work/University..." 
-                        className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] focus:outline-none focus:border-[#F68B51] bg-[#F9F9F9] md:bg-transparent" 
-                      />
-                      {travelFilters.start.length > 1 && (
-                        <div className="absolute top-full left-0 mt-1 w-full bg-white shadow rounded-lg z-50">
-
-                          {loadingSuggestions && (
-                            <div className="p-2 text-sm text-gray-500">Searching...</div>
-                          )}
-
-                          {!loadingSuggestions && travelSuggestions.length === 0 && (
-                            <div className="p-2 text-sm text-gray-500">No results found</div>
-                          )}
-
-                          {travelSuggestions.map((place, i) => (
-                            <div
-                              key={i}
-                              onClick={() => handleTravelSelect(place)}
-                              className="p-2 hover:bg-gray-100 cursor-pointer text-sm"
-                            >
-                              {place.formatted}
-                            </div>
-                          ))}
-
-                        </div>
-                      )}
-                    </div>
-                    <div className="col-span-1 md:col-span-3">
-                      <label htmlFor="maxTime" className="block text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">MAX TIME</label>
-                      <select
-                        id="maxTime"
-                        value={travelFilters.maxTime}
-                        onChange={(e) =>
-                          setTravelFilters((prev) => ({
-                            ...prev,
-                            maxTime: e.target.value,
-                          }))
-                        }
-                        className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] text-gray-500"
-                      >
-                        <option value="30">30 Mins</option>
-                        <option value="45">45 Mins</option>
-                      </select>
-                    </div>
-                    <div className="col-span-1 md:col-span-3">
-                      <label htmlFor="transport" className="block text-[10px] md:text-[13px] font-bold text-[#6B7280] uppercase mb-2 tracking-wider">TRANSPORT</label>
-                      <select
-                        id="transport"
-                        value={travelFilters.transport}
-                        onChange={(e) =>
-                          setTravelFilters((prev) => ({
-                            ...prev,
-                            transport: e.target.value,
-                          }))
-                        }
-                        className="w-full border border-gray-100 rounded-xl py-3 px-4 text-[13px] text-gray-500"
-                      >
-                        <option value="public">🚆 Public</option>
-                        <option value="cycling">🚲 Cycling</option>
-                      </select>
-                    </div>
+                    
                   </>
                 )}
 

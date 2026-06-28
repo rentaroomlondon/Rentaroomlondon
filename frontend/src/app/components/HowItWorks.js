@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
 
-const HowItWorks = () => {
   const steps = [
     {
       id: 1,
@@ -52,7 +51,8 @@ const HowItWorks = () => {
       image: "https://images.pexels.com/photos/8293654/pexels-photo-8293654.jpeg?auto=compress&cs=tinysrgb&w=400"
     }
   ];
-
+const HowItWorks = () => {
+  
   return (
     <section className="py-20 px-4 bg-white font-sans text-[#1F2937]">
       <div className="max-w-7xl mx-auto text-center">

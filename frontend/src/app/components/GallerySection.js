@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { ChevronUp, ChevronDown, Play } from "lucide-react";
 
-const VideoExplorer = () => {
   const videoData = [
     { id: 1, title: "Rent a Room in London", src: "#", thumb: "https://res.cloudinary.com/dyfiv680c/image/upload/v1782311008/RENTAROOMLONDON/images/WhatsApp_Image_2024-10-23_at_5.35.54_PM_2_ncmoma.jpg" },
     { id: 2, title: "Cheap Rooms for Students", src: "#", thumb: "https://res.cloudinary.com/dyfiv680c/image/upload/v1781962639/RENTAROOMLONDON/images/IMG-20250919-WA0001_b5cm28_jj5rpe.jpg" },
@@ -10,6 +9,7 @@ const VideoExplorer = () => {
     { id: 4, title: "En Suite Room Tour", src: "#", thumb: "https://res.cloudinary.com/dyfiv680c/image/upload/v1781961605/RENTAROOMLONDON/images/WhatsApp_Image_2024-08-19_at_9.25.27_PM_xpckfg_l5ahpp.jpg" },
     { id: 5, title: "Birmingham City Living", src: "#", thumb: "https://res.cloudinary.com/dyfiv680c/image/upload/v1781961829/RENTAROOMLONDON/images/width_1080_eb2400d0-8909-415b-b8f5-56b953a3dcaa_e7wzpi_arqx4j.jpg" },
   ];
+const VideoExplorer = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 

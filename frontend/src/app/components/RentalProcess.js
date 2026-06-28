@@ -2,7 +2,6 @@ import React from "react";
 import { Search, Heart, Eye, FileText, CheckCircle, Key, Home, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-const RentalProcess = () => {
   const steps = [
     {
       id: 1,
@@ -55,6 +54,7 @@ const RentalProcess = () => {
     },
   ];
 
+const RentalProcess = () => {
   return (
     <section className="py-8 px-5 md:px-12 bg-white overflow-hidden">
       <div className="max-w-6xl mx-auto"> {/* Slightly tighter max-width */}
