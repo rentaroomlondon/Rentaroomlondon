@@ -1,10 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-
-import dynamic from "next/dynamic";
-
-const Searchbar = dynamic(() => import("./Searchbar"), { ssr: false });
+import Searchbar from './Searchbar';
 
 const HeroSection = () => {
   const [currentBg, setCurrentBg] = useState(0);
