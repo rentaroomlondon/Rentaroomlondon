@@ -5,11 +5,11 @@ import RoomTypeSection from './components/RoomTypeSection';
 import RoomRentalServices from './components/RoomRentalServices';
 import LocationDirectory from './components/LocationDirectory';
 import RentalProcess from './components/RentalProcess';
+import RentalFAQ from './components/RentalFAQ';
 
 import dynamic from "next/dynamic";
 
 const GallerySection = dynamic(() => import("./components/GallerySection"));
-const RentalFAQ = dynamic(() => import("./components/RentalFAQ"));
 
 export const metadata = {
   title: "Best Rental Rooms For Students And Professionals In London",
