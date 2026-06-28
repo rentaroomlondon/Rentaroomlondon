@@ -122,7 +122,7 @@ export default function RootLayout({ children }) {
           </AdminAuthProvider>
         </AuthProvider>
         <FloatingWhatsApp />
-        <CrispChat />
+        {/* <CrispChat /> */}
       </body>
     </html>
   );
