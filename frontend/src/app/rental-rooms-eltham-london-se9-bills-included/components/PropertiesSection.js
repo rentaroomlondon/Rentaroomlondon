@@ -1,17 +1,39 @@
 "use client";
-import React, { useState } from "react"; // Added useState import
+
+import React, { useEffect, useState } from "react";
 import PropertyCardSkeleton from "@/app/find-a-room/components/PropertyCardSkeleton";
 import PropertyCard from "@/app/find-a-room/components/PropertyCard";
 
 const PropertiesSection = () => {
-  // These are the states you will update when you add your "fetch" logic later
   const [rooms, setRooms] = useState([]);
-  const [loading, setLoading] = useState(true); 
-  
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/listings/search?search=Eltham`
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+          setRooms(data.listings);
+        }
+      } catch (error) {
+        console.error("Error fetching rooms:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRooms();
+  }, []);
+
   return (
     <section className="py-20 px-5 md:px-12 bg-[#FAF9F6]">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="space-y-2">
@@ -26,22 +48,23 @@ const PropertiesSection = () => {
 
         {/* Listings Grid */}
         <div className="grid grid-cols-1 gap-6">
-          {loading ? ( // Changed from isLoading to loading
-            // Show skeletons while data is being fetched
+          {loading ? (
             Array.from({ length: 4 }).map((_, i) => (
               <PropertyCardSkeleton key={i} />
             ))
-          ) : rooms && rooms.length > 0 ? ( // Changed from listings to rooms
-            // Render actual properties
+          ) : rooms.length > 0 ? (
             rooms.map((item) => (
               <PropertyCard key={item._id} data={item} />
             ))
           ) : (
-            // Fallback UI if no listings found
             <div className="text-center py-20 bg-white rounded-[32px] border border-dashed border-gray-200">
               <div className="mb-4 text-4xl">🏘️</div>
-              <p className="text-[#1A2332] font-semibold">No rooms currently listed.</p>
-              <p className="text-gray-500 text-sm">Please check back later for new properties in Cricklewood.</p>
+              <p className="text-[#1A2332] font-semibold">
+                No rooms currently listed.
+              </p>
+              <p className="text-gray-500 text-sm">
+                Please check back later for new properties in Eltham.
+              </p>
             </div>
           )}
         </div>

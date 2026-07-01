@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React from "react";
 
 export default function AffordableDoubleRooms() {
@@ -50,9 +51,9 @@ export default function AffordableDoubleRooms() {
       tagline: "Vibrant high streets, arts, & seamless transit points",
       links: [
         { label: "All East London", href: "#" },
-        { label: "South Tottenham", href: "#" },
-        { label: "Leyton", href: "#" },
-        { label: "East Ham", href: "#" },
+        { label: "South Tottenham", href: "/Spare-rooms-rent-south-tottenham-n15-london" },
+        { label: "Leyton", href: "/rent-single-double-rooms-leyton-e10-london" },
+        { label: "East Ham", href: "/east-ham-e6-properties-rent-bills-included" },
       ],
     },
     {
@@ -208,7 +209,7 @@ export default function AffordableDoubleRooms() {
             
             <div className="pt-2">
               <a 
-                href="https://google.com" 
+                href="https://share.google/bBoarwjkYkiRGGr3Y" 
                 target="_blank" 
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 text-xs font-bold text-[#FF6B35] uppercase tracking-wider hover:underline"
@@ -312,12 +313,25 @@ export default function AffordableDoubleRooms() {
               Our high-demand rooms fill up fast. Connect directly with an accommodation lead to discuss upcoming availability and contract terms today.
             </p>
             <div className="pt-2">
-              <button className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#e05621] text-white font-bold text-sm px-8 py-4 rounded-xl shadow-md transition duration-200 cursor-pointer transform hover:scale-[1.01]">
+              <Link
+                href="/find-a-room"
+                className="inline-flex items-center gap-2 bg-[#FF6B35] hover:bg-[#e05621] text-white font-bold text-sm px-8 py-4 rounded-xl shadow-md transition duration-200 cursor-pointer transform hover:scale-[1.01]"
+              >
                 Rent a Room
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
                 </svg>
-              </button>
+              </Link>
             </div>
           </div>
         </div>

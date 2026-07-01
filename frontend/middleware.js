@@ -195,7 +195,8 @@ const goneUrls = new Set([
     "/page/4/",
     "/microsoft-excel-portable-keygen-100-worked-lifetime-zip/",
     "/adobe-after-effects-2025-portable-activator-lifetime-x32x64-final-premium/",
-    "/microsoft-word-2024-portable-activator-clean-x32-x64-no-virus/"
+    "/microsoft-word-2024-portable-activator-clean-x32-x64-no-virus/",
+    "/teamviewer-premium-portable-keygen-patch-stable-tested/"
     ]);
 
 export function middleware(request) {
