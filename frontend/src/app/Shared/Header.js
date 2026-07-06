@@ -56,7 +56,7 @@ const navLinks = [
       { label: "Single occupancy room", href: "/cheap-single-room-rent-london-uk" },
       { label: "Double room", href: "/affordable-double-rooms-rental-uk" },
       { label: "Studio room", href: "/find-a-room?roomType=studio" },
-      { label: "Flat share room", href: "#" },
+      { label: "Flat share room", href: "/flat-shares-rental-rooms-london" },
     ],
   },
 
