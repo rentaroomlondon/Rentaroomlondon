@@ -88,9 +88,9 @@ const PropertyCard = ({ data }) => {
 
         <div className="flex-1 p-5 md:p-6 flex flex-col justify-between">
           <div>
-            <h2 className="text-[#0F253B] md:text-[#1A2332] text-[15px] md:text-[16px] font-bold leading-tight mb-2">
+            <h3 className="text-[#0F253B] md:text-[#1A2332] text-[15px] md:text-[16px] font-bold leading-tight mb-2">
               {data.title}
-            </h2>
+            </h3>
 
             <div className="flex items-start gap-1 text-gray-400 mb-4">
               📍
