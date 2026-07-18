@@ -499,7 +499,7 @@ const Header = () => {
             </p>
 
             <div className="flex items-center justify-between py-3 border-b border-white/5">
-              <Link href="/contact-us" onClick={() => setIsOpen(false)} >
+              <Link href="/contact-london-rental-room-uk" onClick={() => setIsOpen(false)} >
                 <span className="text-[14px] text-[#FFFFFFD9] font-medium">Get in Touch</span>
                 <ChevronRight  />
               </Link>
