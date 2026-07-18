@@ -55,7 +55,7 @@ const navLinks = [
     dropdown: [
       { label: "Single occupancy room", href: "/cheap-single-room-rent-london-uk" },
       { label: "Double room", href: "/affordable-double-rooms-rental-uk" },
-      { label: "Studio room", href: "/find-a-room?roomType=studio" },
+      { label: "Studio room", href: "/studio-room-bills-included-e10-london-uk" },
       { label: "Flat share room", href: "/flat-shares-rental-rooms-london" },
     ],
   },
