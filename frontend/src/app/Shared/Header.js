@@ -83,7 +83,7 @@ const navLinks = [
   },
   {
     label: "CONTACT",
-    href: "/contact-us",
+    href: "/contact-london-rental-room-uk",
   },
   {
     label: "BOOK A ROOM",
