@@ -27,6 +27,11 @@ const nextConfig = {
         destination: "/affordable-rental-room-uk", // 👈 change if your new slug is different
         permanent: true, // ✅ 301
       },
+      {
+        source: "/contact-us",
+        destination: "/contact-london-rental-room-uk", // 👈 change if your new slug is different
+        permanent: true, // ✅ 301
+      },
     ];
   },
 
