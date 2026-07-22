@@ -11,7 +11,7 @@ export const metadata = {
   title: "Affordable Rental Rooms in Cricklewood (NW2), London",
   description: "Explore affordable rental rooms in Cricklewood, London with bills included. Ideal for students and professionals near transport and universities. Book your room today!",
   alternates: {
-    canonical: "https://rentaroomlondon.co.uk/cricklewood", // Adjust to your actual URL
+    canonical: "https://rentaroomlondon.co.uk/rental-rooms-students-cricklewood-uk", // Adjust to your actual URL
   },
 };
 
