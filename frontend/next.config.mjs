@@ -14,8 +14,26 @@ const nextConfig = {
 
   // ✅ IMAGES (ONLY Cloudinary)
   images: {
-    domains: ["res.cloudinary.com"],
-    domains: ['images.unsplash.com'],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.co",
+        port: "",
+        pathname: "/**",
+      },
+    ],
     minimumCacheTTL: 31536000,
   },
 

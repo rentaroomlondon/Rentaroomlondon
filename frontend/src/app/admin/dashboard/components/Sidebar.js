@@ -1,8 +1,9 @@
 import { 
   LayoutDashboard, BarChart3, Building2, Search, 
   Users, FileText, ClipboardList, Bell, Wrench, 
-  CreditCard, Package, User, Settings, 
-  BookImageIcon
+  CreditCard, User, Settings, 
+  BookImageIcon,
+  LucideForm
 } from 'lucide-react';
 import { SidebarLink } from './SidebarLink';
 
@@ -60,8 +61,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => (
           active={activeTab === "maintenance"} onClick={() => setActiveTab("maintenance")} />
         <SidebarLink icon={<CreditCard size={20} />} label="Payments"
           active={activeTab === "payments"} onClick={() => setActiveTab("payments")} />
-        <SidebarLink icon={<Package size={20} />} label="Inventory"
-          active={activeTab === "inventory"} onClick={() => setActiveTab("inventory")} />
+        <SidebarLink icon={<LucideForm size={20} />} label="blog"
+          active={activeTab === "blog"} onClick={() => setActiveTab("blog")} />
       </div>
 
       <div className="pb-8">

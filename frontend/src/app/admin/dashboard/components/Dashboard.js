@@ -10,6 +10,7 @@ import PropertyManager from "./PropertyManager";
 import Listings from "./Listings";
 import ViewingRequests from "./ViewingRequests";
 import Applications from "./Applications";
+import Blog from "./Blog";
 
 
 const Dashboard = () => {
@@ -28,7 +29,7 @@ const Dashboard = () => {
     registrations: { title: "Registrations", breadcrumb: "New Users" },
     maintenance: { title: "Maintenance", breadcrumb: "Requests" },
     payments: { title: "Payments", breadcrumb: "Transactions" },
-    inventory: { title: "Inventory", breadcrumb: "Stock" },
+    blog: { title: "Blog", breadcrumb: "blog" },
     staff: { title: "Staff", breadcrumb: "Team Members" },
     settings: { title: "Settings", breadcrumb: "System Settings" },
   };
@@ -46,7 +47,7 @@ const Dashboard = () => {
     registrations: <Registrations />,
     maintenance: <Maintenance />,
     payments: <div className="bg-white p-6 rounded-xl">Payments</div>,
-    inventory: <div className="bg-white p-6 rounded-xl">Inventory</div>,
+    blog: <Blog />,
     staff: <div className="bg-white p-6 rounded-xl">Staff</div>,
     settings: <div className="bg-white p-6 rounded-xl">Settings</div>,
   };
