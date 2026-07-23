@@ -26,7 +26,7 @@ const goneUrls = new Set([
     "/property-city/south-west-london",
     "/kmspico-portable-windows-x64-final",
     "/room-to-rent-north-west-london",
-    // "/blog",
+    "/blog",
     "/9-kennylands-court-hendon-way",
     "/contact",
     "/property-city/birmingham",
