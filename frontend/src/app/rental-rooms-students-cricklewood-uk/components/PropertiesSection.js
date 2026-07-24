@@ -41,7 +41,7 @@ const PropertiesSection = () => {
             </h3>
 
             <h2 className="text-[32px] md:text-[42px] font-semibold text-[#1A2332] font-playfair">
-              List of Rental Rooms in Cricklewood, Brent, London
+              List of Rooms to Rent in Cricklewood, Brent, London
             </h2>
           </div>
         </div>

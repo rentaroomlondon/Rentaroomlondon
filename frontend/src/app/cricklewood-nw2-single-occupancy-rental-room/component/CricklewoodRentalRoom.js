@@ -229,11 +229,10 @@ export default function CricklewoodRentalRoom() {
                 Cricklewood strikes a rare balance for single-room tenants: genuinely affordable rent, strong transport connections, and a lively but low-key neighbourhood feel. Whether you&apos;re commuting to Middlesex University or into Central London for work, a single room here gives you your own space without stretching your budget.
               </p>
               <p className="text-slate-700 font-medium">
-                Ready to see what&apos;s available? Browse our current{' '}
+                Ready to see what&apos;s available? Browse our {' '}
                 <Link href="https://rentaroomlondon.co.uk/rental-rooms-students-cricklewood-uk" className="text-indigo-600 hover:underline">
                   current Cricklewood listings
-                </Link>{' '}
-                or <Link href="/contact-london-rental-room-uk" className="text-indigo-600 hover:underline">get in touch (Contact us page)</Link> and we&apos;ll help you find the right fit.
+                </Link>.
               </p>
             </div>
 
