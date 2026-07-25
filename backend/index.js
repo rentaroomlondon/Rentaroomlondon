@@ -16,7 +16,8 @@ import contactRoutes from "./Routes/contactRoutes.js";
 import { startMaintenanceReminder } from "./utils/maintenanceReminder.js";
 import staffRoutes from "./Routes/staffRoutes.js";
 import LeadRoutes from "./Routes/LeadRoute.js";
-import blogRoutes from "./Routes/blogRoutes.js"
+import blogRoutes from "./Routes/blogRoutes.js";
+import enquiryRoutes from "./Routes/enquiryRoutes.js";
 
 dotenv.config();
 
@@ -59,6 +60,7 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/staff", staffRoutes);
 app.use("/api/leads", LeadRoutes);
 app.use("/api/blogs", blogRoutes);
+app.use("/api/enquiries", enquiryRoutes);
 
 // Test route
 app.get('/', (req, res) => {

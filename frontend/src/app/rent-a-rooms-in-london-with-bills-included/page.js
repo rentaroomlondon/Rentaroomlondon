@@ -1,5 +1,10 @@
-import React from "react";
-import AccommodationLondon from "./component/AccommodationLondon";
+import React from 'react'
+import HeroSection from './component/HeroSection';
+import Tab from './component/Tab';
+import Banner from './component/Banner';
+import AboutRooms from './component/AboutRooms';
+import FAQ from './component/Faq';
+import Form from './component/Form';
 
 export const metadata = {
   title: "Rent a Rooms in London With Bills Included| Student Accommodation",
@@ -11,6 +16,17 @@ export const metadata = {
   },
 };
 
-export default function Page() {
-  return <AccommodationLondon />;
+const page = () => {
+  return (
+    <div>
+      <HeroSection />
+      <Tab />
+      <Banner />
+      <AboutRooms />
+      <FAQ />
+      <Form />
+    </div>
+  )
 }
+
+export default page
