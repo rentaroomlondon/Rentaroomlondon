@@ -277,7 +277,7 @@ export default function Form() {
       const data = await res.json();
 
       if (data.success) {
-        alert("Enquiry submitted successfully!");
+        // alert("Enquiry submitted successfully!");
         // Optional: reset form
         setForm({
           name: '',
@@ -289,6 +289,7 @@ export default function Form() {
           budget: '',
         });
         setSelected(null);
+        router.push('/thank-you-rental-room-london');
       } else {
         alert(data.message || "Something went wrong");
       }

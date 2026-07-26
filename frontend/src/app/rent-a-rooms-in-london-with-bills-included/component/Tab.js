@@ -1,18 +1,15 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Building2,
-  ChevronRight,
-  Plus,
-  ExternalLink,
   MessageCircle,
+  ChevronLeft,
+  ChevronRight,
+  X,
 } from 'lucide-react';
 import RoomCard from './RoomCard';
-
-const GBP_LINK =
-  'https://www.google.com/search?sca_esv=7653edd048582144&rlz=1C1CHZN_enKW1034KW1034&sxsrf=APpeQnuqDknmR_k5xlchENl18i8bPILKlA%3A1784893273111&q=RentaRoomLondon&stick=H4sIAAAAAAAAAONgU1I1qDCxMDczNEy2MDRMMk41NTW1MqgwS04xsLRIskxJtEgyMDYwWcTKH5SaV5IYlJ-f65Ofl5KfBwCThyX0OwAAAA&mat=Cc0ocppXRqjM&ved=2ahUKEwjQxoXMneuVAxWXT2wGHYLZEQkQrMcEegQIFBAF';
 
 const WHATSAPP_BASE = 'https://wa.me/447419990126';
 const DEFAULT_WHATSAPP_TEXT = 'Hello! I am interested in booking a room.';
@@ -44,14 +41,8 @@ const mapListingToCard = (listing) => {
   const area = getAreaFromPostcode(postcode);
 
   const features = [];
-  if (listing.location?.address) features.push(listing.location.address);
+  // Location / address removed as requested
   if (listing.roomType) features.push(`${listing.roomType.replace('_', ' ')} room`);
-  if (listing.bathroomType) features.push(`${listing.bathroomType} bathroom`);
-  if (listing.propertyAmenities?.length) {
-    features.push(
-      ...listing.propertyAmenities.slice(0, 3).map((a) => a.replace(/_/g, ' '))
-    );
-  }
   if (features.length === 0 && listing.description) {
     features.push(
       listing.description.slice(0, 80) + (listing.description.length > 80 ? '…' : '')
@@ -67,11 +58,11 @@ const mapListingToCard = (listing) => {
     image:
       listing.images?.[0] ||
       'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80',
+    images: listing.images || [],
     features,
     priceTag: listing.monthlyPrice
       ? `£${listing.monthlyPrice}/mo`
       : listing.roomType?.replace('_', ' ') || 'Available',
-    address: listing.location?.address,
     slug: listing.slug,
     raw: listing,
   };
@@ -94,10 +85,48 @@ export default function Tab() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [enquirySuccess, setEnquirySuccess] = useState(false);
   const [enquiryRoomTitle, setEnquiryRoomTitle] = useState('');
-  const [visibleCount, setVisibleCount] = useState(4);
+
+  // Image gallery modal
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [modalImages, setModalImages] = useState([]);
+  const [modalTitle, setModalTitle] = useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Slider state
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [cardsPerView, setCardsPerView] = useState(3);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const maxIndex = Math.max(0, listings.length - cardsPerView);
+
+  // ── Responsive cardsPerView + isMobile ─────
+  useEffect(() => {
+    const update = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 640);
+
+      if (width < 640) {
+        setCardsPerView(1);
+      } else if (width < 1024) {
+        setCardsPerView(2);
+      } else {
+        setCardsPerView(3);
+      }
+    };
+
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  // Keep index in bounds when cardsPerView changes
+  useEffect(() => {
+    setCurrentIndex((prev) =>
+      Math.min(prev, Math.max(0, listings.length - cardsPerView))
+    );
+  }, [cardsPerView, listings.length]);
 
   // ── Fetch from DB ──────────────────────────
   useEffect(() => {
@@ -132,65 +161,19 @@ export default function Tab() {
     };
   }, []);
 
-  // ── Dynamic categories + counts ────────────
-  const categories = useMemo(() => {
-    const counts = {};
-    listings.forEach((l) => {
-      counts[l.category] = (counts[l.category] || 0) + 1;
-    });
-
-    return [
-      { id: 'All', label: 'All London Rooms', count: listings.length },
-      {
-        id: 'Greenwich',
-        label: 'Greenwich & Deptford',
-        count: (counts['Greenwich'] || 0) + (counts['Colindale'] || 0),
-      },
-      {
-        id: 'Cricklewood',
-        label: 'Cricklewood & Willesden',
-        count: counts['Cricklewood'] || 0,
-      },
-      { id: 'Hendon', label: 'Hendon & Middlesex', count: counts['Hendon'] || 0 },
-      { id: 'Eltham', label: 'Eltham & SE London', count: counts['Eltham'] || 0 },
-      {
-        id: 'Any Location',
-        label: 'Custom Campus Search',
-        count: counts['Any Location'] || 0,
-      },
-    ].filter((c) => c.id === 'All' || c.count > 0);
-  }, [listings]);
-
-  // ── Filtering ──────────────────────────────
-  const filteredLocations = useMemo(() => {
-    if (selectedCategory === 'All') return listings;
-    if (selectedCategory === 'Greenwich') {
-      return listings.filter(
-        (loc) => loc.category === 'Greenwich' || loc.category === 'Colindale'
-      );
-    }
-    return listings.filter((loc) => loc.category === selectedCategory);
-  }, [listings, selectedCategory]);
-
-  // Reset pagination when tab changes
-  useEffect(() => {
-    setVisibleCount(4);
-  }, [selectedCategory]);
-
-  const visibleLocations = filteredLocations.slice(0, visibleCount);
-  const hasMore = visibleCount < filteredLocations.length;
-
-  const handleShowMore = () => {
-    setVisibleCount((prev) => prev + 4);
-  };
-
   // ── Handlers ───────────────────────────────
   const handleViewRoom = (loc) => {
-    if (loc.slug) {
-      router.push(`/listings/${loc.slug}`);
-    } else {
-      console.warn('Listing has no slug:', loc);
-    }
+    const images =
+      loc.images?.length > 0
+        ? loc.images
+        : loc.image
+        ? [loc.image]
+        : [];
+
+    setModalImages(images);
+    setModalTitle(loc.title || 'Room Images');
+    setCurrentImageIndex(0);
+    setShowImageModal(true);
   };
 
   const handleEnquire = (loc) => {
@@ -198,16 +181,36 @@ export default function Tab() {
     setEnquirySuccess(true);
   };
 
+  const goPrev = () => {
+    setCurrentIndex((prev) => Math.max(0, prev - 1));
+  };
+
+  const goNext = () => {
+    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? modalImages.length - 1 : prev - 1
+    );
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === modalImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
   // ── Render ─────────────────────────────────
   return (
-    <div className="w-full bg-[#FAF8F5] text-slate-900 font-sans min-h-screen">
+    <div className="w-full text-slate-900 font-sans">
       <section
         id="locations-section"
-        className="py-12 sm:py-16 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto border-t border-slate-200/80"
+        className="py-12 sm:py-16 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto"
       >
         {/* Section Headings */}
         <div className="space-y-2 mb-8">
-          <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full border border-orange-200">
+          <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full">
             <Building2 className="w-3.5 h-3.5 text-orange-600" />
             <span>London Direct Landlord Properties</span>
           </div>
@@ -219,161 +222,189 @@ export default function Tab() {
           </h4>
         </div>
 
-        {/* Sidebar + Main Grid */}
-        <div className="bg-white border border-slate-200/90 rounded-3xl shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[600px]">
-          {/* Left Vertical Navigation */}
-          <div className="lg:col-span-4 bg-slate-50/80 border-r border-slate-200/80 p-4 sm:p-6 space-y-2">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400 px-3 pb-2">
-              Select London Area
-            </div>
-
-            {categories.map((cat) => {
-              const isActive = selectedCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`w-full text-left px-4 py-3.5 rounded-2xl font-bold text-sm transition-all flex items-center justify-between group ${
-                    isActive
-                      ? 'bg-slate-950 text-white shadow-md border border-slate-800'
-                      : 'bg-white text-slate-700 hover:bg-slate-100/80 border border-slate-200/70'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`w-2 h-2 rounded-full ${
-                        isActive ? 'bg-orange-500 animate-pulse' : 'bg-slate-300'
-                      }`}
-                    />
-                    <span>{cat.label}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
-                        isActive
-                          ? 'bg-orange-500 text-white'
-                          : 'bg-slate-100 text-slate-500'
-                      }`}
-                    >
-                      {cat.count}
-                    </span>
-                    <ChevronRight
-                      className={`w-4 h-4 transition-transform ${
-                        isActive
-                          ? 'text-orange-400 translate-x-1'
-                          : 'text-slate-400 group-hover:translate-x-1'
-                      }`}
-                    />
-                  </div>
-                </button>
-              );
-            })}
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+          <div>
+            <h4 className="text-xl font-black text-slate-900">
+              All Available London Rooms
+            </h4>
+            <p className="text-xs text-slate-500 font-medium">
+              Direct landlord verified listings • All utility bills included
+            </p>
           </div>
+        </div>
 
-          {/* Right Content Panel */}
-          <div className="lg:col-span-8 p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50/30 flex flex-col justify-between">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
-              <div>
-                <h4 className="text-xl font-black text-slate-900">
-                  {selectedCategory === 'All'
-                    ? 'All Available London Rooms'
-                    : `Rooms in ${selectedCategory}`}
-                </h4>
-                <p className="text-xs text-slate-500 font-medium">
-                  Direct landlord verified listings • All utility bills included
-                </p>
-              </div>
-              <span className="bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full border border-orange-200">
-                {filteredLocations.length} Properties Available
-              </span>
-            </div>
+        {/* Loading / Error / Empty / Cards */}
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-64 rounded-2xl bg-slate-200/60 animate-pulse"
+              />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-center py-16 text-slate-500">
+            <p className="font-bold text-lg mb-2">Could not load rooms</p>
+            <p className="text-sm">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 text-orange-600 font-bold text-sm underline"
+            >
+              Try again
+            </button>
+          </div>
+        ) : listings.length === 0 ? (
+          <div className="text-center py-16 text-slate-500">
+            <p className="font-bold text-lg">No rooms found</p>
+            <p className="text-sm mt-1">Please check back later.</p>
+          </div>
+        ) : isMobile ? (
+          /* ── Mobile: vertical column (all cards stacked) ── */
+          <div className="grid grid-cols-1 gap-5">
+            {listings.map((loc) => (
+              <RoomCard
+                key={loc.id}
+                loc={loc}
+                onEnquire={() => handleEnquire(loc)}
+                onView={() => handleViewRoom(loc)}
+              />
+            ))}
+          </div>
+        ) : (
+          /* ── Tablet / Desktop: controlled slider with buttons ── */
+          <div className="relative">
+            {/* Left button */}
+            <button
+              onClick={goPrev}
+              disabled={currentIndex === 0}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10
+                         w-10 h-10 rounded-full bg-white shadow-md border border-slate-200
+                         flex items-center justify-center
+                         disabled:opacity-40 disabled:cursor-not-allowed
+                         hover:bg-orange-50 hover:border-orange-300 transition-all"
+              aria-label="Previous"
+            >
+              <ChevronLeft className="w-5 h-5 text-slate-700" />
+            </button>
 
-            {/* Loading / Error / Empty / Cards */}
-            {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {[1, 2, 3, 4].map((i) => (
+            {/* Cards track */}
+            <div className="overflow-hidden mx-8">
+              <div
+                className="flex transition-transform duration-300 ease-out gap-5"
+                style={{
+                  transform: `translateX(-${currentIndex * (100 / cardsPerView)}%)`,
+                }}
+              >
+                {listings.map((loc) => (
                   <div
-                    key={i}
-                    className="h-64 rounded-2xl bg-slate-200/60 animate-pulse"
-                  />
-                ))}
-              </div>
-            ) : error ? (
-              <div className="text-center py-16 text-slate-500">
-                <p className="font-bold text-lg mb-2">Could not load rooms</p>
-                <p className="text-sm">{error}</p>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="mt-4 text-orange-600 font-bold text-sm underline"
-                >
-                  Try again
-                </button>
-              </div>
-            ) : filteredLocations.length === 0 ? (
-              <div className="text-center py-16 text-slate-500">
-                <p className="font-bold text-lg">No rooms found in this area</p>
-                <p className="text-sm mt-1">
-                  Try another London area or check back later.
-                </p>
-              </div>
-            ) : (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {visibleLocations.map((loc) => (
+                    key={loc.id}
+                    className="flex-shrink-0"
+                    style={{
+                      width: `calc((100% - ${(cardsPerView - 1) * 1.25}rem) / ${cardsPerView})`,
+                    }}
+                  >
                     <RoomCard
-                      key={loc.id}
                       loc={loc}
                       onEnquire={() => handleEnquire(loc)}
                       onView={() => handleViewRoom(loc)}
                     />
-                  ))}
-                </div>
-
-                {hasMore && (
-                  <div className="flex justify-center pt-2">
-                    <button
-                      onClick={handleShowMore}
-                      className="bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm px-6 py-3 rounded-xl border border-slate-300 transition-all shadow-sm flex items-center gap-2"
-                    >
-                      <Plus className="w-4 h-4 text-orange-600" />
-                      <span>Show More</span>
-                      <span className="text-xs text-slate-500 font-medium">
-                        (+{Math.min(4, filteredLocations.length - visibleCount)} more)
-                      </span>
-                    </button>
                   </div>
-                )}
-              </>
-            )}
-
-            {/* Footer */}
-            <div className="pt-4 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span>
-                  Showing {visibleLocations.length} of {filteredLocations.length}{' '}
-                  verified listings
-                </span>
+                ))}
               </div>
-              <a
-                href={GBP_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="text-orange-600 font-bold hover:underline flex items-center gap-1"
-              >
-                <span>Read GBP Reviews</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
             </div>
+
+            {/* Right button */}
+            <button
+              onClick={goNext}
+              disabled={currentIndex >= maxIndex}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10
+                         w-10 h-10 rounded-full bg-white shadow-md border border-slate-200
+                         flex items-center justify-center
+                         disabled:opacity-40 disabled:cursor-not-allowed
+                         hover:bg-orange-50 hover:border-orange-300 transition-all"
+              aria-label="Next"
+            >
+              <ChevronRight className="w-5 h-5 text-slate-700" />
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* ── IMAGE GALLERY MODAL ── */}
+      {showImageModal && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
+          <div className="relative w-full max-w-4xl">
+            {/* Close button */}
+            <button
+              onClick={() => setShowImageModal(false)}
+              className="absolute -top-12 right-0 text-white hover:text-orange-400 transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-8 h-8" />
+            </button>
+
+            {/* Title */}
+            <p className="text-white text-center text-sm font-medium mb-3 truncate">
+              {modalTitle}
+            </p>
+
+            {/* Image */}
+            <div className="relative bg-black rounded-2xl overflow-hidden aspect-[4/3] sm:aspect-video flex items-center justify-center">
+              {modalImages.length > 0 ? (
+                <img
+                  src={modalImages[currentImageIndex]}
+                  alt={`${modalTitle} - ${currentImageIndex + 1}`}
+                  className="max-h-full max-w-full object-contain"
+                />
+              ) : (
+                <p className="text-white/60">No images available</p>
+              )}
+
+              {/* Prev / Next image buttons */}
+              {modalImages.length > 1 && (
+                <>
+                  <button
+                    onClick={prevImage}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* Dots indicator */}
+            {modalImages.length > 1 && (
+              <div className="flex justify-center gap-2 mt-4">
+                {modalImages.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentImageIndex(idx)}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      idx === currentImageIndex
+                        ? 'bg-orange-500 w-5'
+                        : 'bg-white/40'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      </section>
+      )}
 
       {/* WHATSAPP ENQUIRY DIALOG */}
       {enquirySuccess && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl relative border border-slate-200">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl relative">
             <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto">
               <MessageCircle className="w-8 h-8" />
             </div>

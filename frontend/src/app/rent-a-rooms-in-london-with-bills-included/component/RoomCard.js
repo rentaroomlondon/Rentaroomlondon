@@ -60,7 +60,7 @@ export default function RoomCard({ loc, onEnquire, onView }) {
             className="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-2xs"
           >
             <MessageCircle className="w-3.5 h-3.5 fill-white text-orange-500" />
-            <span>Enquire Room</span>
+            <span>Enquire</span>
           </button>
 
           <button
@@ -68,7 +68,7 @@ export default function RoomCard({ loc, onEnquire, onView }) {
             className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5"
           >
             <Eye className="w-3.5 h-3.5 text-slate-600" />
-            <span>View Room</span>
+            <span>View</span>
           </button>
         </div>
       </div>
