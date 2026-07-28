@@ -10,6 +10,7 @@ import {
   ExternalLink,
   CheckCircle2,
   Play,
+  Pause,
 } from 'lucide-react';
 
 const GBP_LINK =
@@ -19,8 +20,13 @@ export default function HeroSection() {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const handlePlay = () => {
-    if (videoRef.current) {
+  const handleTogglePlay = () => {
+    if (!videoRef.current) return;
+
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    } else {
       videoRef.current.play();
       setIsPlaying(true);
     }
@@ -233,22 +239,23 @@ export default function HeroSection() {
                   onPause={() => setIsPlaying(false)}
                 >
                   <source src="/room-video.webm" type="video/webm" />
-                  {/* <source src="/videos/room-video.mp4" type="video/mp4" /> */}
                   Your browser does not support the video tag.
                 </video>
 
-                {/* Play Button Overlay */}
-                {!isPlaying && (
-                  <button
-                    onClick={handlePlay}
-                    className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-all duration-300 z-10"
-                    aria-label="Play video"
-                  >
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform duration-300">
+                {/* Play / Pause Overlay */}
+                <button
+                  onClick={handleTogglePlay}
+                  className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-all duration-300 z-10"
+                  aria-label={isPlaying ? 'Pause video' : 'Play video'}
+                >
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform duration-300">
+                    {isPlaying ? (
+                      <Pause className="w-7 h-7 sm:w-8 sm:h-8 text-slate-900 fill-slate-900" />
+                    ) : (
                       <Play className="w-7 h-7 sm:w-8 sm:h-8 text-slate-900 fill-slate-900 ml-1" />
-                    </div>
-                  </button>
-                )}
+                    )}
+                  </div>
+                </button>
 
                 {/* Optional dark gradient overlay at bottom */}
                 <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
