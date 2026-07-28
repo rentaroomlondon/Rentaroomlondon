@@ -24,9 +24,9 @@ export default function RoomCard({ loc, onEnquire, onView }) {
         </div>
 
         {/* Price / Highlight Tag */}
-        <div className="absolute top-3 right-3 bg-orange-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-2xs">
+        {/* <div className="absolute top-3 right-3 bg-orange-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-2xs">
           {loc.priceTag}
-        </div>
+        </div> */}
 
         {/* Postcode Tag */}
         <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur text-slate-900 text-[11px] font-bold px-2 py-0.5 rounded border border-slate-200/80 flex items-center gap-1">

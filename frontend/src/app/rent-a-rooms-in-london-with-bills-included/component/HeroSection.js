@@ -1,7 +1,5 @@
 'use client';
-
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useRef, useState } from 'react';
 import {
   Star,
   ShieldCheck,
@@ -10,138 +8,22 @@ import {
   GraduationCap,
   Clock,
   ExternalLink,
-  MessageCircle,
   CheckCircle2,
-  ChevronDown,
+  Play,
 } from 'lucide-react';
 
 const GBP_LINK =
   'https://www.google.com/search?sca_esv=7653edd048582144&rlz=1C1CHZN_enKW1034KW1034&sxsrf=APpeQnuqDknmR_k5xlchENl18i8bPILKlA%3A1784893273111&q=RentaRoomLondon&stick=H4sIAAAAAAAAAONgU1I1qDCxMDczNEy2MDRMMk41NTW1MqgwS04xsLRIskxJtEgyMDYwWcTKH5SaV5IYlJ-f65Ofl5KfBwCThyX0OwAAAA&mat=Cc0ocppXRqjM&ved=2ahUKEwjQxoXMneuVAxWXT2wGHYLZEQkQrMcEegQIFBAF';
 
 export default function HeroSection() {
-  const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [openSection, setOpenSection] = useState(null); // which question is expanded
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    moveIn: '',
-    area: '',
-    lengthOfStay: '',
-    budget: '',
-  });
-
-  const handleChange = (key) => (e) => {
-    setForm((prev) => ({ ...prev, [key]: e.target.value }));
-  };
-
-  const selectOption = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-    setOpenSection(null); // collapse after selection
-  };
-
-  const toggleSection = (section) => {
-    setOpenSection((prev) => (prev === section ? null : section));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/enquiries`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        // alert('Enquiry submitted successfully!');
-        setForm({
-          name: '',
-          email: '',
-          phone: '',
-          moveIn: '',
-          area: '',
-          lengthOfStay: '',
-          budget: '',
-        });
-
-        // Redirect to thank-you page
-        router.push('/thank-you-rental-room-london');
-      } else {
-        alert(data.message || 'Something went wrong');
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Network error');
-    } finally {
-      setIsSubmitting(false);
+  const handlePlay = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setIsPlaying(true);
     }
-  };
-
-  // Helper for compact selectable questions
-  const CompactQuestion = ({
-    id,
-    label,
-    value,
-    options,
-    required = true,
-  }) => {
-    const isOpen = openSection === id;
-
-    return (
-      <div className="border border-slate-200 rounded-xl overflow-hidden">
-        <button
-          type="button"
-          onClick={() => toggleSection(id)}
-          className="w-full flex items-center justify-between px-4 py-3.5 text-left bg-white hover:bg-slate-50 transition-colors"
-        >
-          <div>
-            <p className="text-sm font-semibold text-slate-700">
-              {label} {required && <span className="text-orange-500">*</span>}
-            </p>
-            <p className="text-sm text-slate-500 mt-0.5">
-              {value || 'Select an option'}
-            </p>
-          </div>
-          <ChevronDown
-            className={`w-5 h-5 text-slate-400 transition-transform ${
-              isOpen ? 'rotate-180' : ''
-            }`}
-          />
-        </button>
-
-        {isOpen && (
-          <div className="border-t border-slate-100 bg-slate-50/80 px-2 py-2 space-y-1">
-            {options.map((opt) => {
-              const optValue = typeof opt === 'string' ? opt : opt.value;
-              const optLabel = typeof opt === 'string' ? opt : opt.label;
-              const isSelected = value === optValue;
-
-              return (
-                <button
-                  key={optValue}
-                  type="button"
-                  onClick={() => selectOption(id, optValue)}
-                  className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                    isSelected
-                      ? 'bg-orange-100 text-orange-800 font-semibold'
-                      : 'hover:bg-white text-slate-700'
-                  }`}
-                >
-                  {optLabel}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    );
   };
 
   return (
@@ -320,7 +202,6 @@ export default function HeroSection() {
                     </div>
                   </div>
                 </div>
-
                 <a
                   href={GBP_LINK}
                   target="_blank"
@@ -332,170 +213,62 @@ export default function HeroSection() {
                 </a>
               </div>
             </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-              <a
-                href={GBP_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-sm px-6 py-3.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 group"
-              >
-                <MessageCircle className="w-4 h-4 fill-white text-orange-500" />
-                <span>Enquire via WhatsApp</span>
-                <span className="group-hover:translate-x-1 transition-transform">
-                  →
-                </span>
-              </a>
-
-              <a
-                href={GBP_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="bg-white hover:bg-slate-50 text-slate-800 font-semibold text-sm px-5 py-3.5 rounded-xl border border-slate-300 transition-all flex items-center justify-center gap-2"
-              >
-                <ShieldCheck className="w-4 h-4 text-orange-600" />
-                <span>Verify Google Profile</span>
-              </a>
-            </div>
           </div>
 
-          {/* ========== COMPACT FORM ========== */}
+          {/* ========== ROOM VIDEO ========== */}
           <div className="lg:col-span-5">
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-lg sticky top-6">
-              <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full border border-orange-200 mb-4">
-                <MessageCircle className="w-3.5 h-3.5 text-orange-600" />
-                Enquiry Form
+            <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-lg sticky top-6">
+              {/* Video Container */}
+              <div className="relative aspect-[4/5] sm:aspect-video lg:aspect-[4/5] bg-slate-100 group">
+                <video
+                  ref={videoRef}
+                  className="w-full h-full object-cover"
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  poster="/apartment-room-rental-service.webp"
+                  aria-label="Live room tour of modern student accommodation in London"
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                >
+                  <source src="/room-video.webm" type="video/webm" />
+                  {/* <source src="/videos/room-video.mp4" type="video/mp4" /> */}
+                  Your browser does not support the video tag.
+                </video>
+
+                {/* Play Button Overlay */}
+                {!isPlaying && (
+                  <button
+                    onClick={handlePlay}
+                    className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-all duration-300 z-10"
+                    aria-label="Play video"
+                  >
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/95 hover:bg-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform duration-300">
+                      <Play className="w-7 h-7 sm:w-8 sm:h-8 text-slate-900 fill-slate-900 ml-1" />
+                    </div>
+                  </button>
+                )}
+
+                {/* Optional dark gradient overlay at bottom */}
+                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
               </div>
 
-              <h2 className="text-xl sm:text-2xl font-black text-slate-950 tracking-tight mb-1">
-                Tell us what you&apos;re looking for
-              </h2>
-              <p className="text-sm text-slate-500 mb-6">
-                Fill the form and we&apos;ll get back to you quickly.
-              </p>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Name */}
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                    Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={form.name}
-                    onChange={handleChange('name')}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-400/40 focus:border-orange-300 transition"
-                  />
+              {/* Caption under video */}
+              <div className="p-5 sm:p-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Live Room Tour
+                  </span>
                 </div>
-
-                {/* Email */}
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={form.email}
-                    onChange={handleChange('email')}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-400/40 focus:border-orange-300 transition"
-                  />
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                    Phone *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={form.phone}
-                    onChange={handleChange('phone')}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-400/40 focus:border-orange-300 transition"
-                  />
-                </div>
-
-                {/* Compact Questions */}
-                <CompactQuestion
-                  id="moveIn"
-                  label="When are you looking to move?"
-                  value={form.moveIn}
-                  options={[
-                    'Within 1 week',
-                    'Within 1 month',
-                    'Within 3 months',
-                    'Within 6 months',
-                  ]}
-                />
-
-                <CompactQuestion
-                  id="area"
-                  label="Which area interests you most?"
-                  value={form.area}
-                  options={[
-                    'Cricklewood',
-                    'Harlesden',
-                    'Kingsbury',
-                    'West Hampstead',
-                    'Hendon',
-                    'Plumstead',
-                    'Eltham',
-                    'Greenwich',
-                    'Stockwell',
-                    'South Tottenham',
-                    'Leyton',
-                    'East Ham',
-                    'Birmingham',
-                    'Other / Any London',
-                  ]}
-                />
-
-                <CompactQuestion
-                  id="lengthOfStay"
-                  label="Length of Stay"
-                  value={form.lengthOfStay}
-                  options={[
-                    'less than month',
-                    '1-2 months',
-                    '3-5 months',
-                    '6-9 months',
-                    '10-12 months',
-                  ]}
-                />
-
-                <CompactQuestion
-                  id="budget"
-                  label="Monthly Budget"
-                  value={
-                    form.budget === '620-1500'
-                      ? '£620 – £1,500'
-                      : form.budget === '1500-2500'
-                      ? '£1,500 – £2,500'
-                      : form.budget === '2500-3500'
-                      ? '£2,500 – £3,500'
-                      : form.budget === '3500+'
-                      ? '£3,500+'
-                      : ''
-                  }
-                  options={[
-                    { label: '£620 – £1,500', value: '620-1500' },
-                    { label: '£1,500 – £2,500', value: '1500-2500' },
-                    { label: '£2,500 – £3,500', value: '2500-3500' },
-                    { label: '£3,500+', value: '3500+' },
-                  ]}
-                />
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-3.5 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-colors shadow-sm mt-2"
-                >
-                  {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
-                </button>
-              </form>
+                <h3 className="text-lg font-black text-slate-950">
+                  Modern Rooms Across London
+                </h3>
+                <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                  Fully furnished rooms with bills included. Direct from landlord – zero agency fees.
+                </p>
+              </div>
             </div>
           </div>
         </div>
