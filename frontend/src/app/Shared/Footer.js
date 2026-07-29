@@ -50,7 +50,14 @@ const Footer = () => {
             {/* Social Icons Stack */}
             <div className="pt-2">
               <div className="flex gap-3">
-                <SocialIcon>{facebookIcon}</SocialIcon>
+                <Link
+                  href="https://www.facebook.com/people/Rent-a-Room/61583753398768/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Rent a Room Facebook"
+                >
+                  <SocialIcon>{facebookIcon}</SocialIcon>
+                </Link>
                 <SocialIcon>{xIcon}</SocialIcon>
                 <SocialIcon>{youtubeIcon}</SocialIcon>
                 <SocialIcon>{linkedinIcon}</SocialIcon>
