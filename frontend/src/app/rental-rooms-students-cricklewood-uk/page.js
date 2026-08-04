@@ -5,6 +5,7 @@ import PropertiesSection from './components/PropertiesSection';
 import StudentAccommodation from './components/StudentAccommodation';
 import ConnectivitySection from './components/ConnectivitySection';
 import AreaGuide from './components/AreaGuide';
+import CricklewoodFAQ from './components/CricklewoodFAQ';
 
 
 export const metadata = {
@@ -25,6 +26,7 @@ const page = () => {
       <StudentAccommodation />
       <ConnectivitySection />
       <AreaGuide />
+      <CricklewoodFAQ />
     </div>
   )
 }
