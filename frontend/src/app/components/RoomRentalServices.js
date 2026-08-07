@@ -50,7 +50,7 @@ const RoomRentalServices = () => {
             </div>
             
             <p className="text-gray-600 leading-relaxed text-lg">
-              Properties situated near train stations and city centers, making commuting simple and efficient for professionals and students alike.
+              Rental Rooms situated near train stations and city centers, making commuting simple and efficient for professionals and students alike.
             </p>
 
             <Link

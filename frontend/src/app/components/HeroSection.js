@@ -88,13 +88,13 @@ const HeroSection = () => {
             </div>
 
             <h1 className="text-[34px] md:text-[55px] font-sans font-bold leading-[1.1] mb-5">
-                Find  <span className="text-[#F47C3C]"> Affordable  </span>
-                <span className="text-[#F47C3C]">Rooms</span> <br className="hidden md:block" />for Room Rent in London
+                Rooms to Rent<span className="text-[#F47C3C]"> in London </span>
+                 <br className="hidden md:block" /> With Bills Included
             </h1>
             
             {/* Description Text */}
             <p className="text-[14px] md:text-lg font-light font-sans opacity-90 max-w-82 md:max-w-lg mx-auto leading-relaxed">
-              Browse verified room listings across London's top neighborhoods. Short-term, long-term, bills included — your perfect room is one search away.
+              Looking to rent a room in London? Browse verified listings across the city's top neighborhoods. From flexible short-term stays to dedicated student accommodation with bills included rental rooms — your perfect room is one search away.
             </p>
             
             {/* Slider Dots */}

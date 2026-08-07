@@ -24,7 +24,7 @@ const RoomTypeSection = () => {
               <div className="space-y-4">
                 <h3 className="text-[#FF6B35] font-bold text-sm uppercase tracking-[4px]">Room Categories</h3>
                 <h2 className="text-[36px] md:text-[48px] font-semibold text-[#1A2332] font-playfair leading-tight">
-                  Find Every Type of Room in London — <span className="italic">All in One Place</span>
+                  Find Every Type of Room for Rent in London at Low Cost
                 </h2>
               </div>
               

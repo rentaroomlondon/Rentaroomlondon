@@ -12,9 +12,9 @@ import dynamic from "next/dynamic";
 const GallerySection = dynamic(() => import("./components/GallerySection"));
 
 export const metadata = {
-  title: "Best Rental Rooms For Students And Professionals In London",
+  title: "Rent a Room in London | Student Accommodation With Bills Included",
   description:
-    "Find affordable accommodation in London, perfect for students and professionals with easy access to universities and city transport with bills included.",
+    "Looking to rent a room in London at low cost? Find affordable student accommodation & flatshares with bills included, near top universities and transport.",
 
   keywords: [
     "rent a room london",
