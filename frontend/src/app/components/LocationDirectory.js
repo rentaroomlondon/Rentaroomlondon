@@ -140,10 +140,7 @@ const LocationDirectory = () => {
                   {/* Station Dot */}
                   <div className="absolute -left-[41px] md:-left-[57px] top-0 w-4 h-4 rounded-full border-4 border-[#1A2332] bg-white group-hover:bg-[#FF6B35] transition-colors" />
 
-                  <Link
-                    href={loc.href}
-                    className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 bg-white/5 p-6 rounded-[24px] group-hover:bg-white/10 transition-all border border-transparent group-hover:border-white/10 block"
-                  >
+                  <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 bg-white/5 p-6 rounded-[24px] group-hover:bg-white/10 transition-all border border-transparent group-hover:border-white/10">
                     <div className="flex-shrink-0">
                       <span className="inline-block bg-[#FF6B351A] text-[#FF6B35] px-4 py-2 rounded-lg font-bold text-lg">
                         {loc.pc}
@@ -159,11 +156,19 @@ const LocationDirectory = () => {
                       </p>
                     </div>
 
-                    <div className="flex gap-4 text-white/20">
-                      <Building2 size={20} />
-                      <Train size={20} />
+                    <div className="flex items-center gap-4">
+                      <div className="flex gap-4 text-white/20">
+                        <Building2 size={20} />
+                        <Train size={20} />
+                      </div>
+                      <Link
+                        href={loc.href}
+                        className="bg-[#FF6B35] hover:bg-[#e55a2b] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap"
+                      >
+                        Room Available
+                      </Link>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               ))}
             </div>
