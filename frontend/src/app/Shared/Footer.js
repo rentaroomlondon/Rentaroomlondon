@@ -15,19 +15,19 @@ const tenantLinks = [
 ];
 
 const locationLinks = [
-  { label: "Rental Rooms in Cricklewood", href: "/rental-rooms-students-cricklewood-uk" },
-  { label: "Rental Rooms in Harlesden", href: "/rooms-rent-harlesden-nw10-bills-included" },
-  { label: "Rental Rooms in Kingsbury", href: "/shared-rental-rooms-kingsbury-london-nw9" },
-  { label: "Rental Rooms in West Hampstead", href: "/rooms-rental-nw6-west-hampstead-london" },
-  { label: "Rental Rooms in Hendon", href: "/cheap-rental-rooms-hendon-nw4-london" },
-  { label: "Rental Rooms in Plumstead", href: "/affordable-rental-rooms-se18-plumstead-bills-included" },
-  { label: "Rental Rooms in Eltham", href: "/rental-rooms-eltham-london-se9-bills-included" },
-  { label: "Rental Rooms in Greenwich", href: "/best-rental-rooms-greenwich-university-se10-london" },
-  { label: "Rental Rooms in Stockwell", href: "/stockwell-sw9-student-housing-bills-included" },
-  { label: "Rental Rooms in South Tottenham", href: "/Spare-rooms-rent-south-tottenham-n15-london" },
-  { label: "Rental Rooms in Leyton", href: "/rent-single-double-rooms-leyton-e10-london" },
-  { label: "Rental Rooms in East Ham", href: "/east-ham-e6-properties-rent-bills-included" },
-  { label: "Rental Rooms in Birmingham", href: "/birmingham-city-centre-student-housing-bills-included" },
+  { label: "Rent a Room in Cricklewood", href: "/rental-rooms-students-cricklewood-uk" },
+  { label: "Rent a Room in Harlesden", href: "/rooms-rent-harlesden-nw10-bills-included" },
+  { label: "Rent a Room in Kingsbury", href: "/shared-rental-rooms-kingsbury-london-nw9" },
+  { label: "Rent a Room in West Hampstead", href: "/rooms-rental-nw6-west-hampstead-london" },
+  { label: "Rent a Room in Hendon", href: "/cheap-rental-rooms-hendon-nw4-london" },
+  { label: "Rent a Room in Plumstead", href: "/affordable-rental-rooms-se18-plumstead-bills-included" },
+  { label: "Rent a Room in Eltham", href: "/rental-rooms-eltham-london-se9-bills-included" },
+  { label: "Rent a Room in Greenwich", href: "/best-rental-rooms-greenwich-university-se10-london" },
+  { label: "Rent a Room in Stockwell", href: "/stockwell-sw9-student-housing-bills-included" },
+  { label: "Rent a Room in South Tottenham", href: "/Spare-rooms-rent-south-tottenham-n15-london" },
+  { label: "Rent a Room in Leyton", href: "/rent-single-double-rooms-leyton-e10-london" },
+  { label: "Rent a Room in East Ham", href: "/east-ham-e6-properties-rent-bills-included" },
+  { label: "Rent a Room in Birmingham", href: "/birmingham-city-centre-student-housing-bills-included" },
 ];
 
 const Footer = () => {

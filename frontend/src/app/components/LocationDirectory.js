@@ -165,7 +165,7 @@ const LocationDirectory = () => {
                         href={loc.href}
                         className="bg-[#FF6B35] hover:bg-[#e55a2b] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap"
                       >
-                        Room Available
+                        Room Availablee
                       </Link>
                     </div>
                   </div>
