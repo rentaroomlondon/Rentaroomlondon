@@ -43,7 +43,7 @@ const StudentAccommodation = () => {
             </div>
             
             <h2 className="text-[32px] md:text-[44px] font-semibold text-[#1A2332] font-playfair leading-tight">
-              Student Accommodation near universities 
+              Student Accommodation in London 
               <span className="text-[#FF6B35] italic">With Bills Included</span>
             </h2>
 

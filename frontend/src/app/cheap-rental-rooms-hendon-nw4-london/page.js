@@ -8,8 +8,8 @@ import AreaGuide from './components/AreaGuide';
 
 
 export const metadata = {
-  title: "Affordable Rental Rooms in Hendon, London NW4 With Bills Included",
-  description: "Explore budget-friendly student accommodation and shared rental rooms with bills included in Hendon, London with trusted property listings and flexible stays.",
+  title: "Student Accommodation in NW4, London | Rent a Room in Hendon",
+  description: "Looking for affordable rooms for rent in Hendon, NW4? We offer rental rooms for students & professionals near universities, workplaces, & travel hubs.",
   alternates: {
     canonical: "https://rentaroomlondon.co.uk/cheap-rental-rooms-hendon-nw4-london", // Adjust to your actual URL
   },

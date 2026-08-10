@@ -88,17 +88,17 @@ const HeroSection = () => {
             </nav>
 
             <h1 className="text-white mb-6 font-playfair text-[36px] leading-[1.1] md:text-[60px] font-bold">
-              Find Best Rental Rooms in{" "}
+              Rent a Room in{" "}
               <span className="text-[#FF6B35] italic font-playfair">
-                Cricklewood, London
+                Cricklewood (NW2), London
               </span>{" "}
               at Affordable Cost
             </h1>
 
             <p className="text-[#FFFFFFA6] font-sans font-light text-[16px] leading-7 md:text-[18px] mb-8">
-              Whether you're a student searching for affordable accommodation near campus 
-              or a landlord with a room to fill, we connect the right people to the 
-              right properties — <span className="text-white font-medium">every time.</span>
+              From affordable student accommodation near top universities to prime rooms to 
+              rent in Cricklewood for professionals and flatsharers, we connect the right 
+              people to the right room for rental with bills included — <span className="text-white font-medium">every time.</span>
             </p>
 
             

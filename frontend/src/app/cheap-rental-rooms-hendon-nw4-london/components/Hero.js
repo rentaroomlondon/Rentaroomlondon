@@ -89,14 +89,14 @@ const HeroSection = () => {
             
 
             <h1 className="text-white mb-6 font-playfair text-[36px] leading-[1.1] md:text-[60px] font-bold">
-              Affordable Rooms & Shared Accommodation in {" "}
+              Rent a Room in Hendon, London Student Accommodation in {" "}
               <span className="text-[#FF6B35] italic font-playfair">
-                Hendon, London
+                NW4, London
               </span>{" "}
             </h1>
 
             <p className="text-[#FFFFFFA6] font-sans font-light text-[16px] leading-7 md:text-[18px] mb-8">
-              Looking for affordable rental rooms near universities, workplaces, or travel hubs? Our platform connects people with reliable properties and hassle-free room rental solutions 
+              Looking for affordable student accommodation near universities, workplaces, or travel hubs? Easily rent a room in London with bills included through our platform for reliable properties and hassle-free living 
               <span className="text-white font-medium"> in Hendon.</span>
             </p>
 
