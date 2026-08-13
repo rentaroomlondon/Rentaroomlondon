@@ -1,71 +1,8 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { toast } from "react-toastify";
+import ContactForm from "@/app/Shared/ContactForm";
 
 const HeroSection = () => {
-  const [form, setForm] = useState({
-    contactMethod: "Call me",
-    title: "Mr",
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-
-  // ✅ Handle input change
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  // ✅ Handle submit logic
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contact`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        toast.success("Message sent successfully");
-        setForm({
-          contactMethod: "Call me",
-          title: "Mr",
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          message: "",
-        });
-
-        // Native browser redirect
-        window.location.href = "/thank-you-rental-room-london";
-        
-      } else {
-        toast.error(data.message || "Something went wrong");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Server error ❌");
-    }
-    setLoading(false);
-  };
-
   return (
     <section className="relative w-full min-h-[600px] flex items-center overflow-hidden px-5 py-16 lg:py-24 bg-[#1A2332] md:bg-[linear-gradient(102.2deg,#1A2332_0%,#243044_100%)]">
       
@@ -106,103 +43,11 @@ const HeroSection = () => {
 
           {/* RIGHT COLUMN: Contact Form */}
           <div className="relative">
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-6 md:p-8 rounded-[32px] shadow-2xl">
-              <div className="mb-6">
-                <h2 className="text-white text-xl md:text-2xl font-playfair font-bold mb-2">
-                  Get in Touch
-                </h2>
-                <p className="text-[#FFFFFFA6] text-sm">
-                  Inquiry about rooms in Cricklewood
-                </p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <select 
-                    name="contactMethod"
-                    value={form.contactMethod}
-                    onChange={handleChange}
-                    className="w-full p-3 bg-white/10 border border-white/10 rounded-xl text-white text-sm outline-none cursor-pointer focus:border-[#FF6B35] transition-all"
-                  >
-                    <option className="text-black">Call me</option>
-                    <option className="text-black">Email me</option>
-                  </select>
-
-                  <select 
-                    name="title"
-                    value={form.title}
-                    onChange={handleChange}
-                    className="w-full p-3 bg-white/10 border border-white/10 rounded-xl text-white text-sm outline-none cursor-pointer focus:border-[#FF6B35] transition-all"
-                  >
-                    <option className="text-black">Mr</option>
-                    <option className="text-black">Mrs</option>
-                    <option className="text-black">Ms</option>
-                  </select>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={form.firstName}
-                    onChange={handleChange}
-                    placeholder="First Name *"
-                    className="w-full p-3 bg-white border-0 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#FF6B35]"
-                    required
-                  />
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={form.lastName}
-                    onChange={handleChange}
-                    placeholder="Surname *"
-                    className="w-full p-3 bg-white border-0 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#FF6B35]"
-                    required
-                  />
-                </div>
-
-                <input
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="E-mail Address *"
-                  className="w-full p-3 bg-white border-0 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#FF6B35]"
-                  required
-                />
-
-                <input
-                  type="tel"
-                  name="phone"
-                  value={form.phone}
-                  onChange={handleChange}
-                  placeholder="Phone No. *"
-                  className="w-full p-3 bg-white border-0 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#FF6B35]"
-                  required
-                />
-
-                <textarea
-                  name="message"
-                  value={form.message}
-                  onChange={handleChange}
-                  rows={3}
-                  placeholder="How can we help you?"
-                  className="w-full p-3 bg-white border-0 rounded-xl text-sm outline-none resize-none focus:ring-2 focus:ring-[#FF6B35]"
-                />
-
-                <button 
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-[#FF6B35] hover:bg-[#e65a25] text-white font-bold py-4 rounded-xl uppercase tracking-widest text-[11px] transition-all shadow-lg shadow-[#FF6B3533]"
-                >
-                  {loading ? "Sending..." : (
-                    <span className="flex items-center justify-center gap-2">
-                      Submit Inquiry <ArrowRight size={14} />
-                    </span>
-                  )}
-                </button>
-              </form>
-            </div>
+            <ContactForm
+              title="Get in Touch"
+              subtitle="Inquiry about rooms in Cricklewood."
+              redirectUrl="/thank-you-rental-room-london"
+            />
           </div>
 
         </div>

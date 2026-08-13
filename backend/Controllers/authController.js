@@ -49,8 +49,17 @@ export const register = async (req, res) => {
       roomType,
       needFromDate,
       notes,
-      isVerified 
+      isVerified,
+      website
     } = req.body;
+
+    // Honeypot check
+    if (website) {
+      return res.status(201).json({
+        success: true,
+        message: "Registration successful. Please verify your email.",
+      });
+    }
 
     const emailLower = email.toLowerCase();
 

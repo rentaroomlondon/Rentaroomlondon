@@ -1,5 +1,60 @@
 import Contact from "../Models/Contact.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import { validate } from "deep-email-validator";
+
+// ---------- Helpers ----------
+const isValidName = (name) => {
+  if (!name || typeof name !== "string") return false;
+  const cleaned = name.trim();
+
+  // 1. Basic format
+  if (!/^[a-zA-Z\s'-]{2,40}$/.test(cleaned)) return false;
+
+  // 2. Must contain at least one vowel (blocks hsah, jhbjh, etc.)
+  if (!/[aeiouAEIOU]/.test(cleaned)) return false;
+
+  // 3. Reject too many consecutive consonants (random keyboard spam)
+  if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/.test(cleaned)) {
+    return false;
+  }
+
+  // 4. Reject very short random-looking names
+  if (cleaned.length < 3) return false;
+
+  return true;
+};
+
+const isValidPhone = (phone) => {
+  if (!phone || typeof phone !== "string") return false;
+  const digits = phone.replace(/\D/g, "");
+  return digits.length >= 10 && digits.length <= 15;
+};
+
+const isSpammyEmail = (email) => {
+  if (!email) return true;
+  const local = (email.split("@")[0] || "").toLowerCase();
+
+  // existing rules...
+  const dotCount = (local.match(/\./g) || []).length;
+  if (dotCount >= 3) return true;
+  if (local.includes("..") || local.startsWith(".") || local.endsWith(".")) return true;
+  if (local.length < 3) return true;
+
+  // NEW: reject pure random-looking / test-like locals
+  // 1. No vowels (common in keyboard smash)
+  if (!/[aeiou]/.test(local)) return true;
+
+  // 2. Too many consecutive consonants
+  if (/[bcdfghjklmnpqrstvwxyz]{5,}/.test(local)) return true;
+
+  // 3. Common test / throwaway patterns
+  if (/^(test|temp|fake|asdf|qwerty|xxx|spam|abc|123|admin)/.test(local)) return true;
+  if (/^\d+$/.test(local)) return true;                 // only numbers
+  if (/^[a-z]{1,2}\d+$/.test(local)) return true;      // a1, ab123, etc.
+  if (local.length >= 8 && !/[aeiou].*[aeiou]/.test(local)) return true; // long but almost no vowels
+
+  return false;
+};
 
 export const submitContact = async (req, res) => {
   try {
@@ -11,25 +66,78 @@ export const submitContact = async (req, res) => {
       email,
       phone,
       message,
+      website, // honeypot
     } = req.body;
 
-    // ✅ Validation
-    if (!firstName || !lastName || !email || !phone) {
-      return res.status(400).json({
-        success: false,
-        message: "Please fill all required fields",
+    // ========== 1. HONEYPOT ==========
+    if (website && website.trim() !== "") {
+      return res.status(201).json({
+        success: true,
+        message: "Message sent successfully",
       });
     }
 
-    // ✅ Save to DB
+    // ========== 2. BASIC + STRONG VALIDATION ==========
+    const errors = [];
+
+    if (!isValidName(firstName)) {
+      errors.push("Please enter a valid first name");
+    }
+    if (!isValidName(lastName)) {
+      errors.push("Please enter a valid surname");
+    }
+    if (!isValidPhone(phone)) {
+      errors.push("Please enter a valid phone number (at least 10 digits)");
+    }
+
+    const allowedTitles = ["Mr", "Mrs", "Ms"];
+    const allowedMethods = ["Call me", "Email me"];
+
+    if (title && !allowedTitles.includes(title)) {
+      errors.push("Invalid title selected");
+    }
+    if (contactMethod && !allowedMethods.includes(contactMethod)) {
+      errors.push("Invalid contact method selected");
+    }
+
+    // Spammy email pattern check (before deep-email-validator)
+    if (isSpammyEmail(email?.trim().toLowerCase())) {
+      errors.push("Please enter a valid email address");
+    }
+
+    if (errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: errors[0],
+      });
+    }
+
+    // ========== 3. STRONG EMAIL VALIDATION ==========
+    const emailResult = await validate({
+      email: email?.trim().toLowerCase(),
+      validateRegex: true,
+      validateMx: true,
+      validateTypo: true,
+      validateDisposable: true,
+      validateSMTP: false,
+    });
+
+    if (!emailResult.valid) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid email address",
+      });
+    }
+
+    // ========== 4. SAVE TO DB (only if everything passed) ==========
     const contact = await Contact.create({
-      contactMethod,
-      title,
-      firstName,
-      lastName,
-      email,
-      phone,
-      message,
+      contactMethod: contactMethod || "Call me",
+      title: title || "Mr",
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone.trim(),
+      message: message ? message.trim() : "",
     });
 
     // =========================
@@ -88,12 +196,27 @@ export const submitContact = async (req, res) => {
     </div>
     `;
 
-    await sendEmail(
+    const adminRecipients = [
+      "londonrentalroom@gmail.com",
       "info@rentaroomlondon.co.uk",
-      "📩 New Contact Inquiry",
-      adminHtml
-    );
+    ];
 
+    try {
+      await sendEmail(
+        adminRecipients,
+        "📩 New Contact Inquiry",
+        adminHtml
+      );
+
+      console.log("✅ ADMIN EMAIL SENT SUCCESSFULLY");
+      console.log("📨 Sent to:");
+      adminRecipients.forEach((recipient) => {
+        console.log(`   → ${recipient}`);
+      });
+    } catch (error) {
+      console.error("❌ ADMIN EMAIL FAILED");
+      console.error("Error:", error.message);
+    }
     // =========================
     // 📧 USER EMAIL
     // =========================
@@ -140,11 +263,20 @@ export const submitContact = async (req, res) => {
     </div>
     `;
 
-    await sendEmail(
-      email,
-      "We Received Your Message",
-      userHtml
-    );
+    try {
+      await sendEmail(
+        email,
+        "We Received Your Message",
+        userHtml
+      );
+
+      console.log("✅ CUSTOMER CONFIRMATION EMAIL SENT");
+      console.log(`📨 Sent to: ${email}`);
+    } catch (error) {
+      console.error("❌ CUSTOMER EMAIL FAILED");
+      console.error(`📧 Customer: ${email}`);
+      console.error("Error:", error.message);
+    }
 
     // =========================
 

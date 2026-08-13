@@ -1,5 +1,33 @@
-import Enquiry from "../Models/Enquiry.js";
+import Enquiry from "../Models/Enquiry.js";          // adjust path/name if different
 import { sendEmail } from "../utils/sendEmail.js";
+import { validate } from "deep-email-validator";
+
+// ---------- Helpers (same as contact) ----------
+const isValidName = (name) => {
+  if (!name || typeof name !== "string") return false;
+  const cleaned = name.trim();
+  if (!/^[a-zA-Z\s'-]{2,40}$/.test(cleaned)) return false;
+  if (!/[aeiouAEIOU]/.test(cleaned)) return false;
+  if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/.test(cleaned)) return false;
+  if (cleaned.length < 3) return false;
+  return true;
+};
+
+const isValidPhone = (phone) => {
+  if (!phone || typeof phone !== "string") return false;
+  const digits = phone.replace(/\D/g, "");
+  return digits.length >= 10 && digits.length <= 15;
+};
+
+const isSpammyEmail = (email) => {
+  if (!email) return true;
+  const local = email.split("@")[0] || "";
+  const dotCount = (local.match(/\./g) || []).length;
+  if (dotCount >= 3) return true;
+  if (local.includes("..") || local.startsWith(".") || local.endsWith(".")) return true;
+  if (local.length < 3) return true;
+  return false;
+};
 
 export const submitEnquiry = async (req, res) => {
   try {
@@ -12,21 +40,61 @@ export const submitEnquiry = async (req, res) => {
       lengthOfStay,
       budget,
       selectedLocationId,
+      website,        // honeypot
     } = req.body;
 
-    // ✅ Validation
-    if (!name || !email || !phone || !moveIn || !area || !lengthOfStay || !budget) {
-      return res.status(400).json({
-        success: false,
-        message: "Please fill all required fields",
+    // ========== 1. HONEYPOT ==========
+    if (website && website.trim() !== "") {
+      return res.status(201).json({
+        success: true,
+        message: "Enquiry submitted successfully",
       });
     }
 
-    // ✅ Save to DB
+    // ========== 2. BASIC + STRONG VALIDATION ==========
+    const errors = [];
+
+    if (!isValidName(name)) {
+      errors.push("Please enter a valid name");
+    }
+
+    if (!isValidPhone(phone)) {
+      errors.push("Please enter a valid phone number (at least 10 digits)");
+    }
+
+    if (isSpammyEmail(email?.trim().toLowerCase())) {
+      errors.push("Please enter a valid email address");
+    }
+
+    if (errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: errors[0],
+      });
+    }
+
+    // ========== 3. STRONG EMAIL VALIDATION ==========
+    const emailResult = await validate({
+      email: email?.trim().toLowerCase(),
+      validateRegex: true,
+      validateMx: true,
+      validateTypo: true,
+      validateDisposable: true,
+      validateSMTP: false,
+    });
+
+    if (!emailResult.valid) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid email address",
+      });
+    }
+
+    // ========== 4. SAVE TO DB ==========
     const enquiry = await Enquiry.create({
-      name,
-      email,
-      phone,
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone.trim(),
       moveIn,
       area,
       lengthOfStay,
@@ -86,11 +154,39 @@ export const submitEnquiry = async (req, res) => {
     </div>
     `;
 
-    await sendEmail(
-      "info@rentaroomlondon.co.uk",
-      "📩 New Room Enquiry",
-      adminHtml
-    );
+    try {
+      await sendEmail(
+        "londonrentalroom@gmail.com",
+        "📩 New Contact Inquiry",
+        adminHtml
+      );
+
+      console.log("✅ Admin email sent to: londonrentalroom@gmail.com");
+    } catch (error) {
+      console.error(
+        "❌ Admin email failed: londonrentalroom@gmail.com",
+        error.message
+      );
+    }
+
+    // =========================
+    // 📧 ADMIN EMAIL #2
+    // =========================
+
+    try {
+      await sendEmail(
+        "info@rentaroomlondon.co.uk",
+        "📩 New Contact Inquiry",
+        adminHtml
+      );
+
+      console.log("✅ Admin email sent to: info@rentaroomlondon.co.uk");
+    } catch (error) {
+      console.error(
+        "❌ Admin email failed: info@rentaroomlondon.co.uk",
+        error.message
+      );
+    }
 
     // =========================
     // 📧 USER EMAIL
@@ -135,11 +231,20 @@ export const submitEnquiry = async (req, res) => {
     </div>
     `;
 
-    await sendEmail(
-      email,
-      "We Received Your Enquiry – Rent a Room London",
-      userHtml
-    );
+    try {
+      await sendEmail(
+        email,
+        "We Received Your Message",
+        userHtml
+      );
+
+      console.log(`✅ Customer email sent to: ${email}`);
+    } catch (error) {
+      console.error(
+        `❌ Customer email failed: ${email}`,
+        error.message
+      );
+    }
 
     // =========================
 

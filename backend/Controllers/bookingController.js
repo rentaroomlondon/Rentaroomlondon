@@ -203,27 +203,55 @@ export const createBooking = async (req, res) => {
     // ============================
     // ⚡ BACKGROUND EMAILS
     // ============================
-    setImmediate(() => {
-      try {
-        if (userEmail) {
-          sendEmail(
+    setImmediate(async () => {
+      // 📧 Email to user / guest
+      if (userEmail) {
+        try {
+          await sendEmail(
             userEmail,
             "📅 Viewing Request Received - RENTAROOMLONDON",
             userHtml
-          ).catch((err) =>
-            console.error("❌ User email failed:", err.message)
+          );
+
+          console.log(`✅ Email sent to customer: ${userEmail}`);
+        } catch (err) {
+          console.error(
+            `❌ Customer email failed: ${userEmail}`,
+            err.message
           );
         }
+      }
 
-        sendEmail(
+      // 📧 Admin email → info@rentaroomlondon.co.uk
+      try {
+        await sendEmail(
           "info@rentaroomlondon.co.uk",
           "📢 New Viewing Request",
           adminHtml
-        ).catch((err) =>
-          console.error("❌ Admin email failed:", err.message)
         );
+
+        console.log("✅ Email sent to: info@rentaroomlondon.co.uk");
       } catch (err) {
-        console.error("🔥 Background email error:", err);
+        console.error(
+          "❌ Email failed: info@rentaroomlondon.co.uk",
+          err.message
+        );
+      }
+
+      // 📧 Admin email → londonrentalroom@gmail.com
+      try {
+        await sendEmail(
+          "londonrentalroom@gmail.com",
+          "📢 New Viewing Request - RENTAROOMLONDON",
+          adminHtml
+        );
+
+        console.log("✅ Email sent to: londonrentalroom@gmail.com");
+      } catch (err) {
+        console.error(
+          "❌ Email failed: londonrentalroom@gmail.com",
+          err.message
+        );
       }
     });
 
