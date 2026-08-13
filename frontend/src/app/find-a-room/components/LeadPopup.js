@@ -133,6 +133,7 @@ const LeadPopup = () => {
       return false; // silently fail
     }
 
+    
     if (!isValidRealName(formData.name)) {
       setStatusMsg({ type: "error", text: "Please enter a valid full name" });
       return false;
