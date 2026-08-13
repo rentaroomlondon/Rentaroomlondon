@@ -125,9 +125,13 @@ const Contact = () => {
 
   // ---------- Client-side validation ----------
   const validateForm = () => {
-    const { firstName, lastName, email, phone, message } = form;
+    const { firstName, lastName, email, phone, message, website } = form;
 
-    // Name checks (Strong)
+    // Honeypot
+    if (website) {
+      return false;
+    }
+
     if (!isValidRealName(firstName)) {
       toast.error("Please enter a valid first name");
       return false;
@@ -137,32 +141,41 @@ const Contact = () => {
       return false;
     }
 
-    // Email spam pattern
-    const local = email.split("@")[0] || "";
-    const dotCount = (local.match(/\./g) || []).length;
-    if (
-      dotCount >= 3 ||
-      local.includes("..") ||
-      local.startsWith(".") ||
-      local.endsWith(".")
-    ) {
+    // ---------- Strong Email Validation ----------
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanEmail) {
       toast.error("Please enter a valid email address");
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    if (!emailRegex.test(email.trim())) {
+    if (!emailRegex.test(cleanEmail)) {
       toast.error("Please enter a valid email address");
       return false;
     }
 
-    // Strong Phone validation
+    const localPart = cleanEmail.split("@")[0];
+
+    const isSuspicious =
+      localPart.length < 4 ||
+      (localPart.match(/\./g) || []).length >= 2 ||
+      localPart.includes("..") ||
+      localPart.startsWith(".") ||
+      localPart.endsWith(".") ||
+      /^[0-9]+$/.test(localPart) ||
+      /^(test|fake|dummy|sample|admin|user|guest|asdf|qwer)/.test(localPart);
+
+    if (isSuspicious) {
+      toast.error("Please enter a valid email address");
+      return false;
+    }
+
     if (isFakeOrInvalidPhone(phone)) {
       toast.error("Please enter a complete and valid phone number");
       return false;
     }
 
-    // Message spam
     if (
       message &&
       message.trim().length > 10 &&

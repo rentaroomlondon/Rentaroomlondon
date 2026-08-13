@@ -480,7 +480,13 @@ export default function Form() {
       lastName,
       email,
       phone,
+      website,
     } = form;
+
+    // Honeypot
+    if (website) {
+      return false;
+    }
 
     if (!isValidRealName(firstName)) {
       alert('Please enter a valid first name');
@@ -492,48 +498,43 @@ export default function Form() {
       return false;
     }
 
-    const cleanEmail =
-      email.trim();
+    // ---------- Strong Email Validation ----------
+    const cleanEmail = email.trim().toLowerCase();
 
-    const local =
-      cleanEmail.split('@')[0] || '';
-
-    const dotCount =
-      (local.match(/\./g) || []).length;
-
-    if (
-      dotCount >= 3 ||
-      local.includes('..') ||
-      local.startsWith('.') ||
-      local.endsWith('.')
-    ) {
-      alert(
-        'Please enter a valid email address'
-      );
+    if (!cleanEmail) {
+      alert('Please enter a valid email address');
       return false;
     }
 
-    const emailRegex =
-      /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     if (!emailRegex.test(cleanEmail)) {
-      alert(
-        'Please enter a valid email address'
-      );
+      alert('Please enter a valid email address');
+      return false;
+    }
+
+    const localPart = cleanEmail.split('@')[0];
+
+    const isSuspicious =
+      localPart.length < 4 ||
+      (localPart.match(/\./g) || []).length >= 2 ||
+      localPart.includes('..') ||
+      localPart.startsWith('.') ||
+      localPart.endsWith('.') ||
+      /^[0-9]+$/.test(localPart) ||
+      /^(test|fake|dummy|sample|admin|user|guest|asdf|qwer)/.test(localPart);
+
+    if (isSuspicious) {
+      alert('Please enter a valid email address');
       return false;
     }
 
     if (isFakeOrInvalidPhone(phone)) {
-      alert(
-        'Please enter a complete and valid phone number'
-      );
+      alert('Please enter a complete and valid phone number');
       return false;
     }
 
     if (!form.moveIn) {
-      alert(
-        'Please select when you are looking to move'
-      );
+      alert('Please select when you are looking to move');
       return false;
     }
 
@@ -543,16 +544,12 @@ export default function Form() {
     }
 
     if (!form.lengthOfStay) {
-      alert(
-        'Please select length of stay'
-      );
+      alert('Please select length of stay');
       return false;
     }
 
     if (!form.budget) {
-      alert(
-        'Please select a monthly budget'
-      );
+      alert('Please select a monthly budget');
       return false;
     }
 

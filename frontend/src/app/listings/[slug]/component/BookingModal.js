@@ -103,7 +103,7 @@ const BookingModal = ({ isOpen, onClose, listing }) => {
     return true;
   };
 
-  // ---------- Strong Phone Validation with libphonenumber-js ----------
+  // ---------- Strong Phone Validation ----------
   const isFakeOrInvalidPhone = (phone) => {
     if (!phone) return true;
 
@@ -173,19 +173,40 @@ const BookingModal = ({ isOpen, onClose, listing }) => {
 
     // Guest validation
     if (!user) {
+      // Name
       if (!isValidRealName(bookingData.name)) {
         newErrors.name = "Please enter a valid full name";
       }
 
-      if (!bookingData.email.trim()) {
+      // ---------- Strong Email Validation ----------
+      const email = bookingData.email.trim().toLowerCase();
+
+      if (!email) {
         newErrors.email = "Email is required";
       } else {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-        if (!emailRegex.test(bookingData.email.trim())) {
+
+        if (!emailRegex.test(email)) {
           newErrors.email = "Please enter a valid email";
+        } else {
+          const localPart = email.split("@")[0];
+
+          const isSuspicious =
+            localPart.length < 4 ||                               // too short (h.e.n, a@, etc.)
+            (localPart.match(/\./g) || []).length >= 2 ||         // too many dots (h.e.n)
+            localPart.includes("..") ||
+            localPart.startsWith(".") ||
+            localPart.endsWith(".") ||
+            /^[0-9]+$/.test(localPart) ||                         // only numbers
+            /^(test|fake|dummy|sample|admin|user|guest|asdf|qwer)/.test(localPart);
+
+          if (isSuspicious) {
+            newErrors.email = "Please enter a valid email address";
+          }
         }
       }
 
+      // Phone
       if (isFakeOrInvalidPhone(bookingData.phone)) {
         newErrors.phone = "Please enter a valid phone number";
       }

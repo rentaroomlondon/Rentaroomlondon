@@ -39,24 +39,32 @@ const LeadPopup = () => {
 
     // Basic checks
     if (cleaned.length < 2 || cleaned.length > 40) return false;
-    if (!/^[a-zA-Z\s'-]+$/.test(cleaned)) return false; // only letters, space, ' and -
+    if (!/^[a-zA-Z\s'-]+$/.test(cleaned)) return false;
     if (!/[a-zA-Z]/.test(cleaned)) return false;
 
     const lower = cleaned.toLowerCase();
 
-    // Block only very obvious spam / fake patterns
+    // Block spam / test / fake patterns
     const blockedPatterns = [
+      // Test related (this was missing)
+      "test", "testing", "tester", "testuser", "test1", "test2", "test3",
+      "test87", "test123", "dummy", "fake", "sample", "example",
+
+      // Keyboard spam
       "asdf", "qwer", "zxcv", "qwerty", "asdfgh", "zxcvbn",
-      "qazwsx", "poiuyt", "testtest", "asdfasdf", "qweqwe",
-      "abcabc", "xyzxyz", "aaaa", "bbbb", "cccc", "dddd",
-      "name", "fullname", "firstname", "lastname", "username"
+      "qazwsx", "poiuyt", "hjkl", "uiop", "bnm",
+      "jhdb", "hbds", "dsgh", "fghj", "cvbn", "tyui",
+      "qwe", "asd", "zxc", "rty", "fgh", "vbn",
+
+      // Generic fake
+      "name", "fullname", "firstname", "lastname", "username", "user", "admin", "guest"
     ];
 
-    if (blockedPatterns.some(pattern => lower.includes(pattern))) {
+    if (blockedPatterns.some((pattern) => lower.includes(pattern))) {
       return false;
     }
 
-    // Block pure repeated characters (aaaa, bbbb, etc.)
+    // Block pure repeated characters (aaaa, bbbb...)
     const lettersOnly = cleaned.replace(/[\s'-]/g, "");
     if (/^(.)\1+$/i.test(lettersOnly)) {
       return false;
