@@ -56,7 +56,10 @@ const Contact = () => {
       "asdf", "qwer", "zxcv", "hjkl", "uiop", "bnm",
       "qwerty", "asdfgh", "zxcvbn", "qazwsx", "poiuyt",
       "jhdb", "hbds", "dsgh", "fghj", "cvbn", "tyui",
-      "qwe", "asd", "zxc", "rty", "fgh", "vbn"
+      "qwe", "asd", "zxc", "rty", "fgh", "vbn",
+      "test", "testing", "tester", "testuser", "test1", "test2", "test3",
+      "test87", "test123", "dummy", "fake", "sample", "example",
+      "name", "fullname", "firstname", "lastname", "username", "user", "admin", "guest"
     ];
 
     const lowerName = cleaned.toLowerCase();

@@ -386,6 +386,9 @@ export default function Form() {
       'rty',
       'fgh',
       'vbn',
+      "test", "testing", "tester", "testuser", "test1", "test2", "test3",
+      "test87", "test123", "dummy", "fake", "sample", "example",
+      "name", "fullname", "firstname", "lastname", "username", "user", "admin", "guest"
     ];
 
     const lowerName =

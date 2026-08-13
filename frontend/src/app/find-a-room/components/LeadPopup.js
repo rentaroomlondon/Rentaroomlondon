@@ -37,22 +37,33 @@ const LeadPopup = () => {
 
     const cleaned = name.trim();
 
-    if (!/^[a-zA-Z\s'-]{2,40}$/.test(cleaned)) return false;
-    if (!/[aeiouAEIOU]/.test(cleaned)) return false;
-    if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{4,}/.test(cleaned)) {
-      return false;
-    }
-    if (/(.)\1{3,}/.test(cleaned)) return false;
+    // Basic checks
+    if (cleaned.length < 2 || cleaned.length > 40) return false;
+    if (!/^[a-zA-Z\s'-]+$/.test(cleaned)) return false; // only letters, space, ' and -
+    if (!/[a-zA-Z]/.test(cleaned)) return false;
 
-    const fakePatterns = [
-      "asdf", "qwer", "zxcv", "hjkl", "uiop", "bnm",
-      "qwerty", "asdfgh", "zxcvbn", "qazwsx", "poiuyt",
-      "jhdb", "hbds", "dsgh", "fghj", "cvbn", "tyui",
-      "qwe", "asd", "zxc", "rty", "fgh", "vbn",
+    const lower = cleaned.toLowerCase();
+
+    // Block only very obvious spam / fake patterns
+    const blockedPatterns = [
+      "asdf", "qwer", "zxcv", "qwerty", "asdfgh", "zxcvbn",
+      "qazwsx", "poiuyt", "testtest", "asdfasdf", "qweqwe",
+      "abcabc", "xyzxyz", "aaaa", "bbbb", "cccc", "dddd",
+      "name", "fullname", "firstname", "lastname", "username"
     ];
 
-    const lowerName = cleaned.toLowerCase();
-    if (fakePatterns.some((pattern) => lowerName.includes(pattern))) {
+    if (blockedPatterns.some(pattern => lower.includes(pattern))) {
+      return false;
+    }
+
+    // Block pure repeated characters (aaaa, bbbb, etc.)
+    const lettersOnly = cleaned.replace(/[\s'-]/g, "");
+    if (/^(.)\1+$/i.test(lettersOnly)) {
+      return false;
+    }
+
+    // Block 5+ identical characters in a row
+    if (/(.)\1{4,}/.test(cleaned)) {
       return false;
     }
 

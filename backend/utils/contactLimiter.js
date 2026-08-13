@@ -9,4 +9,5 @@ export const contactLimiter = rateLimit({
     success: false,
     message: "Too many requests. Please try again later.",
   },
+  validate: { trustProxy: false },
 });

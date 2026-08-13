@@ -47,7 +47,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-app.set('trust proxy', true);
+app.set('trust proxy', 1);
 
 //Route
 app.use("/api/auth", authRoutes);

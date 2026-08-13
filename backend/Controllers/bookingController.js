@@ -17,10 +17,22 @@ export const createBooking = async (req, res) => {
       guestName,
       guestEmail,
       guestPhone,
+      website, // honeypot
     } = req.body;
 
     console.log("📩 Incoming Booking Request:", req.body);
 
+    // ============================
+    // 🛡️ HONEYPOT CHECK
+    // ============================
+    if (website) {
+      // Silently pretend success so bots think it worked
+      return res.status(201).json({
+        success: true,
+        message: "Booking created successfully",
+      });
+    }
+    
     // ============================
     // ✅ BASIC VALIDATION
     // ============================
