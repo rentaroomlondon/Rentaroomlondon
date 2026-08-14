@@ -1,11 +1,12 @@
 import RoomLead from "../Models/Lead.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import { isNameSafe } from "../utils/validateName.js";   // ← Import here
 
 export const createRoomLead = async (req, res) => {
   try {
     const { name, phone, location, website } = req.body;
 
-    // Honeypot check – if filled, treat as bot and silently succeed
+    // 1. Honeypot check
     if (website) {
       return res.status(201).json({
         success: true,
@@ -13,9 +14,27 @@ export const createRoomLead = async (req, res) => {
       });
     }
 
-    // Create the lead in the database
+    // 2. Basic validation
+    if (!name || name.trim().length < 2) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid full name",
+      });
+    }
+
+    // 3. NameAPI Risk Detector (blocks garbage names)
+    const nameIsSafe = await isNameSafe(name);
+
+    if (!nameIsSafe) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid full name",
+      });
+    }
+
+    // 4. Create the lead
     const lead = await RoomLead.create({
-      name,
+      name: name.trim(),
       phone,
       location,
     });
@@ -31,19 +50,14 @@ export const createRoomLead = async (req, res) => {
       <p><b>Lead ID:</b> ${lead._id}</p>
     `;
 
-    // ============================
-    // 📧 EMAIL → INFO
-    // ============================
+    // Email → INFO
     try {
       await sendEmail(
         "info@rentaroomlondon.co.uk",
         subject,
         htmlContent
       );
-
-      console.log(
-        "✅ Room Lead email sent to: info@rentaroomlondon.co.uk"
-      );
+      console.log("✅ Room Lead email sent to: info@rentaroomlondon.co.uk");
     } catch (emailError) {
       console.error(
         "❌ Room Lead email failed: info@rentaroomlondon.co.uk",
@@ -51,19 +65,14 @@ export const createRoomLead = async (req, res) => {
       );
     }
 
-    // ============================
-    // 📧 EMAIL → GMAIL
-    // ============================
+    // Email → GMAIL
     try {
       await sendEmail(
         "londonrentalroom@gmail.com",
         subject,
         htmlContent
       );
-
-      console.log(
-        "✅ Room Lead email sent to: londonrentalroom@gmail.com"
-      );
+      console.log("✅ Room Lead email sent to: londonrentalroom@gmail.com");
     } catch (emailError) {
       console.error(
         "❌ Room Lead email failed: londonrentalroom@gmail.com",
@@ -80,6 +89,28 @@ export const createRoomLead = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: error.message,
+    });
+  }
+};
+
+// ============================
+// 🟢 GET ALL ROOM LEADS (ADMIN)
+// ============================
+export const getAllRoomLeads = async (req, res) => {
+  try {
+    const leads = await RoomLead.find()
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: leads.length,
+      data: leads,
+    });
+  } catch (error) {
+    console.error("Get All Room Leads Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
     });
   }
 };

@@ -2,6 +2,60 @@ import Booking from "../Models/Booking.js";
 import Listing from "../Models/Listing.js";
 import User from "../Models/User.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import { validate } from "deep-email-validator";
+import { isNameSafe } from "../utils/validateName.js"; // ← NameAPI helper
+
+// ---------- Helpers ----------
+const isValidName = (name) => {
+  if (!name || typeof name !== "string") return false;
+
+  const cleaned = name.trim();
+
+  // 1. Basic format (letters, spaces, apostrophe, hyphen only)
+  if (!/^[a-zA-Z\s'-]{2,40}$/.test(cleaned)) return false;
+
+  // 2. Must contain at least one vowel
+  if (!/[aeiouAEIOU]/.test(cleaned)) return false;
+
+  // 3. Reject too many consecutive consonants
+  if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/.test(cleaned)) {
+    return false;
+  }
+
+  // 4. Reject very short names
+  if (cleaned.length < 3) return false;
+
+  // 5. Reject common fake / keyboard patterns
+  const lower = cleaned.toLowerCase();
+  if (
+    /^(test|temp|fake|asdf|qwerty|xxx|spam|abc|admin|name|fullname|lastname|firstname)/.test(lower) ||
+    /^[bcdfghjklmnpqrstvwxyz]{4,}$/.test(lower) // all consonants
+  ) {
+    return false;
+  }
+
+  return true;
+};
+
+const isSpammyEmail = (email) => {
+  if (!email) return true;
+  const local = (email.split("@")[0] || "").toLowerCase();
+
+  const dotCount = (local.match(/\./g) || []).length;
+  if (dotCount >= 3) return true;
+  if (local.includes("..") || local.startsWith(".") || local.endsWith(".")) return true;
+  if (local.length < 3) return true;
+
+  // Random / test patterns
+  if (!/[aeiou]/.test(local)) return true;
+  if (/[bcdfghjklmnpqrstvwxyz]{5,}/.test(local)) return true;
+  if (/^(test|temp|fake|asdf|qwerty|xxx|spam|abc|123|admin)/.test(local)) return true;
+  if (/^\d+$/.test(local)) return true;
+  if (/^[a-z]{1,2}\d+$/.test(local)) return true;
+  if (local.length >= 8 && !/[aeiou].*[aeiou]/.test(local)) return true;
+
+  return false;
+};
 
 // ============================
 // 🟢 CREATE BOOKING (FAST ⚡)
@@ -32,7 +86,7 @@ export const createBooking = async (req, res) => {
         message: "Booking created successfully",
       });
     }
-    
+
     // ============================
     // ✅ BASIC VALIDATION
     // ============================
@@ -69,6 +123,45 @@ export const createBooking = async (req, res) => {
       if (!guestName || !guestEmail || !guestPhone) {
         return res.status(400).json({
           message: "Name, email and phone are required",
+        });
+      }
+
+      // 1. Fast local name validation (catches "kjsd", "jhfs", etc.)
+      if (!isValidName(guestName)) {
+        return res.status(400).json({
+          message: "Invalid name. Please provide a real name.",
+        });
+      }
+
+      // 2. NameAPI check (extra layer)
+      const nameIsSafe = await isNameSafe(guestName);
+      if (!nameIsSafe) {
+        return res.status(400).json({
+          message: "Invalid name. Please provide a real name.",
+        });
+      }
+
+      // 3. Email spammy check (fast)
+      if (isSpammyEmail(guestEmail)) {
+        return res.status(400).json({
+          message: "Invalid email address",
+        });
+      }
+
+      // 4. deep-email-validator
+      const emailValidation = await validate({
+        email: guestEmail,
+        validateRegex: true,
+        validateMx: true,
+        validateTypo: true,
+        validateDisposable: true,
+        validateSMTP: false, // keep false for speed
+      });
+
+      if (!emailValidation.valid) {
+        console.log("❌ Email validation failed:", emailValidation.reason);
+        return res.status(400).json({
+          message: "Invalid or disposable email address",
         });
       }
     }
@@ -123,10 +216,8 @@ export const createBooking = async (req, res) => {
     // 📧 COMMON EMAIL DATA
     // ============================
     const userEmail = user?.email || guestEmail;
-    const userName =
-      user?.firstName || guestName || "User";
-    const userPhone =
-      user?.phone || guestPhone || "-";
+    const userName = user?.firstName || guestName || "User";
+    const userPhone = user?.phone || guestPhone || "-";
 
     // ============================
     // 📧 EMAIL TEMPLATES
@@ -224,13 +315,9 @@ export const createBooking = async (req, res) => {
             "📅 Viewing Request Received - RENTAROOMLONDON",
             userHtml
           );
-
           console.log(`✅ Email sent to customer: ${userEmail}`);
         } catch (err) {
-          console.error(
-            `❌ Customer email failed: ${userEmail}`,
-            err.message
-          );
+          console.error(`❌ Customer email failed: ${userEmail}`, err.message);
         }
       }
 
@@ -241,13 +328,9 @@ export const createBooking = async (req, res) => {
           "📢 New Viewing Request",
           adminHtml
         );
-
         console.log("✅ Email sent to: info@rentaroomlondon.co.uk");
       } catch (err) {
-        console.error(
-          "❌ Email failed: info@rentaroomlondon.co.uk",
-          err.message
-        );
+        console.error("❌ Email failed: info@rentaroomlondon.co.uk", err.message);
       }
 
       // 📧 Admin email → londonrentalroom@gmail.com
@@ -257,16 +340,11 @@ export const createBooking = async (req, res) => {
           "📢 New Viewing Request - RENTAROOMLONDON",
           adminHtml
         );
-
         console.log("✅ Email sent to: londonrentalroom@gmail.com");
       } catch (err) {
-        console.error(
-          "❌ Email failed: londonrentalroom@gmail.com",
-          err.message
-        );
+        console.error("❌ Email failed: londonrentalroom@gmail.com", err.message);
       }
     });
-
   } catch (error) {
     console.error("🔥 Error in createBooking:", error);
     res.status(500).json({ message: error.message });

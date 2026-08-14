@@ -1,14 +1,15 @@
-import Enquiry from "../Models/Enquiry.js";          // adjust path/name if different
+import Enquiry from "../Models/Enquiry.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import { validate } from "deep-email-validator";
+import { isNameSafe } from "../utils/validateName.js"; // ← import NameAPI helper
 
-// ---------- Helpers (same as contact) ----------
+// ---------- Helpers ----------
 const isValidName = (name) => {
   if (!name || typeof name !== "string") return false;
   const cleaned = name.trim();
   if (!/^[a-zA-Z\s'-]{2,40}$/.test(cleaned)) return false;
-  if (!/[aeiouAEIOU]/.test(cleaned)) return false;
-  if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/.test(cleaned)) return false;
+  if (!/[aeiouAEIOU]/.test(cleaned)) return false; // must contain a vowel
+  if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/.test(cleaned)) return false; // no 5+ consonants in a row
   if (cleaned.length < 3) return false;
   return true;
 };
@@ -40,7 +41,7 @@ export const submitEnquiry = async (req, res) => {
       lengthOfStay,
       budget,
       selectedLocationId,
-      website,        // honeypot
+      website, // honeypot
     } = req.body;
 
     // ========== 1. HONEYPOT ==========
@@ -73,7 +74,16 @@ export const submitEnquiry = async (req, res) => {
       });
     }
 
-    // ========== 3. STRONG EMAIL VALIDATION ==========
+    // ========== 3. NameAPI Risk Detector ==========
+    const nameIsSafe = await isNameSafe(name);
+    if (!nameIsSafe) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid full name",
+      });
+    }
+
+    // ========== 4. STRONG EMAIL VALIDATION ==========
     const emailResult = await validate({
       email: email?.trim().toLowerCase(),
       validateRegex: true,
@@ -90,7 +100,7 @@ export const submitEnquiry = async (req, res) => {
       });
     }
 
-    // ========== 4. SAVE TO DB ==========
+    // ========== 5. SAVE TO DB ==========
     const enquiry = await Enquiry.create({
       name: name.trim(),
       email: email.trim().toLowerCase(),
@@ -160,32 +170,23 @@ export const submitEnquiry = async (req, res) => {
         "📩 New Contact Inquiry",
         adminHtml
       );
-
       console.log("✅ Admin email sent to: londonrentalroom@gmail.com");
     } catch (error) {
-      console.error(
-        "❌ Admin email failed: londonrentalroom@gmail.com",
-        error.message
-      );
+      console.error("❌ Admin email failed: londonrentalroom@gmail.com", error.message);
     }
 
     // =========================
     // 📧 ADMIN EMAIL #2
     // =========================
-
     try {
       await sendEmail(
         "info@rentaroomlondon.co.uk",
         "📩 New Contact Inquiry",
         adminHtml
       );
-
       console.log("✅ Admin email sent to: info@rentaroomlondon.co.uk");
     } catch (error) {
-      console.error(
-        "❌ Admin email failed: info@rentaroomlondon.co.uk",
-        error.message
-      );
+      console.error("❌ Admin email failed: info@rentaroomlondon.co.uk", error.message);
     }
 
     // =========================
@@ -232,21 +233,11 @@ export const submitEnquiry = async (req, res) => {
     `;
 
     try {
-      await sendEmail(
-        email,
-        "We Received Your Message",
-        userHtml
-      );
-
+      await sendEmail(email, "We Received Your Message", userHtml);
       console.log(`✅ Customer email sent to: ${email}`);
     } catch (error) {
-      console.error(
-        `❌ Customer email failed: ${email}`,
-        error.message
-      );
+      console.error(`❌ Customer email failed: ${email}`, error.message);
     }
-
-    // =========================
 
     return res.status(201).json({
       success: true,
@@ -256,7 +247,6 @@ export const submitEnquiry = async (req, res) => {
   } catch (error) {
     console.error("Enquiry Error:", error);
 
-    // Handle Mongoose validation errors nicely
     if (error.name === "ValidationError") {
       const messages = Object.values(error.errors).map((val) => val.message);
       return res.status(400).json({
@@ -265,6 +255,29 @@ export const submitEnquiry = async (req, res) => {
       });
     }
 
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+
+
+// ============================
+// 🟢 GET ALL ENQUIRIES (ADMIN)
+// ============================
+export const getAllEnquiries = async (req, res) => {
+  try {
+    const enquiries = await Enquiry.find()
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: enquiries.length,
+      data: enquiries,
+    });
+  } catch (error) {
+    console.error("Get All Enquiries Error:", error);
     res.status(500).json({
       success: false,
       message: "Server Error",

@@ -1,6 +1,7 @@
 import Contact from "../Models/Contact.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import { validate } from "deep-email-validator";
+import { isNameSafe } from "../utils/validateName.js"; // ← NameAPI helper
 
 // ---------- Helpers ----------
 const isValidName = (name) => {
@@ -10,15 +11,15 @@ const isValidName = (name) => {
   // 1. Basic format
   if (!/^[a-zA-Z\s'-]{2,40}$/.test(cleaned)) return false;
 
-  // 2. Must contain at least one vowel (blocks hsah, jhbjh, etc.)
+  // 2. Must contain at least one vowel
   if (!/[aeiouAEIOU]/.test(cleaned)) return false;
 
-  // 3. Reject too many consecutive consonants (random keyboard spam)
+  // 3. Reject too many consecutive consonants
   if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/.test(cleaned)) {
     return false;
   }
 
-  // 4. Reject very short random-looking names
+  // 4. Reject very short names
   if (cleaned.length < 3) return false;
 
   return true;
@@ -34,24 +35,18 @@ const isSpammyEmail = (email) => {
   if (!email) return true;
   const local = (email.split("@")[0] || "").toLowerCase();
 
-  // existing rules...
   const dotCount = (local.match(/\./g) || []).length;
   if (dotCount >= 3) return true;
   if (local.includes("..") || local.startsWith(".") || local.endsWith(".")) return true;
   if (local.length < 3) return true;
 
-  // NEW: reject pure random-looking / test-like locals
-  // 1. No vowels (common in keyboard smash)
+  // Random / test patterns
   if (!/[aeiou]/.test(local)) return true;
-
-  // 2. Too many consecutive consonants
   if (/[bcdfghjklmnpqrstvwxyz]{5,}/.test(local)) return true;
-
-  // 3. Common test / throwaway patterns
   if (/^(test|temp|fake|asdf|qwerty|xxx|spam|abc|123|admin)/.test(local)) return true;
-  if (/^\d+$/.test(local)) return true;                 // only numbers
-  if (/^[a-z]{1,2}\d+$/.test(local)) return true;      // a1, ab123, etc.
-  if (local.length >= 8 && !/[aeiou].*[aeiou]/.test(local)) return true; // long but almost no vowels
+  if (/^\d+$/.test(local)) return true;
+  if (/^[a-z]{1,2}\d+$/.test(local)) return true;
+  if (local.length >= 8 && !/[aeiou].*[aeiou]/.test(local)) return true;
 
   return false;
 };
@@ -100,7 +95,6 @@ export const submitContact = async (req, res) => {
       errors.push("Invalid contact method selected");
     }
 
-    // Spammy email pattern check (before deep-email-validator)
     if (isSpammyEmail(email?.trim().toLowerCase())) {
       errors.push("Please enter a valid email address");
     }
@@ -112,7 +106,28 @@ export const submitContact = async (req, res) => {
       });
     }
 
-    // ========== 3. STRONG EMAIL VALIDATION ==========
+    // ========== 3. NameAPI Risk Detector ==========
+    const firstNameSafe = await isNameSafe(firstName);
+    if (!firstNameSafe) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid first name",
+      });
+    }
+
+    const lastNameSafe = await isNameSafe(lastName);
+    if (!lastNameSafe) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid surname",
+      });
+    }
+
+    // Optional: also check full name together
+    // const fullNameSafe = await isNameSafe(`${firstName} ${lastName}`);
+    // if (!fullNameSafe) { ... }
+
+    // ========== 4. STRONG EMAIL VALIDATION ==========
     const emailResult = await validate({
       email: email?.trim().toLowerCase(),
       validateRegex: true,
@@ -129,7 +144,7 @@ export const submitContact = async (req, res) => {
       });
     }
 
-    // ========== 4. SAVE TO DB (only if everything passed) ==========
+    // ========== 5. SAVE TO DB ==========
     const contact = await Contact.create({
       contactMethod: contactMethod || "Call me",
       title: title || "Mr",
@@ -202,21 +217,12 @@ export const submitContact = async (req, res) => {
     ];
 
     try {
-      await sendEmail(
-        adminRecipients,
-        "📩 New Contact Inquiry",
-        adminHtml
-      );
-
+      await sendEmail(adminRecipients, "📩 New Contact Inquiry", adminHtml);
       console.log("✅ ADMIN EMAIL SENT SUCCESSFULLY");
-      console.log("📨 Sent to:");
-      adminRecipients.forEach((recipient) => {
-        console.log(`   → ${recipient}`);
-      });
     } catch (error) {
-      console.error("❌ ADMIN EMAIL FAILED");
-      console.error("Error:", error.message);
+      console.error("❌ ADMIN EMAIL FAILED:", error.message);
     }
+
     // =========================
     // 📧 USER EMAIL
     // =========================
@@ -264,30 +270,43 @@ export const submitContact = async (req, res) => {
     `;
 
     try {
-      await sendEmail(
-        email,
-        "We Received Your Message",
-        userHtml
-      );
-
-      console.log("✅ CUSTOMER CONFIRMATION EMAIL SENT");
-      console.log(`📨 Sent to: ${email}`);
+      await sendEmail(email, "We Received Your Message", userHtml);
+      console.log(`✅ CUSTOMER CONFIRMATION EMAIL SENT → ${email}`);
     } catch (error) {
-      console.error("❌ CUSTOMER EMAIL FAILED");
-      console.error(`📧 Customer: ${email}`);
-      console.error("Error:", error.message);
+      console.error("❌ CUSTOMER EMAIL FAILED:", error.message);
     }
-
-    // =========================
 
     return res.status(201).json({
       success: true,
       message: "Message sent successfully",
       data: contact,
     });
-
   } catch (error) {
     console.error("Contact Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+
+
+
+// ============================
+// 🟢 GET ALL CONTACTS (ADMIN)
+// ============================
+export const getAllContacts = async (req, res) => {
+  try {
+    const contacts = await Contact.find()
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: contacts.length,
+      data: contacts,
+    });
+  } catch (error) {
+    console.error("Get All Contacts Error:", error);
     res.status(500).json({
       success: false,
       message: "Server Error",

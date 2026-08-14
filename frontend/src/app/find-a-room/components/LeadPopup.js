@@ -52,8 +52,8 @@ const LeadPopup = () => {
 
       // Keyboard spam
       "asdf", "qwer", "zxcv", "qwerty", "asdfgh", "zxcvbn",
-      "qazwsx", "poiuyt", "hjkl", "uiop", "bnm",
-      "jhdb", "hbds", "dsgh", "fghj", "cvbn", "tyui",
+      "qazwsx", "poiuyt", "hjkl", "uiop", "bnm","jksd","bfjhsd","dfghjkl","dfghjklm","dfghjklmn","dfghjklmno","dfghjklmnop","dfghjklmnopq","dfghjklmnopqr","dfghjklmnopqrs","dfghjklmnopqrst","dfghjklmnopqrstu","dfghjklmnopqrstuv","dfghjklmnopqrstuvw","dfghjklmnopqrstuvwx","dfghjklmnopqrstuvwxy","dfghjklmnopqrstuvwxyz",
+      "jhdb", "hbds", "dsgh", "fghj", "cvbn", "tyui","ghh","thfd","bfgdi","dfghj","dfghjkl","dfghjklm","dfghjklmn","dfghjklmno","dfghjklmnop","dfghjklmnopq","dfghjklmnopqr","dfghjklmnopqrs","dfghjklmnopqrst","dfghjklmnopqrstu","dfghjklmnopqrstuv","dfghjklmnopqrstuvw","dfghjklmnopqrstuvwx","dfghjklmnopqrstuvwxy","dfghjklmnopqrstuvwxyz",
       "qwe", "asd", "zxc", "rty", "fgh", "vbn",
 
       // Generic fake
@@ -133,7 +133,7 @@ const LeadPopup = () => {
       return false; // silently fail
     }
 
-    
+
     if (!isValidRealName(formData.name)) {
       setStatusMsg({ type: "error", text: "Please enter a valid full name" });
       return false;

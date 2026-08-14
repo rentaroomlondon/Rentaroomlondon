@@ -11,7 +11,9 @@ import Listings from "./Listings";
 import ViewingRequests from "./ViewingRequests";
 import Applications from "./Applications";
 import Blog from "./Blog";
-
+import RoomLeads from "./RoomLeads";       // ← new
+import Enquiries from "./Enquiries";       // ← new
+import ContactLeads from "./ContactLeads"; // ← new
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -19,49 +21,45 @@ const Dashboard = () => {
   // 🔥 Header mapping
   const headerMap = {
     dashboard: { title: "Dashboard", breadcrumb: "Overview" },
-    analytics: { title: "Analytics", breadcrumb: "Reports" },
     properties: { title: "Properties", breadcrumb: "All Properties" },
     listings: { title: "Listings", breadcrumb: "Search Listings" },
     viewings: { title: "Viewing Requests", breadcrumb: "All Requests" },
     tenants: { title: "Tenants", breadcrumb: "All Tenants" },
     applications: { title: "Applications", breadcrumb: "Tenant Applications" },
-    agreements: { title: "Agreements", breadcrumb: "Contracts" },
     registrations: { title: "Registrations", breadcrumb: "New Users" },
     maintenance: { title: "Maintenance", breadcrumb: "Requests" },
     payments: { title: "Payments", breadcrumb: "Transactions" },
-    blog: { title: "Blog", breadcrumb: "blog" },
-    staff: { title: "Staff", breadcrumb: "Team Members" },
-    settings: { title: "Settings", breadcrumb: "System Settings" },
+    blog: { title: "Blog", breadcrumb: "Blog Posts" },
+    leads: { title: "Room Leads", breadcrumb: "All Room Leads" },
+    enquiries: { title: "Enquiries", breadcrumb: "All Enquiries" },
+    contacts: { title: "Contact Leads", breadcrumb: "All Contact Messages" },
   };
 
   // 🔥 Component mapping
   const componentMap = {
     dashboard: <DashboardHome />,
-    analytics: <div className="bg-white p-6 rounded-xl">Analytics Section</div>,
     properties: <PropertyManager />,
     listings: <Listings />,
     viewings: <ViewingRequests />,
     tenants: <div className="bg-white p-6 rounded-xl">All Tenants</div>,
     applications: <Applications />,
-    agreements: <div className="bg-white p-6 rounded-xl">Agreements</div>,
     registrations: <Registrations />,
     maintenance: <Maintenance />,
     payments: <div className="bg-white p-6 rounded-xl">Payments</div>,
     blog: <Blog />,
-    staff: <div className="bg-white p-6 rounded-xl">Staff</div>,
-    settings: <div className="bg-white p-6 rounded-xl">Settings</div>,
+    leads: <RoomLeads />,
+    enquiries: <Enquiries />,
+    contacts: <ContactLeads />,
   };
 
   return (
     <div className="flex min-h-screen bg-[#F8F9FB] font-sans text-gray-800">
-
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <main className="flex-1 p-8">
         <Header {...headerMap[activeTab]} />
         {componentMap[activeTab]}
       </main>
-
     </div>
   );
 };
