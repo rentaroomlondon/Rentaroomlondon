@@ -5,8 +5,8 @@ import { useWishlist } from '@/app/utils/useWishlist';
 import Link from 'next/link';
 
 const PropertyCard = ({ data }) => {
-   const { isSaved, toggleWishlist,isLoaded } = useWishlist();
-   const [imageLoaded, setImageLoaded] = useState(false);
+  const { isSaved, toggleWishlist, isLoaded } = useWishlist();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // 🔥 Auto-generate tags from real DB fields
   const generatedTags = [
@@ -20,12 +20,16 @@ const PropertyCard = ({ data }) => {
     data.furnished && "Furnished",
     data.bathroomType === "private" && "Private Bathroom",
     data.bathroomType === "shared" && "Shared Bathroom",
-  ].filter(Boolean); // remove false/null
+  ].filter(Boolean);
 
   const image = data.images?.[0] || "/placeholder.png";
 
   const shortDescription = data.description.split(" ").slice(0, 5).join(" ") + "...";
 
+  // Build a specific WhatsApp message for this accommodation
+  const whatsappMessage = `Hello! I am interested in booking this room:\n\n🏠 ${data.title}\n📍 ${data.location?.address || ""}, ${data.location?.postcode || ""}, ${data.location?.city || ""}\n🆔 Listing ID: ${data.listingId || "N/A"}\n\nPlease share more details.`;
+
+  const whatsappUrl = `https://api.whatsapp.com/send/?phone=%2B447419990126&text=${encodeURIComponent(whatsappMessage)}&type=phone_number&app_absent=0`;
 
   const handleWishlist = (e) => {
     e.stopPropagation();  // ⛔ stops click from opening link
@@ -73,11 +77,11 @@ const PropertyCard = ({ data }) => {
             }`}
           />
 
-          {data.monthlyPrice && (
+          {/* {data.monthlyPrice && (
             <div className="absolute top-4 left-4 bg-[#FF7A45] text-white px-2.5 py-1.5 rounded-lg font-bold text-[11px] md:text-[12px] shadow-lg">
               £{data.monthlyPrice} PM
             </div>
-          )}
+          )} */}
 
           {data.availableImmediately && (
             <div className="block md:hidden absolute top-4 right-4 bg-[#22C55E] text-white px-3 py-1.5 rounded-lg font-bold text-[10px] tracking-wider uppercase">
@@ -116,19 +120,17 @@ const PropertyCard = ({ data }) => {
             </p>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <div className="flex items-baseline gap-1">
-                <span className="text-[#FF6B35] text-xl font-bold">£{data.monthlyPrice}</span>
-                <span className="text-[#6B7280] text-[10px]">per month</span>
-              </div>
-
-              {data.availableImmediately && (
-                <div className="flex items-center gap-1 text-[#2ECC71] text-[12px] font-bold mt-0.5">
-                  <Check className="w-3 h-3" /> Available Now
-                </div>
-              )}
-            </div>
+          <div className="flex items-center justify-between gap-3">
+            {/* Specific accommodation request button */}
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#25D366] hover:bg-[#20BD5A] text-white px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 text-xs transition-colors whitespace-nowrap"
+            >
+              Request Rent
+            </a>
 
             <div className="flex gap-2">
   

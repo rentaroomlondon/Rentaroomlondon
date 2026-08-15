@@ -267,7 +267,7 @@ const Searchbar = () => {
               </div>
 
               {/* MOBILE PRICE RANGE */}
-              <div className="mt-6 pt-4 border-t border-gray-50 md:hidden">
+              {/* <div className="mt-6 pt-4 border-t border-gray-50 md:hidden">
                 <div className="flex justify-between items-center mb-3">
                   <span className="text-[10px] font-bold text-[#B1B1B1] uppercase tracking-wider">Adjust Price</span>
                   <span className="text-[14px] font-extrabold text-[#2A3971]">£{price} PM</span>
@@ -293,10 +293,10 @@ const Searchbar = () => {
                     style={{ left: `calc(${(price / 1500) * 100}% - 10px)` }}
                   ></div>
                 </div>
-              </div>
+              </div> */}
 
               {/* DESKTOP PRICE SLIDER */}
-              <div className="hidden md:block mt-8">
+              {/* <div className="hidden md:block mt-8">
                 <div className="flex justify-between text-[10px] font-bold text-[#B1B1B1] mb-3 uppercase tracking-tighter">
                   <span>£0 PM</span>
                   <span className="text-[#F68B51]">Selected: £{price} PM</span>
@@ -319,7 +319,7 @@ const Searchbar = () => {
                     className="absolute inset-0 w-full h-1 opacity-0 cursor-pointer z-10" 
                   />
                 </div>
-              </div>
+              </div> */}
 
               {/* MOBILE SEARCH BUTTON */}
               <div className="md:hidden mt-6">
