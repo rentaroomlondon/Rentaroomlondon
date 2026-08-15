@@ -134,6 +134,7 @@ const PropertyCard = ({ data }) => {
 
             <div className="flex gap-2">
   
+  
               <button
                 onClick={handleWishlist}
                 className={`p-2.5 border rounded-xl transition-colors ${
