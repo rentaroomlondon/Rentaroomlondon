@@ -13,15 +13,15 @@ const Details = ({ listing }) => {
     { label: "Property Reference", value: listing?.listingId, mobile: true },
     { label: "Room Number", value: `${listing?.roomLabel} (${listing?.floor})`, mobile: false },
     { label: "Monthly Rent", value: `£${listing?.monthlyPrice} per month`, color: "text-[#F27A3D]", mobile: true },
-    { label: "Monthly Equivalent", value: `≈ £${listing?.monthlyPrice} per month`, mobile: false },
-    { label: "Security Deposit", value: `£${listing?.deposit} (4 weeks)`, mobile: true },
-    { label: "Holding Deposit", value: `£${listing?.holdingDeposit} (4 weeks)`, mobile: false },
-    { label: "Minimum Tenancy", value: `${listing?.minTenancy} months`, mobile: true },
+    // { label: "Monthly Equivalent", value: `≈ £${listing?.monthlyPrice} per month`, mobile: false },
+    { label: "Security Deposit", value: `£${listing?.deposit} (2 weeks)`, mobile: true },
+    // { label: "Holding Deposit", value: `£${listing?.holdingDeposit} (2 weeks)`, mobile: false },
+    // { label: "Minimum Tenancy", value: `${listing?.minTenancy} months`, mobile: true },
     { label: "Available From", value: formatDate(listing?.availableFrom), color: "text-[#10B981]", mobile: false },
     { label: "Furnishing", value: listing?.furnished ? "Fully Furnished" : "Unfurnished", mobile: true },
     { label: "Parking", value: listing?.parking?.available ? "Available" : "No Parking", mobile: false },
     { label: "EPC Rating", value: `${listing?.epcRating} (Good)`, color: "text-[#10B981]", mobile: true },
-    { label: "Council Tax Band", value: `Band ${listing?.councilTaxBand} (Shared)`, mobile: false },
+    // { label: "Council Tax Band", value: `Band ${listing?.councilTaxBand} (Shared)`, mobile: false },
   ];
 
   return (

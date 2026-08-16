@@ -159,8 +159,8 @@ const handleWhatsApp = () => {
         <div className="space-y-4 pb-2">
           <DetailRow label="Room Type" value={getRoomTypeLabel(listing?.roomType) || "Double Room"} />
           <div className="h-px bg-[#E2E7EE] w-full"></div>
-          <DetailRow label="Min Tenancy" value={`${listing?.minTenancy || ''} months`} />
-          <div className="h-px bg-[#E2E7EE] w-full"></div>
+          {/* <DetailRow label="Min Tenancy" value={`${listing?.minTenancy || ''} months`} />
+          <div className="h-px bg-[#E2E7EE] w-full"></div> */}
           <DetailRow
             label="Move In"
             value={
