@@ -8,6 +8,7 @@ import PropertyCard from "./PropertyCard";
 import PropertyCardSkeleton from "./PropertyCardSkeleton";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
+import LeadFormInline from "./LeadFormInline";
 
 
 const MapView = dynamic(() => import("./MapView"), {
@@ -122,7 +123,9 @@ export default function PropertySearchPage() {
 
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-xl lg:text-2xl font-bold text-[#111827]">
-                <span className="text-[#FF7A45]">{rooms.length}</span> Rooms in{" "}
+                <span className="text-[#FF7A45]">
+                  {/* {rooms.length} */}
+                </span> Rooms in{" "}
                 <span className="capitalize">
                   {filters.search?.split(",")[0] || "London"}
                 </span>
@@ -143,13 +146,18 @@ export default function PropertySearchPage() {
                   <PropertyCardSkeleton key={i} />
                 ))
               ) : rooms.length === 0 ? (
-                <div className="text-center py-20">
-                  <h2 className="text-xl font-semibold text-gray-700">
-                    No Property Found
-                  </h2>
-                  <p className="text-gray-500 mt-2">
-                    Try adjusting your filters or search location.
-                  </p>
+                <div className="py-12 px-4 max-w-lg mx-auto">
+                  <div className="text-center mb-8">
+                    <h2 className="text-xl lg:text-2xl font-bold text-gray-800 mb-3">
+                      We're onboarding new rooms in London every week
+                    </h2>
+                    <p className="text-gray-600">
+                      Leave your details below and we'll send you available room photos and pricing as soon as they're live.
+                    </p>
+                  </div>
+
+                  {/* Inline Lead Form */}
+                  <LeadFormInline />
                 </div>
               ) : (
                 rooms.map((room) => (
