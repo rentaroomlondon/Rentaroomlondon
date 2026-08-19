@@ -190,7 +190,7 @@ const handleWhatsApp = () => {
             <span className="text-lg">🗓️</span> Book a Viewing
           </button>
           
-          <button href="tel:+447419990126" className="w-full border border-[#0C1F33] text-[#0F172A] py-4 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors bg-white">
+          <button onClick={() => window.open("tel:+447419990126")} className="w-full border border-[#0C1F33] text-[#0F172A] py-4 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors bg-white">
             <Phone size={16} className="fill-current" /> Call Agent
           </button>
         </div>
