@@ -11,6 +11,7 @@ const navLinks = [
       columns: [
         {
           title: "North West London",
+          href: "/rooms-to-rent-north-west-london", // change to real URL if needed
           links: [
             { label: "All NW London", href: "#" },
             { label: "Cricklewood", href: "/rental-rooms-students-cricklewood-uk" },
@@ -22,6 +23,7 @@ const navLinks = [
         },
         {
           title: "South East London",
+          href: "/rooms-to-rent-south-east-london", // change to real URL if needed
           links: [
             { label: "All SE London", href: "#" },
             { label: "Plumstead", href: "/affordable-rental-rooms-se18-plumstead-bills-included" },
@@ -32,6 +34,7 @@ const navLinks = [
         },
         {
           title: "East London",
+          href: "/rooms-to-rent-east-london", // ← change this to the real "All East London" page URL
           links: [
             { label: "All East London", href: "#" },
             { label: "South Tottenham", href: "/Spare-rooms-rent-south-tottenham-n15-london" },
@@ -41,6 +44,7 @@ const navLinks = [
         },
         {
           title: "Out of London",
+          href: "#", // change to real URL if needed
           links: [
             { label: "All out of London", href: "#" },
             { label: "Birmingham", href: "/birmingham-city-centre-student-housing-bills-included" },
@@ -49,7 +53,6 @@ const navLinks = [
       ],
     },
   },
-
   {
     label: "PROPERTY TYPE",
     dropdown: [
@@ -59,8 +62,6 @@ const navLinks = [
       { label: "Flat share room", href: "/flat-shares-rental-rooms-london" },
     ],
   },
-
-  // KEEP YOUR OLD ONES
   {
     label: "TENANTS",
     dropdown: [
@@ -88,13 +89,13 @@ const navLinks = [
   {
     label: "BOOK A ROOM",
     href: "/find-a-room",
-  }
+  },
 ];
 
-  // Helper for the small right arrow/chevron
-  const ChevronRight = () => (
-    <span className="text-[10px] opacity-30 font-light">›</span>
-  );
+// Helper for the small right arrow/chevron
+const ChevronRight = () => (
+  <span className="text-[10px] opacity-30 font-light">›</span>
+);
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -116,9 +117,7 @@ const Header = () => {
 
   return (
     <header className="w-full">
-      <nav
-        className="flex items-center w-full h-[60px] bg-[#0F253B] shadow-[0px_2px_10px_0px_rgba(0,0,0,0.15)] font-sans"
-      >
+      <nav className="flex items-center w-full h-[60px] bg-[#0F253B] shadow-[0px_2px_10px_0px_rgba(0,0,0,0.15)] font-sans">
         {/* Left spacing */}
         <div className="w-4 md:w-5 h-full shrink-0" />
 
@@ -138,12 +137,10 @@ const Header = () => {
               className="w-full h-full object-contain"
             />
           </div>
-
           <span className="text-white text-[12px] md:text-base font-semibold font-sans uppercase tracking-wider whitespace-nowrap">
             RentaRoomLondon
           </span>
         </Link>
-
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-9 px-10 h-full">
@@ -196,9 +193,21 @@ const Header = () => {
                   <div className="bg-white text-black shadow-2xl p-8 grid grid-cols-4 gap-8">
                     {link.megaMenu.columns.map((col) => (
                       <div key={col.title}>
-                        <h3 className="font-bold text-[13px] uppercase mb-3">
-                          {col.title}
-                        </h3>
+                        {/* Title is now a link if href exists */}
+                        {col.href ? (
+                          <Link
+                            href={col.href}
+                            className="font-bold text-[13px] uppercase mb-3 block hover:text-orange-500 transition-colors"
+                            onClick={() => setOpenMenu(null)}
+                          >
+                            {col.title}
+                          </Link>
+                        ) : (
+                          <h3 className="font-bold text-[13px] uppercase mb-3">
+                            {col.title}
+                          </h3>
+                        )}
+
                         <div className="flex flex-col gap-2 text-[13px]">
                           {col.links.map((item) => (
                             <Link
@@ -248,7 +257,6 @@ const Header = () => {
                     {user.firstName}
                   </span>
                 </button>
-
                 {profileOpen && (
                   <div className="absolute right-0 top-[45px] bg-white text-black w-40 rounded-lg shadow-lg overflow-hidden z-50">
                     <Link
@@ -293,7 +301,6 @@ const Header = () => {
               />
             </svg>
           </Link>
-
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="px-5 text-white text-2xl"
@@ -338,7 +345,6 @@ const Header = () => {
               RentaRoomLondon
             </span>
           </Link>
-
           <div className="flex items-center gap-4">
             <Link href="/saved" onClick={() => setIsOpen(false)} className="text-white inline-flex">
               <svg width="24" height="26" viewBox="0 0 24 26" fill="none">
@@ -351,7 +357,6 @@ const Header = () => {
                 />
               </svg>
             </Link>
-
             <button onClick={() => setIsOpen(false)} className="text-white">
               <svg
                 width="28"
@@ -396,7 +401,21 @@ const Header = () => {
               .find((l) => l.label === "FIND A ROOM")
               ?.megaMenu?.columns.map((col) => (
                 <div key={col.title} className="mb-4">
-                  <p className="text-orange-400 text-[12px] font-bold mb-2">{col.title}</p>
+                  {/* Title is now a link if href exists */}
+                  {col.href ? (
+                    <Link
+                      href={col.href}
+                      onClick={() => setIsOpen(false)}
+                      className="text-orange-400 text-[12px] font-bold mb-2 block hover:underline"
+                    >
+                      {col.title}
+                    </Link>
+                  ) : (
+                    <p className="text-orange-400 text-[12px] font-bold mb-2">
+                      {col.title}
+                    </p>
+                  )}
+
                   {col.links.map((item) => (
                     <Link
                       key={item.label}
