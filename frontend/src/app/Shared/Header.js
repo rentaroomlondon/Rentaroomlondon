@@ -96,6 +96,7 @@ const navLinks = [
   },
 ];
 
+
 // Helper for the small right arrow/chevron
 const ChevronRight = () => (
   <span className="text-[10px] opacity-30 font-light">›</span>
