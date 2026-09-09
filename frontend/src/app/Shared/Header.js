@@ -90,6 +90,10 @@ const navLinks = [
     label: "BOOK A ROOM",
     href: "/find-a-room",
   },
+  {
+    label: "Blog",
+    href: "/blog-rooms-to-rent-london",
+  },
 ];
 
 // Helper for the small right arrow/chevron

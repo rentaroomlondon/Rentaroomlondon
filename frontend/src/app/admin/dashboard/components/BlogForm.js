@@ -10,13 +10,68 @@ import uploadToCloudinary from "@/app/utils/uploadToCloudinary";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// Full "MS Word style" editor toolbar
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    [{ font: [] }],
+    [{ size: ["small", false, "large", "huge"] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ color: [] }, { background: [] }],
+    [{ script: "sub" }, { script: "super" }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ indent: "-1" }, { indent: "+1" }],
+    [{ align: [] }],
+    ["blockquote", "code-block"],
+    ["link", "image", "video"],
+    ["clean"],
+  ],
+  clipboard: { matchVisual: false },
+};
+
+const quillFormats = [
+  "header",
+  "font",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "color",
+  "background",
+  "script",
+  "list",
+  "indent",
+  "align",
+  "blockquote",
+  "code-block",
+  "link",
+  "image",
+  "video",
+];
+
+// Turn any text into a clean URL slug (mirrors the backend rule)
+const slugify = (value) =>
+  String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/['"!:@*+~.()]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 const BlogForm = ({ slug, onBack }) => {
   const [formData, setFormData] = useState({
     title: "",
+    slug: "",
+    metaTitle: "",
+    metaDescription: "",
     excerpt: "",
     content: "",
     image: "",
   });
+
+  // Was the slug auto-derived from the title, or hand-edited by the admin?
+  const [slugTouched, setSlugTouched] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
@@ -36,10 +91,14 @@ const BlogForm = ({ slug, onBack }) => {
           if (blog) {
             setFormData({
               title: blog.title || "",
+              slug: blog.slug || "",
+              metaTitle: blog.metaTitle || "",
+              metaDescription: blog.metaDescription || "",
               excerpt: blog.excerpt || "",
               content: blog.content || "",
               image: blog.image || "",
             });
+            setSlugTouched(true); // existing post already has a real URL
             setImagePreview(blog.image || "");
           }
         } catch (err) {
@@ -56,10 +115,19 @@ const BlogForm = ({ slug, onBack }) => {
   // Handle standard input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+      // Keep the URL in sync with the title until the admin edits it themselves
+      if (name === "title" && !slugTouched) {
+        next.slug = slugify(value);
+      }
+      return next;
+    });
+  };
+
+  const handleSlugChange = (e) => {
+    setSlugTouched(true);
+    setFormData((prev) => ({ ...prev, slug: slugify(e.target.value) }));
   };
 
   // Handle Rich Text Content change
@@ -100,13 +168,19 @@ const BlogForm = ({ slug, onBack }) => {
         },
         body: JSON.stringify({
           title: formData.title,
+          slug: formData.slug,
+          metaTitle: formData.metaTitle,
+          metaDescription: formData.metaDescription,
           excerpt: formData.excerpt,
           content: formData.content,
           image: imageUrl,
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to save blog post");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to save blog post");
+      }
 
       alert(slug ? "Blog updated successfully!" : "Blog created successfully!");
       if (onBack) onBack();
@@ -125,6 +199,9 @@ const BlogForm = ({ slug, onBack }) => {
       </div>
     );
   }
+
+  const inputClass =
+    "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm";
 
   return (
     <div className="min-h-screen bg-[#F8F9FB] p-8">
@@ -153,9 +230,77 @@ const BlogForm = ({ slug, onBack }) => {
                 value={formData.title}
                 onChange={handleChange}
                 required
-                placeholder="Enter blog title..."
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
+                placeholder="e.g. The Complete Guide to Renting a Room in the UK | Checklist"
+                className={inputClass}
               />
+              <p className="text-xs text-slate-400 mt-1">
+                Internal name shown in the dashboard and blog cards.
+              </p>
+            </div>
+
+            {/* URL / SLUG */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1">
+                Blog URL (slug)
+              </label>
+              <div className="flex items-center rounded-lg border overflow-hidden focus-within:ring-2 focus-within:ring-orange-500">
+                <span className="px-3 py-2 bg-slate-50 text-slate-400 text-xs border-r select-none whitespace-nowrap">
+                  rentaroomlondon.co.uk/
+                </span>
+                <input
+                  type="text"
+                  name="slug"
+                  value={formData.slug}
+                  onChange={handleSlugChange}
+                  required
+                  placeholder="complete-guide-checklist-renting-room-uk"
+                  className="flex-1 px-3 py-2 text-sm focus:outline-none"
+                />
+              </div>
+              <p className="text-xs text-slate-400 mt-1">
+                This is the full page URL. Lowercase letters, numbers and dashes
+                only. Changing this on an existing post changes its live link.
+              </p>
+            </div>
+
+            {/* SEO META TITLE */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1">
+                Meta Title (SEO)
+              </label>
+              <input
+                type="text"
+                name="metaTitle"
+                value={formData.metaTitle}
+                onChange={handleChange}
+                maxLength={120}
+                placeholder="Shown in Google results & browser tab"
+                className={inputClass}
+              />
+              <p className="text-xs text-slate-400 mt-1">
+                {formData.metaTitle.length}/120 · Leave blank to use the Blog
+                Title.
+              </p>
+            </div>
+
+            {/* SEO META DESCRIPTION */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1">
+                Meta Description (SEO)
+              </label>
+              <textarea
+                name="metaDescription"
+                rows={2}
+                value={formData.metaDescription}
+                onChange={handleChange}
+                maxLength={320}
+                placeholder="Everything you need to know before renting a room in the UK..."
+                className={inputClass}
+              />
+              <p className="text-xs text-slate-400 mt-1">
+                {formData.metaDescription.length}/320 · Leave blank to use the
+                Excerpt.
+              </p>
             </div>
 
             {/* SHORT DESCRIPTION / EXCERPT */}
@@ -168,8 +313,10 @@ const BlogForm = ({ slug, onBack }) => {
                 rows={3}
                 value={formData.excerpt}
                 onChange={handleChange}
-                placeholder="Write a brief summary of the blog post..."
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
+                required
+                maxLength={300}
+                placeholder="Write a brief summary shown on the blog list cards..."
+                className={inputClass}
               />
             </div>
 
@@ -178,15 +325,22 @@ const BlogForm = ({ slug, onBack }) => {
               <label className="block text-sm font-semibold text-slate-700 mb-1">
                 Full Content
               </label>
-              <div className="bg-white rounded-lg overflow-hidden border">
+              <div className="bg-white rounded-lg overflow-hidden border blog-editor [&_.ql-container]:text-[15px]! [&_.ql-editor]:min-h-90 [&_.ql-toolbar]:sticky [&_.ql-toolbar]:top-0 [&_.ql-toolbar]:z-10 [&_.ql-toolbar]:bg-white">
                 <ReactQuill
                   theme="snow"
                   value={formData.content}
                   onChange={handleContentChange}
+                  modules={quillModules}
+                  formats={quillFormats}
                   placeholder="Write your rich blog content here..."
-                  className="h-64 mb-12"
                 />
               </div>
+              <p className="text-xs text-slate-400 mt-1">
+                Full formatting toolbar — headings, font size, bold/italic/underline,
+                text &amp; highlight colour, alignment, ordered &amp; bullet lists,
+                indentation, quotes, tables via lists, links, images and video. Use
+                the eraser icon to clear formatting.
+              </p>
             </div>
 
             {/* ONE IMAGE UPLOAD */}

@@ -114,6 +114,11 @@ const BlogManager = () => {
                       {item.title}
                     </h2>
 
+                    {/* URL SLUG */}
+                    <p className="text-[11px] text-slate-400 mt-1 truncate">
+                      rentaroomlondon.co.uk/{item.slug}
+                    </p>
+
                     {/* EXCERPT / DESCRIPTION */}
                     <p className="text-sm text-gray-500 line-clamp-2 mt-2">
                       {item.excerpt || item.description || "No description provided."}

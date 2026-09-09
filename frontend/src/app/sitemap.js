@@ -21,6 +21,26 @@ export default async function sitemap() {
         priority: 0.9,
       }));
 
+    // 📝 BLOG POSTS
+    let blogUrls = [];
+    try {
+      const blogRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs`, {
+        cache: "no-store",
+      });
+      const blogData = await blogRes.json();
+      const blogs = blogData.blogs || blogData.data || [];
+      blogUrls = blogs
+        .filter((b) => b.slug)
+        .map((b) => ({
+          url: `${baseUrl}/${b.slug}`,
+          lastModified: new Date(b.updatedAt || b.createdAt || Date.now()),
+          changeFrequency: "weekly",
+          priority: 0.7,
+        }));
+    } catch (blogErr) {
+      console.error("Sitemap blog fetch error:", blogErr);
+    }
+
     return [
       // 🏠 HOME
       {
@@ -60,6 +80,12 @@ export default async function sitemap() {
         url: `${baseUrl}/privacy-policy`,
         lastModified: new Date(),
         priority: 0.5,
+      },
+      {
+        url: `${baseUrl}/blog-rooms-to-rent-london`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.7,
       },
 
       // 🏠 YOUR LISTED STATIC PROPERTY PAGES
@@ -126,6 +152,9 @@ export default async function sitemap() {
 
       // 🔥 DYNAMIC PROPERTY PAGES
       ...propertyUrls,
+
+      // 📝 DYNAMIC BLOG POSTS
+      ...blogUrls,
     ];
   } catch (error) {
     console.error("Sitemap Error:", error);

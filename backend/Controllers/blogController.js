@@ -41,7 +41,8 @@ export const getBlogBySlug = async (req, res) => {
 // @access  Private
 export const createBlog = async (req, res) => {
   try {
-    const { title, excerpt, content } = req.body;
+    const { title, slug, metaTitle, metaDescription, excerpt, content } =
+      req.body;
 
     let image = req.body.image || "";
     if (req.file) {
@@ -50,6 +51,9 @@ export const createBlog = async (req, res) => {
 
     const blog = await Blog.create({
       title,
+      slug, // optional — auto-generated from title when blank
+      metaTitle,
+      metaDescription,
       excerpt,
       content,
       image,
@@ -60,11 +64,18 @@ export const createBlog = async (req, res) => {
       blog,
     });
   } catch (err) {
+    // Friendly message for a duplicate custom URL
+    if (err.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        error: "That blog URL is already in use. Please choose a different one.",
+      });
+    }
     res.status(400).json({ success: false, error: err.message });
   }
 };
 
-// @desc    Update blog (Slug is excluded from update payload so it remains unchanged)
+// @desc    Update blog
 // @route   PUT /api/blogs/:slug
 // @access  Private
 export const updateBlog = async (req, res) => {
@@ -75,25 +86,37 @@ export const updateBlog = async (req, res) => {
       return res.status(404).json({ success: false, error: "Blog post not found" });
     }
 
-    const { title, excerpt, content } = req.body;
+    const { title, slug, metaTitle, metaDescription, excerpt, content } =
+      req.body;
     let image = req.body.image || blog.image;
-    
+
     if (req.file) {
       image = req.file.path;
     }
 
-    // Explicitly update only mutable fields (title, excerpt, content, image)
-    blog = await Blog.findOneAndUpdate(
-      { slug: req.params.slug },
-      { title, excerpt, content, image },
-      { new: true, runValidators: true }
-    );
+    const fields = { title, metaTitle, metaDescription, excerpt, content, image };
+
+    // Only touch the slug when the admin actually sends a new, different value
+    if (typeof slug === "string" && slug.trim() && slug.trim() !== blog.slug) {
+      fields.slug = slug.trim();
+    }
+
+    blog = await Blog.findOneAndUpdate({ slug: req.params.slug }, fields, {
+      new: true,
+      runValidators: true,
+    });
 
     res.status(200).json({
       success: true,
       blog,
     });
   } catch (err) {
+    if (err.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        error: "That blog URL is already in use. Please choose a different one.",
+      });
+    }
     res.status(400).json({ success: false, error: err.message });
   }
 };
