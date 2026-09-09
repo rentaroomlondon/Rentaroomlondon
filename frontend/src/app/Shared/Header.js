@@ -518,6 +518,21 @@ const Header = () => {
             </Link>
           </section>
 
+          {/* BLOG */}
+          <section className="mb-8">
+            <p className="text-[10px] text-[#FFFFFF4D] font-bold tracking-[0.15em] mb-4">
+              BLOG
+            </p>
+            <Link
+              href="/blog-rooms-to-rent-london"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center justify-between py-3 border-b border-white/5"
+            >
+              <span className="text-[14px] text-[#FFFFFFD9] font-medium">Blog</span>
+              <ChevronRight />
+            </Link>
+          </section>
+
           {/* USER PROFILE */}
           {!loadingUser && user && (
             <Link
