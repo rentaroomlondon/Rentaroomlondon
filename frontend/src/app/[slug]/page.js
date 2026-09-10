@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import ContactForm from "@/app/Shared/ContactForm";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -18,19 +18,6 @@ async function getBlogDetail(slug) {
   } catch (err) {
     console.error("Fetch blog detail error:", err);
     return null;
-  }
-}
-
-// ================= FETCH ALL BLOGS (prev / next / related) =================
-async function getAllBlogs() {
-  try {
-    const res = await fetch(`${API_URL}/blogs`, { cache: "no-store" });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data?.blogs || data?.data || [];
-  } catch (err) {
-    console.error("Fetch blogs error:", err);
-    return [];
   }
 }
 
@@ -93,28 +80,11 @@ const formatDate = (value) =>
 
 export default async function BlogDetailPage({ params }) {
   const { slug } = await params;
-  const [blog, allBlogs] = await Promise.all([
-    getBlogDetail(slug),
-    getAllBlogs(),
-  ]);
+  const blog = await getBlogDetail(slug);
 
   if (!blog) {
     notFound();
   }
-
-  // Prev / Next (list is newest-first from the API)
-  const currentIndex = allBlogs.findIndex(
-    (b) => b.slug === blog.slug || b._id === blog._id
-  );
-  const newerPost = currentIndex > 0 ? allBlogs[currentIndex - 1] : null;
-  const olderPost =
-    currentIndex >= 0 && currentIndex < allBlogs.length - 1
-      ? allBlogs[currentIndex + 1]
-      : null;
-
-  const relatedPosts = allBlogs
-    .filter((b) => b.slug !== blog.slug)
-    .slice(0, 3);
 
   // Article structured data for search engines
   const jsonLd = {
@@ -225,7 +195,7 @@ export default async function BlogDetailPage({ params }) {
 
           {/* ---------- SIDEBAR ---------- */}
           <aside className="min-w-0 lg:col-span-4">
-            <div>
+            <div className="lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto">
               <div className="rounded-[28px] bg-[#0F253B] p-5 shadow-xl sm:p-6 md:bg-[linear-gradient(160deg,#1A2332_0%,#243044_100%)]">
                 <ContactForm
                   title="Talk to a Room Expert"
@@ -245,89 +215,7 @@ export default async function BlogDetailPage({ params }) {
           </aside>
         </div>
 
-        {/* ---------- PREV / NEXT ---------- */}
-        {(newerPost || olderPost) && (
-          <nav className="mt-14 grid grid-cols-1 gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2">
-            {olderPost ? (
-              <Link
-                href={`/${olderPost.slug}`}
-                className="group flex flex-col gap-1 rounded-2xl border border-slate-200/80 bg-white p-5 transition hover:border-[#f47c3c]/40 hover:shadow-md"
-              >
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                  <ArrowLeft size={13} strokeWidth={2.5} /> Previous Article
-                </span>
-                <span className="font-playfair text-[15px] font-bold leading-snug text-[#1A1A1A] line-clamp-2 group-hover:text-[#f47c3c]">
-                  {olderPost.title}
-                </span>
-              </Link>
-            ) : (
-              <span className="hidden sm:block" />
-            )}
-
-            {newerPost && (
-              <Link
-                href={`/${newerPost.slug}`}
-                className="group flex flex-col items-end gap-1 rounded-2xl border border-slate-200/80 bg-white p-5 text-right transition hover:border-[#f47c3c]/40 hover:shadow-md"
-              >
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                  Next Article <ArrowRight size={13} strokeWidth={2.5} />
-                </span>
-                <span className="font-playfair text-[15px] font-bold leading-snug text-[#1A1A1A] line-clamp-2 group-hover:text-[#f47c3c]">
-                  {newerPost.title}
-                </span>
-              </Link>
-            )}
-          </nav>
-        )}
       </section>
-
-      {/* ================= RELATED ================= */}
-      {relatedPosts.length > 0 && (
-        <section className="border-t border-slate-200/70 bg-white">
-          <div className="mx-auto max-w-6xl px-5 md:px-6 py-14 md:py-20">
-            <h2 className="mb-8 font-playfair text-[24px] font-bold text-[#1A1A1A] md:text-[30px]">
-              More Articles
-            </h2>
-            <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
-              {relatedPosts.map((post) => (
-                <article
-                  key={post._id || post.slug}
-                  className="group flex flex-col overflow-hidden rounded-[18px] border border-slate-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <Link
-                    href={`/${post.slug}`}
-                    className="relative block h-44 w-full overflow-hidden bg-slate-100"
-                  >
-                    <Image
-                      src={
-                        post.image ||
-                        "https://placehold.co/600x400?text=Rentaroomlondon"
-                      }
-                      alt={post.title || "Blog cover"}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      sizes="(max-width: 640px) 100vw, 380px"
-                    />
-                  </Link>
-                  <div className="flex flex-1 flex-col p-5">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#f47c3c]">
-                      {formatDate(post.createdAt)}
-                    </span>
-                    <Link href={`/${post.slug}`}>
-                      <h3 className="mt-2 font-playfair text-[16px] font-bold leading-snug text-[#1A1A1A] line-clamp-2 group-hover:text-[#f47c3c]">
-                        {post.title}
-                      </h3>
-                    </Link>
-                    <p className="mt-2 text-[13px] leading-relaxed text-slate-500 line-clamp-2">
-                      {post.excerpt || ""}
-                    </p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
     </main>
   );
 }
