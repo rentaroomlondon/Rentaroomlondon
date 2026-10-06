@@ -14,6 +14,22 @@ const roomLeadSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    email: {
+      type: String,
+      default: "",
+      trim: true,
+      lowercase: true,
+    },
+    roomType: {
+      type: String,
+      enum: ["", "Single", "Double", "Ensuite"],
+      default: "",
+    },
+    monthlyBudget: {
+      type: String,
+      enum: ["", "Under £600", "£600–£750", "£750–£900", "£900+"],
+      default: "",
+    },
   },
   {
     timestamps: true,

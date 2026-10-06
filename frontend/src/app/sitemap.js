@@ -90,6 +90,11 @@ export default async function sitemap() {
 
       // 🏠 YOUR LISTED STATIC PROPERTY PAGES
       {
+        url: `${baseUrl}/rental-rooms-students-harrow-ha1-bills-included`,
+        lastModified: new Date(),
+        priority: 0.8,
+      },
+      {
         url: `${baseUrl}/rental-rooms-students-cricklewood-uk`,
         lastModified: new Date(),
         priority: 0.8,

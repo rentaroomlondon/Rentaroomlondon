@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import React, { useState, useRef } from "react";
 import { useAuth } from "../Context/AuthContext";
@@ -15,6 +15,7 @@ const navLinks = [
           links: [
             { label: "All NW London", href: "#" },
             { label: "Cricklewood", href: "/rental-rooms-students-cricklewood-uk" },
+            { label: "Harrow", href: "/rental-rooms-students-harrow-ha1-bills-included" },
             { label: "Harlesden", href: "/rooms-rent-harlesden-nw10-bills-included" },
             { label: "Kingsbury", href: "/shared-rental-rooms-kingsbury-london-nw9" },
             { label: "West Hampstead", href: "/rooms-rental-nw6-west-hampstead-london" },

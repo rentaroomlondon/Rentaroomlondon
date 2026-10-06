@@ -11,6 +11,9 @@ const LeadPopup = () => {
     name: "",
     phone: "",
     location: "",
+    email: "",
+    roomType: "",
+    monthlyBudget: "",
     website: "", // honeypot
   });
   const [loading, setLoading] = useState(false);
@@ -149,6 +152,25 @@ const LeadPopup = () => {
       return false;
     }
 
+    const cleanEmail = formData.email.trim().toLowerCase();
+    if (cleanEmail) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      const localPart = cleanEmail.split("@")[0];
+      const isSuspicious =
+        localPart.length < 4 ||
+        (localPart.match(/\./g) || []).length >= 2 ||
+        localPart.includes("..") ||
+        localPart.startsWith(".") ||
+        localPart.endsWith(".") ||
+        /^[0-9]+$/.test(localPart) ||
+        /^(test|fake|dummy|sample|admin|user|guest|asdf|qwer)/.test(localPart);
+
+      if (!emailRegex.test(cleanEmail) || isSuspicious) {
+        setStatusMsg({ type: "error", text: "Please enter a valid email address" });
+        return false;
+      }
+    }
+
     return true;
   };
 
@@ -164,7 +186,12 @@ const LeadPopup = () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/leads/submit-lead`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          name: formData.name.trim(),
+          location: formData.location.trim(),
+          email: formData.email.trim().toLowerCase(),
+        }),
       });
 
       const data = await response.json();
@@ -176,7 +203,7 @@ const LeadPopup = () => {
           setIsOpen(false);
 
           setTimeout(() => {
-            setFormData({ name: "", phone: "", location: "", website: "" });
+            setFormData({ name: "", phone: "", location: "", email: "", roomType: "", monthlyBudget: "", website: "" });
             setStatusMsg({ type: "", text: "" });
           }, 300);
         }, 2000);
@@ -194,7 +221,7 @@ const LeadPopup = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity animate-fadeIn">
-      <div className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl border border-gray-100">
+      <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl border border-gray-100">
         <div className="h-2 bg-gradient-to-r from-blue-700 via-indigo-800 to-slate-900" />
 
         <button
@@ -305,6 +332,59 @@ const LeadPopup = () => {
                 placeholder="e.g. Camden, Canary Wharf, Zone 2"
                 className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 transition-all disabled:bg-gray-50 disabled:text-gray-500"
               />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Email (Optional)
+              </label>
+              <input
+                type="email"
+                name="email"
+                autoComplete="email"
+                disabled={loading || statusMsg.type === "success"}
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 transition-all disabled:bg-gray-50 disabled:text-gray-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Room Type (Optional)
+              </label>
+              <select
+                name="roomType"
+                disabled={loading || statusMsg.type === "success"}
+                value={formData.roomType}
+                onChange={handleChange}
+                className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 transition-all disabled:bg-gray-50 disabled:text-gray-500"
+              >
+                <option value="">Any room type</option>
+                <option value="Single">Single</option>
+                <option value="Double">Double</option>
+                <option value="Ensuite">Ensuite</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Monthly Budget (Optional)
+              </label>
+              <select
+                name="monthlyBudget"
+                disabled={loading || statusMsg.type === "success"}
+                value={formData.monthlyBudget}
+                onChange={handleChange}
+                className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 transition-all disabled:bg-gray-50 disabled:text-gray-500"
+              >
+                <option value="">Any budget</option>
+                <option value="Under £600">Under £600</option>
+                <option value="£600–£750">£600–£750</option>
+                <option value="£750–£900">£750–£900</option>
+                <option value="£900+">£900+</option>
+              </select>
             </div>
 
             <button
