@@ -1,7 +1,11 @@
 "use client"
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAdminAuth } from "@/app/Context/AdminAuthContext";
 
 export default function AdminLogin() {
+  const router = useRouter();
+  const { setAdmin } = useAdminAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,10 +33,24 @@ export default function AdminLogin() {
       }
 
       setMessage("Login successful ✅");
-      console.log(data);
+      setMessage("Verifying admin session...");
 
-      // redirect example
-      window.location.href = "/admin/dashboard";
+      const sessionResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/me`, {
+        credentials: "include",
+        cache: "no-store",
+      });
+      const sessionData = await sessionResponse.json();
+
+      if (!sessionResponse.ok || !sessionData.admin) {
+        const apiUrl = new URL(process.env.NEXT_PUBLIC_API_URL);
+        const sameSite = apiUrl.hostname === window.location.hostname && apiUrl.protocol === window.location.protocol;
+        throw new Error(sameSite
+          ? "Login succeeded, but the browser did not keep the admin session cookie. Restart the backend and clear the localhost cookies, then try again."
+          : `Login succeeded, but frontend origin ${window.location.origin} and API origin ${apiUrl.origin} use different hostnames or protocols. Open both with the same hostname and protocol so the session cookie is shared.`);
+      }
+
+      setAdmin(sessionData.admin);
+      router.replace("/admin/dashboard");
     } catch (error) {
       setMessage(error.message);
     } finally {

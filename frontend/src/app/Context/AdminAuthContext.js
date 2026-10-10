@@ -1,10 +1,12 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const AdminAuthContext = createContext();
 
 export const AdminAuthProvider = ({ children }) => {
+  const pathname = usePathname();
   const [admin, setAdmin] = useState(null);
   const [loadingAdmin, setLoadingAdmin] = useState(true);
 
@@ -53,8 +55,12 @@ export const AdminAuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if (pathname === "/admin/login") {
+      setLoadingAdmin(false);
+      return;
+    }
     fetchAdmin();
-  }, []);
+  }, [pathname]);
 
   return (
     <AdminAuthContext.Provider

@@ -60,12 +60,12 @@ export const loginAdmin = async (req, res) => {
     }
 
     const token = generateToken(admin._id);
+    const isSecure = req.secure || req.get("x-forwarded-proto") === "https";
 
-    // ✅ SET COOKIE HERE
     res.cookie("adminToken", token, {
       httpOnly: true,
-      sameSite: "none",
-      secure: true,
+      sameSite: isSecure ? "none" : "lax",
+      secure: isSecure,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
@@ -106,10 +106,11 @@ export const getCurrentAdmin = async (req, res) => {
 
 export const logoutAdmin = (req, res) => {
   try {
+    const isSecure = req.secure || req.get("x-forwarded-proto") === "https";
     res.clearCookie("adminToken", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: isSecure,
+      sameSite: isSecure ? "none" : "lax",
     });
 
     res.json({
