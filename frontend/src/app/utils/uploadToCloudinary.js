@@ -83,3 +83,4 @@ const uploadToCloudinary = async (file) => {
 };
 
 export default uploadToCloudinary;
+
