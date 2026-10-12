@@ -3,6 +3,19 @@ const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+const createImagePublicId = (fileName) => {
+  const baseName = fileName
+    .replace(/\.[^.]+$/, "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  const uniqueSuffix = crypto.randomUUID().replace(/-/g, "").slice(0, 6);
+  return `${baseName || "image"}-${uniqueSuffix}`;
+};
+
 const uploadToCloudinary = async (file) => {
 
   if (!cloudName || !uploadPreset) {
@@ -32,7 +45,11 @@ const uploadToCloudinary = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", uploadPreset);
-  formData.append("folder", `RENTAROOMLONDON/${folder}`);
+  formData.append("folder", `rental-room/${folder}`);
+
+  if (file.type.startsWith("image/")) {
+    formData.append("public_id", createImagePublicId(file.name));
+  }
 
   // Cloudinary optimization
   formData.append("quality", "auto");

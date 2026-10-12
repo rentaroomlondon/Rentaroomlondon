@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   Home, Bed, PoundSterling, MapPin,
   CheckCircle2, ShieldCheck, Zap, Car, 
-  Info, ChevronRight, Layout, AlertCircle, X, Loader2, Upload
+  Info, ChevronRight, ChevronUp, ChevronDown, Layout, AlertCircle, X, Loader2, Upload
 } from "lucide-react";
 import uploadToCloudinary from "../../../utils/uploadToCloudinary";
 
@@ -169,6 +169,7 @@ const ListingForm = ({ slug, existingData }) => {
   const [pendingImages, setPendingImages] = useState([]);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({});
+  const [draggedImageIndex, setDraggedImageIndex] = useState(null);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
@@ -346,12 +347,6 @@ const ListingForm = ({ slug, existingData }) => {
   // Handle image selection - upload immediately in background
   const handleImages = async (e) => {
     const files = Array.from(e.target.files);
-    const totalFiles = formData.images.length + pendingImages.length + files.length;
-
-    if (totalFiles > 10) {
-      setErrors(prev => ({ ...prev, images: "Maximum 10 images allowed" }));
-      return;
-    }
 
     if (files.some(file => !file.type.startsWith('image/'))) {
       setErrors(prev => ({ ...prev, images: "Only image files are allowed" }));
@@ -394,6 +389,19 @@ const ListingForm = ({ slug, existingData }) => {
         return newProgress;
       });
     }
+  };
+
+  const moveImage = (fromIndex, toIndex) => {
+    setFormData((prev) => {
+      if (toIndex < 0 || toIndex >= prev.images.length || fromIndex === toIndex) {
+        return prev;
+      }
+
+      const images = [...prev.images];
+      const [image] = images.splice(fromIndex, 1);
+      images.splice(toIndex, 0, image);
+      return { ...prev, images };
+    });
   };
 
   const retryUpload = async (index) => {
@@ -924,10 +932,10 @@ const ListingForm = ({ slug, existingData }) => {
                         Images upload automatically in background
                       </p>
                       <p className="text-xs text-slate-400">
-                        Minimum 5 images required (Max 10)
+                        Upload as many images as you need (minimum 5)
                       </p>
                       <p className={`text-xs mt-2 font-semibold ${totalImagesCount >= 5 ? 'text-green-500' : 'text-orange-500'}`}>
-                        {totalImagesCount}/5 images uploaded
+                        {totalImagesCount} image{totalImagesCount === 1 ? '' : 's'} uploaded
                       </p>
                     </div>
                   </label>
@@ -939,17 +947,72 @@ const ListingForm = ({ slug, existingData }) => {
                 {formData.images.length > 0 && (
                   <div>
                     <h4 className="text-xs font-bold text-slate-500 mb-2">Uploaded Images</h4>
-                    <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
+                    <p className="text-xs text-slate-400 mb-3">Drag images to reorder them, or use the arrows. The first image is the cover.</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                       {formData.images.map((url, index) => (
-                        <div key={`uploaded-${index}`} className="relative group">
+                        <div
+                          key={`${url}-${index}`}
+                          draggable
+                          onDragStart={(event) => {
+                            event.dataTransfer.effectAllowed = "move";
+                            event.dataTransfer.setData("text/plain", String(index));
+                            setDraggedImageIndex(index);
+                          }}
+                          onDragOver={(event) => {
+                            event.preventDefault();
+                            event.dataTransfer.dropEffect = "move";
+                          }}
+                          onDrop={(event) => {
+                            event.preventDefault();
+                            const fromIndex = Number(event.dataTransfer.getData("text/plain"));
+                            if (Number.isInteger(fromIndex)) moveImage(fromIndex, index);
+                            setDraggedImageIndex(null);
+                          }}
+                          onDragEnd={() => setDraggedImageIndex(null)}
+                          className={`relative group cursor-grab rounded-xl border border-slate-200 p-1.5 active:cursor-grabbing ${draggedImageIndex === index ? "opacity-40" : ""}`}
+                        >
                           <img
                             src={url}
                             alt={`uploaded ${index + 1}`}
-                            className="w-full h-24 object-cover rounded-xl border border-slate-200"
+                            draggable={false}
+                            className="w-full h-24 rounded-lg object-cover"
                           />
+                          {index === 0 && (
+                            <span className="absolute left-2 top-2 rounded-md bg-orange-500 px-2 py-1 text-[10px] font-bold text-white shadow">
+                              COVER
+                            </span>
+                          )}
+                          <div className="mt-2 flex items-center justify-between gap-1">
+                            <span className="text-[11px] text-slate-500">Image {index + 1}</span>
+                            <div className="flex items-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() => moveImage(index, index - 1)}
+                                disabled={index === 0}
+                                aria-label={`Move image ${index + 1} up`}
+                                title="Move earlier"
+                                className="rounded p-1 text-slate-600 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30"
+                              >
+                                <ChevronUp size={15} />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => moveImage(index, index + 1)}
+                                disabled={index === formData.images.length - 1}
+                                aria-label={`Move image ${index + 1} down`}
+                                title="Move later"
+                                className="rounded p-1 text-slate-600 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30"
+                              >
+                                <ChevronDown size={15} />
+                              </button>
+                            </div>
+                          </div>
                           <button
+                            type="button"
                             onClick={() => removeImage(index, true)}
-                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 shadow-lg"
+                            aria-label={`Remove image ${index + 1}`}
+                            title="Remove image"
+                            className="absolute -right-2 -top-2 rounded-full bg-red-500 p-1 text-white shadow-lg transition-all hover:bg-red-600"
                           >
                             <X size={12} />
                           </button>
