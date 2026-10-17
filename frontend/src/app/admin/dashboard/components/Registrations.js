@@ -42,6 +42,8 @@ const Registrations = () => {
         </span>
       </div>
 
+      <div className="overflow-x-auto">
+      <div className="min-w-[760px]">
       {/* 🔥 Table Header */}
       <div className="grid grid-cols-6 px-6 py-3 text-xs font-semibold text-gray-400 border-b">
         <span>User</span>
@@ -117,6 +119,8 @@ const Registrations = () => {
             </div>
           ))
         )}
+      </div>
+      </div>
       </div>
     </div>
   );

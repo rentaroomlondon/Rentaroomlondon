@@ -1,7 +1,7 @@
 export const SidebarLink = ({ icon, label, count, active, badge, highlight, onClick }) => (
-  <div 
+  <button type="button"
     onClick={onClick}
-    className={`flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-all ${
+    className={`flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2.5 text-left transition-all ${
       active ? 'bg-white/10 text-white' : 'hover:bg-white/5 hover:text-white'
     }`}
   >
@@ -17,5 +17,5 @@ export const SidebarLink = ({ icon, label, count, active, badge, highlight, onCl
         {count}
       </span>
     )}
-  </div>
+  </button>
 );

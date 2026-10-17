@@ -17,6 +17,7 @@ import ContactLeads from "./ContactLeads"; // ← new
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // 🔥 Header mapping
   const headerMap = {
@@ -53,13 +54,16 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#F8F9FB] font-sans text-gray-800">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+    <div className="min-h-screen bg-[#F8F9FB] font-sans text-gray-800 lg:flex">
+      {mobileNavOpen && <button type="button" aria-label="Close navigation menu" onClick={() => setMobileNavOpen(false)} className="fixed inset-0 z-40 bg-slate-950/50 lg:hidden" />}
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} mobileNavOpen={mobileNavOpen} onNavigate={() => setMobileNavOpen(false)} />
 
-      <main className="flex-1 p-8">
-        <Header {...headerMap[activeTab]} />
-        {componentMap[activeTab]}
-      </main>
+      <div className="min-w-0 flex-1">
+        <Header {...headerMap[activeTab]} onMenuOpen={() => setMobileNavOpen(true)} />
+        <main className="min-w-0 px-3 py-4 sm:px-5 lg:p-8">
+          <div className="min-w-0">{componentMap[activeTab]}</div>
+        </main>
+      </div>
     </div>
   );
 };
