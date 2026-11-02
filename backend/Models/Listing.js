@@ -25,6 +25,8 @@ const listingSchema = new mongoose.Schema(
       default: "single"
     },
 
+
+
     // ✅ SINGLE OCCUPANCY (NEW)
     occupancy: {
       type: String,
