@@ -30,7 +30,39 @@ const locationLinks = [
   { label: "Rent a Room in Birmingham", href: "/birmingham-city-centre-student-housing-bills-included" },
 ];
 
-const Footer = () => {
+const Footer = ({ minimal = false }) => {
+  if (minimal) {
+    return (
+      <footer className="border-t border-[#E8E8E8] bg-white">
+        <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 sm:flex-row sm:items-start sm:justify-between sm:px-12">
+          <div>
+            <FooterTitle>GET IN TOUCH</FooterTitle>
+            <div className="space-y-3 text-sm">
+              <a
+                href="tel:+447419990126"
+                className="block text-[#718096] hover:text-[#1A365D]"
+              >
+                +44 7419 990 126
+              </a>
+              <a
+                href="mailto:info@rentaroomlondon.co.uk"
+                className="block text-[#718096] hover:text-[#1A365D]"
+              >
+                info@rentaroomlondon.co.uk
+              </a>
+            </div>
+          </div>
+          <Link
+            href="/privacy-policy"
+            className="text-sm text-[#718096] hover:text-[#1A365D] sm:mt-1"
+          >
+            Privacy Policy
+          </Link>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer className="bg-white border-t border-[#E8E8E8]">
       {/* Main Grid Area */}

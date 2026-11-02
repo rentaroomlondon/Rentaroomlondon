@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { BusFront, GraduationCap, ShoppingBag, TrainFront } from "lucide-react";
-import PropertyCard from "@/app/Shared/PropertyCard";
 import PropertyCardSkeleton from "@/app/Shared/PropertyCardSkeleton";
+import HendonRoomCard from "./HendonRoomCard";
 
 const properties = [
   {
@@ -194,30 +194,10 @@ export default function HendonRooms() {
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {listings.map((listing) => {
-              const address = listing.location?.address || listing.title;
-              const status =
-                listing.status === "available"
-                  ? "Available"
-                  : listing.status
-                    ? listing.status.charAt(0).toUpperCase() +
-                      listing.status.slice(1)
-                    : "Check availability";
-
               return (
-                <PropertyCard
+                <HendonRoomCard
                   key={listing._id || listing.slug}
-                  id={listing._id}
-                  slug={listing.slug}
-                  listingId={listing.listingId}
-                  title={listing.title}
-                  location={`${address}, ${listing.location?.postcode || ""}`}
-                  price={listing.monthlyPrice}
-                  availability={status}
-                  description={
-                    listing.description ||
-                    `${listing.roomLabel || "Room"} at ${address}`
-                  }
-                  imageUrl={listing.images?.[0] || "/rental-room-uk.avif"}
+                  listing={listing}
                 />
               );
             })}

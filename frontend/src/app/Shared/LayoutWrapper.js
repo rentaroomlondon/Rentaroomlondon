@@ -12,16 +12,19 @@ export default function LayoutWrapper({ children }) {
   const isLandingPage = pathname.startsWith(
     "/rent-a-rooms-in-london-with-bills-included"
   );
+  const isHendonPage =
+    pathname === "/room-rent-hendon-nw4-london-middlesex-university";
 
-  const hideHeaderFooter = isAdminPage || isLandingPage;
+  const hideHeader = isAdminPage || isLandingPage || isHendonPage;
+  const hideFooter = isAdminPage || isLandingPage;
 
   return (
     <>
-      {!hideHeaderFooter && <Header />}
+      {!hideHeader && <Header />}
 
       {children}
 
-      {!hideHeaderFooter && <Footer />}
+      {!hideFooter && <Footer minimal={isHendonPage} />}
     </>
   );
 }

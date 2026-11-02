@@ -1,4 +1,3 @@
-import Link from "next/link";
 import ContactForm from "@/app/Shared/ContactForm";
 import HendonRooms from "./HendonRooms";
 
@@ -143,16 +142,6 @@ export default function HendonRoomsPage() {
         <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-[#FF6B3514]" />
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
-            <nav
-              aria-label="Breadcrumb"
-              className="mb-7 flex items-center gap-2 text-sm text-white/65"
-            >
-              <Link href="/" className="transition-colors hover:text-[#FF6B35]">
-                Home
-              </Link>
-              <span aria-hidden="true">/</span>
-              <span className="text-white">Hendon NW4</span>
-            </nav>
             <p className="mb-4 text-xs font-bold uppercase tracking-[0.25em] text-[#FF6B35]">
               Hendon, London NW4 · Zone 3
             </p>
