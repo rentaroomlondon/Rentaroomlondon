@@ -8,7 +8,6 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  Home,
   MapPin,
   Phone,
   PoundSterling,
@@ -104,7 +103,6 @@ export default function HendonRoomCard({ listing }) {
   ].slice(0, 6);
   const details = [
     { icon: BedDouble, label: "Room", value: roomType },
-    { icon: Home, label: "Occupancy", value: listing.occupancy },
     { icon: Bath, label: "Bathroom", value: listing.bathroomType },
     { icon: Ruler, label: "Room size", value: roomSize },
   ].filter((detail) => detail.value);
@@ -133,7 +131,7 @@ export default function HendonRoomCard({ listing }) {
 
   return (
     <>
-      <article className="overflow-hidden rounded-3xl border border-[#E8E4DF] bg-white shadow-[0_12px_36px_rgba(26,35,50,0.08)]">
+      <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-[#E8E4DF] bg-white shadow-[0_12px_36px_rgba(26,35,50,0.08)]">
         <div className="relative h-56 bg-[#E8E4DF] sm:h-64">
           {media[0]?.type === "video" ? (
             <video
@@ -172,14 +170,14 @@ export default function HendonRoomCard({ listing }) {
               onClick={openGallery}
               className="absolute bottom-4 right-4 rounded-xl bg-[#1A2332]/90 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#1A2332]"
             >
-              View photos &amp; videos ({media.length})
+              View Photos ({media.length})
             </button>
           )}
         </div>
 
-        <div className="p-5 sm:p-6">
+        <div className="flex flex-1 flex-col p-5 sm:p-6">
           <div className="mb-5">
-            <h3 className="font-playfair text-xl font-bold text-[#1A2332] sm:text-2xl">
+            <h3 className="font-playfair text-lg font-bold text-[#1A2332] sm:text-2xl">
               {listing.title || roomType || "Hendon room"}
             </h3>
             {location && (
@@ -302,26 +300,18 @@ export default function HendonRoomCard({ listing }) {
             </div>
           )}
 
-          {listing.description && (
-            <p className="mb-5 line-clamp-3 text-sm leading-6 text-[#6B7280]">
-              {listing.description}
-            </p>
-          )}
-
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="mt-auto flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
               onClick={() => setIsBookingOpen(true)}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#FF6B35] px-4 py-3 font-bold text-white shadow-[0_8px_20px_rgba(255,107,53,0.22)] transition-colors hover:bg-[#e85b27]"
+              className="flex flex-1 items-center justify-center rounded-xl bg-[#FF6B35] px-4 py-3 font-bold text-white shadow-[0_8px_20px_rgba(255,107,53,0.22)] transition-colors hover:bg-[#e85b27]"
             >
-              <CalendarDays size={18} aria-hidden="true" />
-              Book a viewing
+              Book viewing
             </button>
             <a
               href="tel:+447419990126"
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-[#1A2332]/15 px-4 py-3 font-bold text-[#1A2332] transition-colors hover:bg-[#F7F7F5]"
+              className="flex flex-1 items-center justify-center rounded-xl border border-[#1A2332]/15 px-4 py-3 font-bold text-[#1A2332] transition-colors hover:bg-[#F7F7F5]"
             >
-              <Phone size={18} aria-hidden="true" />
               Call agent
             </a>
           </div>

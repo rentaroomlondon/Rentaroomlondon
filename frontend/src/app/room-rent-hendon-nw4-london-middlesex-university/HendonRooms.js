@@ -56,6 +56,9 @@ const travelTimes = [
   { destination: "Westminster & South London", time: "30–40 min", route: "Northern Line" },
   { destination: "Brighton", time: "About 1 hr 40 min", route: "Rail" },
 ];
+const WHATSAPP_URL = `https://wa.me/447419990126?text=${encodeURIComponent(
+  "Hello! I would like to book a viewing for a room in Hendon NW4."
+)}`;
 
 const normalize = (value = "") => value.toLowerCase().replace(/[^a-z0-9]/g, "");
 const matchesProperty = (listing, property) => {
@@ -143,10 +146,10 @@ export default function HendonRooms() {
   return (
     <section
       id="available-rooms"
-      className="scroll-mt-24 px-5 py-16 md:px-12 md:py-20"
+      className="scroll-mt-24 px-4 py-12 md:px-6 md:py-16"
     >
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div className="mx-auto max-w-[1400px]">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-[#FF6B35]">
               Room listings
@@ -165,7 +168,7 @@ export default function HendonRooms() {
           <div
             role="status"
             aria-label="Loading available Hendon rooms"
-            className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
+            className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
           >
             {Array.from({ length: 3 }, (_, index) => (
               <PropertyCardSkeleton key={index} />
@@ -180,7 +183,9 @@ export default function HendonRooms() {
               Hendon room details are temporarily unavailable.
             </p>
             <a
-              href="#book-viewing"
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="mt-3 inline-flex font-bold text-[#156082] underline"
             >
               Book a viewing
@@ -192,7 +197,7 @@ export default function HendonRooms() {
             us to check availability.
           </p>
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {listings.map((listing) => {
               return (
                 <HendonRoomCard
