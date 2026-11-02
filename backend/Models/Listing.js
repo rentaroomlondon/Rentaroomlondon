@@ -171,6 +171,7 @@ const listingSchema = new mongoose.Schema(
 
     // 🔹 IMAGES
     images: [String],
+    videos: [String],
     // 🔹 PROPERTY DETAILS
     propertyRef: String,
     epcRating: {

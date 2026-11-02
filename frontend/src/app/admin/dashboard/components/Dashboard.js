@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import DashboardHome from "./DashboardHome";
@@ -18,6 +18,17 @@ import ContactLeads from "./ContactLeads"; // ← new
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [editingPropertySlug, setEditingPropertySlug] = useState(null);
+
+  const handleEditProperty = useCallback((slug) => {
+    if (!slug) return;
+    setEditingPropertySlug(slug);
+    setActiveTab("properties");
+  }, []);
+
+  const handleEditPropertyHandled = useCallback(() => {
+    setEditingPropertySlug(null);
+  }, []);
 
   // 🔥 Header mapping
   const headerMap = {
@@ -38,8 +49,13 @@ const Dashboard = () => {
 
   // 🔥 Component mapping
   const componentMap = {
-    dashboard: <DashboardHome />,
-    properties: <PropertyManager />,
+    dashboard: <DashboardHome onEditProperty={handleEditProperty} />,
+    properties: (
+      <PropertyManager
+        initialSlug={editingPropertySlug}
+        onInitialEditHandled={handleEditPropertyHandled}
+      />
+    ),
     listings: <Listings />,
     viewings: <ViewingRequests />,
     tenants: <div className="bg-white p-6 rounded-xl">All Tenants</div>,

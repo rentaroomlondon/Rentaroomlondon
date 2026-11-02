@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Home, Bed, Banknote, Wrench, MoreHorizontal, 
+  Home, Bed, Banknote, Wrench, MoreVertical,
   ChevronRight, AlertCircle, Calendar, UserPlus, Loader2 
 } from 'lucide-react';
 
-const DashboardHome = () => {
+const DashboardHome = ({ onEditProperty }) => {
   const [stats, setStats] = useState({
     propertiesManaged: 0,
     roomsAvailable: 0,
@@ -25,6 +25,25 @@ const DashboardHome = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'occupied', 'available'
+  const [openMenuId, setOpenMenuId] = useState(null);
+
+  useEffect(() => {
+    const closeMenuOnOutsideClick = (event) => {
+      if (!event.target.closest("[data-property-menu]")) {
+        setOpenMenuId(null);
+      }
+    };
+    const closeMenuOnEscape = (event) => {
+      if (event.key === "Escape") setOpenMenuId(null);
+    };
+
+    document.addEventListener("click", closeMenuOnOutsideClick);
+    document.addEventListener("keydown", closeMenuOnEscape);
+    return () => {
+      document.removeEventListener("click", closeMenuOnOutsideClick);
+      document.removeEventListener("keydown", closeMenuOnEscape);
+    };
+  }, []);
 
   // Fetch all dashboard data
   useEffect(() => {
@@ -459,9 +478,41 @@ const DashboardHome = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button className="text-gray-400 hover:text-gray-600">
-                        <MoreHorizontal size={18} />
-                      </button>
+                      <div className="relative inline-block text-left" data-property-menu>
+                        <button
+                          type="button"
+                          aria-label={`Actions for ${property.title || "property"}`}
+                          aria-haspopup="menu"
+                          aria-expanded={openMenuId === property._id}
+                          onClick={() =>
+                            setOpenMenuId((currentId) =>
+                              currentId === property._id ? null : property._id
+                            )
+                          }
+                          className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        >
+                          <MoreVertical size={18} />
+                        </button>
+                        {openMenuId === property._id && (
+                          <div
+                            role="menu"
+                            className="absolute right-0 z-10 mt-1 min-w-32 rounded-lg border border-slate-200 bg-white py-1 text-left shadow-lg"
+                          >
+                            <button
+                              type="button"
+                              role="menuitem"
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                onEditProperty?.(property.slug);
+                              }}
+                              disabled={!property.slug}
+                              className="block w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-400"
+                            >
+                              Edit
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

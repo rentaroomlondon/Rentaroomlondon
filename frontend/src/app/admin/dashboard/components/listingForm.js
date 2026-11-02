@@ -164,9 +164,11 @@ const ListingForm = ({ slug, existingData }) => {
     epcRating: "",
     councilTaxBand: "",
     images: [],
+    videos: [],
   });
 
   const [pendingImages, setPendingImages] = useState([]);
+  const [pendingVideos, setPendingVideos] = useState([]);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({});
   const [draggedImageIndex, setDraggedImageIndex] = useState(null);
@@ -283,6 +285,7 @@ const ListingForm = ({ slug, existingData }) => {
       epcRating: data.epcRating || "",
       councilTaxBand: data.councilTaxBand || "",
       images: data.images || [],
+      videos: data.videos || [],
     });
   };
 
@@ -416,6 +419,74 @@ const ListingForm = ({ slug, existingData }) => {
     }
   };
 
+  const uploadSingleVideo = async (file, id) => {
+    setPendingVideos((prev) =>
+      prev.map((video) => video.id === id ? { ...video, status: "uploading" } : video)
+    );
+
+    try {
+      const result = await uploadToCloudinary(file);
+      setFormData((prev) => ({ ...prev, videos: [...prev.videos, result.url] }));
+      setPendingVideos((prev) => prev.filter((video) => video.id !== id));
+    } catch (error) {
+      setPendingVideos((prev) =>
+        prev.map((video) => video.id === id
+          ? { ...video, status: "failed", error: error.message }
+          : video
+        )
+      );
+      throw error;
+    }
+  };
+
+  const handleVideos = async (event) => {
+    const files = Array.from(event.target.files || []);
+    event.target.value = "";
+
+    if (files.some((file) => !file.type.startsWith("video/"))) {
+      setErrors((prev) => ({ ...prev, videos: "Only video files are allowed" }));
+      return;
+    }
+
+    setErrors((prev) => ({ ...prev, videos: undefined }));
+    const videosToUpload = files.map((file) => ({
+      id: crypto.randomUUID(),
+      file,
+      status: "uploading",
+    }));
+    setPendingVideos((prev) => [...prev, ...videosToUpload]);
+
+    for (const video of videosToUpload) {
+      try {
+        await uploadSingleVideo(video.file, video.id);
+      } catch (error) {
+        console.error("Video upload failed:", error);
+        setErrors((prev) => ({ ...prev, videos: error.message }));
+      }
+    }
+  };
+
+  const retryVideoUpload = async (video) => {
+    try {
+      setErrors((prev) => ({ ...prev, videos: undefined }));
+      await uploadSingleVideo(video.file, video.id);
+    } catch (error) {
+      console.error("Video retry failed:", error);
+      setErrors((prev) => ({ ...prev, videos: error.message }));
+    }
+  };
+
+  const removeVideo = (index, isExisting = false) => {
+    if (isExisting) {
+      setFormData((prev) => ({
+        ...prev,
+        videos: prev.videos.filter((_, videoIndex) => videoIndex !== index),
+      }));
+      return;
+    }
+    setPendingVideos((prev) => prev.filter((video) => video.id !== index));
+  };
+
   const selectSuggestion = (item) => {
     const addr = item.address || {};
 
@@ -542,6 +613,16 @@ const ListingForm = ({ slug, existingData }) => {
         return;
       }
     }
+
+    if (pendingVideos.some((video) => video.status === "uploading")) {
+      setErrors({ submit: "Please wait for videos to finish uploading" });
+      return;
+    }
+
+    if (pendingVideos.some((video) => video.status === "failed")) {
+      setErrors({ submit: "Some videos failed to upload. Please retry or remove them." });
+      return;
+    }
     
     if (!validateForm()) {
       const firstError = document.querySelector('[data-error="true"]');
@@ -598,6 +679,7 @@ const ListingForm = ({ slug, existingData }) => {
         epcRating: formData.epcRating,
         councilTaxBand: formData.councilTaxBand,
         images: formData.images,
+        videos: formData.videos,
         slug: formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
       };
       
@@ -657,8 +739,10 @@ const ListingForm = ({ slug, existingData }) => {
           epcRating: "",
           councilTaxBand: "",
           images: [],
+          videos: [],
         });
         setPendingImages([]);
+        setPendingVideos([]);
         setUploadProgress({});
         setTouched({});
         setSubmitAttempted(false);
@@ -1068,6 +1152,80 @@ const ListingForm = ({ slug, existingData }) => {
                     </div>
                   </div>
                 )}
+
+                <div className="border-t border-slate-100 pt-5">
+                  <label htmlFor="videoUpload" className="mb-3 block text-sm font-semibold text-slate-700">
+                    Room Videos <span className="font-normal text-slate-400">(optional, up to 100MB each)</span>
+                  </label>
+                  <input
+                    id="videoUpload"
+                    type="file"
+                    multiple
+                    accept="video/*"
+                    onChange={handleVideos}
+                    className="block w-full text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-orange-50 file:px-4 file:py-2 file:font-semibold file:text-orange-700 hover:file:bg-orange-100"
+                  />
+                  <p className="mt-2 text-xs text-slate-400">
+                    Upload a walkthrough or room tour video. Videos upload automatically.
+                  </p>
+                  {errors.videos && <ErrorMessage message={errors.videos} />}
+
+                  {formData.videos.length > 0 && (
+                    <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      {formData.videos.map((url, index) => (
+                        <div key={`${url}-${index}`} className="relative overflow-hidden rounded-xl border border-slate-200">
+                          <video
+                            src={url}
+                            controls
+                            preload="metadata"
+                            className="aspect-video w-full bg-black object-contain"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeVideo(index, true)}
+                            aria-label={`Remove video ${index + 1}`}
+                            className="absolute right-2 top-2 rounded-full bg-red-500 p-1 text-white shadow hover:bg-red-600"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {pendingVideos.length > 0 && (
+                    <div className="mt-4 space-y-2">
+                      {pendingVideos.map((video) => (
+                        <div key={video.id} className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 p-3 text-sm">
+                          <span className="min-w-0 truncate text-slate-600">{video.file.name}</span>
+                          {video.status === "uploading" ? (
+                            <span className="flex shrink-0 items-center gap-2 text-slate-500">
+                              <Loader2 size={16} className="animate-spin" /> Uploading
+                            </span>
+                          ) : (
+                            <div className="flex shrink-0 items-center gap-3">
+                              <button
+                                type="button"
+                                onClick={() => retryVideoUpload(video)}
+                                className="font-semibold text-orange-600 hover:text-orange-700"
+                              >
+                                Retry
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => removeVideo(video.id)}
+                                aria-label={`Remove ${video.file.name}`}
+                                className="rounded p-1 text-red-500 hover:bg-red-50"
+                              >
+                                <X size={16} />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </Section>
           </div>

@@ -79,6 +79,7 @@ const Client = ({ listing }) => {
       {/* 🔥 FULL WIDTH GALLERY */}
       <Gallery
         images={listing?.images || []}
+        videos={listing?.videos || []}
         available={listing?.availableImmediately}
       />
 

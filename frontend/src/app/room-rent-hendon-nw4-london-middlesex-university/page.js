@@ -157,7 +157,7 @@ export default function HendonRoomsPage() {
               Hendon, London NW4 · Zone 3
             </p>
             <h1 className="mb-6 font-playfair text-4xl font-bold leading-tight md:text-6xl">
-              Rooms to Rent in Hendon NW4
+              Rooms to Rent in Hendon, NW4 With Bills Included
             </h1>
             <p className="max-w-2xl text-base leading-7 text-white/75 md:text-lg">
               Explore room listings near Hendon Central Station and Middlesex
@@ -184,60 +184,17 @@ export default function HendonRoomsPage() {
               <span>Live availability and pricing</span>
             </div>
           </div>
-          <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
-            <video
-              className="aspect-video w-full object-cover"
-              controls
-              playsInline
-              preload="metadata"
-              poster="/rental-room-uk.avif"
-            >
-              <source src="/room-video.webm" type="video/webm" />
-              Your browser does not support the room video.
-            </video>
-            <p className="px-5 py-4 text-sm text-white/75">
-              Take a look inside our furnished rooms.
-            </p>
+          <div id="book-viewing" className="scroll-mt-24">
+            <ContactForm
+              title="Ask about a Hendon room"
+              subtitle="Leave your details and tell us which property you would like to view."
+              redirectUrl="/thank-you-rental-room-london"
+            />
           </div>
         </div>
       </section>
 
       <HendonRooms />
-
-      <section className="bg-white px-5 py-16 md:px-12 md:py-20">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
-          <div>
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-[#FF6B35]">
-              Well connected
-            </p>
-            <h2 className="font-playfair text-3xl font-bold md:text-4xl">
-              Close to Middlesex University and Hendon Central
-            </h2>
-            <p className="mt-5 max-w-2xl leading-7 text-[#6B7280]">
-              These furnished rooms put you close to Middlesex University&apos;s
-              Hendon Campus, local shops on Brent Street, and Hendon Central
-              Station. The Northern Line and Thameslink offer connections
-              across London and beyond.
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {[
-              ["Hendon Central", "Northern Line · Zone 3"],
-              ["Hendon Station", "Thameslink services"],
-              ["Middlesex University", "Hendon Campus · The Burroughs"],
-              ["Brent Cross", "Shopping and local amenities"],
-            ].map(([title, detail]) => (
-              <div
-                key={title}
-                className="rounded-2xl border border-[#E8E4DF] bg-[#FAF9F6] p-5"
-              >
-                <h3 className="font-bold">{title}</h3>
-                <p className="mt-1 text-sm text-[#6B7280]">{detail}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section className="px-5 py-16 md:px-12 md:py-20">
         <div className="mx-auto max-w-4xl">
@@ -265,30 +222,6 @@ export default function HendonRoomsPage() {
         </div>
       </section>
 
-      <section
-        id="book-viewing"
-        className="scroll-mt-24 bg-[#1A2332] px-5 py-16 md:px-12 md:py-20"
-      >
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2 lg:items-center">
-          <div className="text-white">
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-[#FF6B35]">
-              Make Hendon your home
-            </p>
-            <h2 className="font-playfair text-3xl font-bold md:text-4xl">
-              Book a viewing for a room in NW4
-            </h2>
-            <p className="mt-4 max-w-xl leading-7 text-white/70">
-              Tell us which room you&apos;re interested in and our team will
-              help you arrange a viewing.
-            </p>
-          </div>
-          <ContactForm
-            title="Ask about a Hendon room"
-            subtitle="Leave your details and tell us which property you would like to view."
-            redirectUrl="/thank-you-rental-room-london"
-          />
-        </div>
-      </section>
     </main>
   );
 }

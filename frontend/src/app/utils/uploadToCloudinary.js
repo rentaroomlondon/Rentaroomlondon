@@ -2,6 +2,7 @@ const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_VIDEO_SIZE = 100 * 1024 * 1024;
 
 const createImagePublicId = (fileName) => {
   const baseName = fileName
@@ -26,7 +27,13 @@ const uploadToCloudinary = async (file) => {
     throw new Error("No file selected");
   }
 
-  if (file.size > MAX_FILE_SIZE) {
+  const isVideo = file.type.startsWith("video/");
+
+  if (isVideo && file.size > MAX_VIDEO_SIZE) {
+    throw new Error("Video exceeds 100MB");
+  }
+
+  if (!isVideo && file.size > MAX_FILE_SIZE) {
     throw new Error("File exceeds 10MB");
   }
 
@@ -34,6 +41,8 @@ const uploadToCloudinary = async (file) => {
 
   if (file.type.startsWith("image/")) {
     folder = "images";
+  } else if (isVideo) {
+    folder = "videos";
   } else if (
     file.type === "application/pdf" ||
     file.type.includes("word") ||
@@ -83,4 +92,3 @@ const uploadToCloudinary = async (file) => {
 };
 
 export default uploadToCloudinary;
-

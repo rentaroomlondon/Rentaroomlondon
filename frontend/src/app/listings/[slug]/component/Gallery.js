@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const Gallery = ({ images = [], available = false }) => {
+const Gallery = ({ images = [], videos = [], available = false }) => {
   const [current, setCurrent] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
@@ -11,23 +11,47 @@ const Gallery = ({ images = [], available = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalIndex, setModalIndex] = useState(0);
 
-  const displayImages =
-    images.length > 0
-      ? images
-      : ["https://via.placeholder.com/800x600?text=No+Image"];
+  const mediaItems = [
+    ...images.map((url) => ({ type: "image", url })),
+    ...videos.map((url) => ({ type: "video", url })),
+  ];
+  const displayMedia =
+    mediaItems.length > 0
+      ? mediaItems
+      : [{ type: "image", url: "https://via.placeholder.com/800x600?text=No+Image" }];
+
+  const renderMedia = (item, className, alt, controls = false) =>
+    item.type === "video" ? (
+      <video
+        key={item.url}
+        src={item.url}
+        controls={controls}
+        playsInline
+        preload="metadata"
+        aria-label={alt}
+        className={className}
+      />
+    ) : (
+      <img
+        key={item.url}
+        src={item.url}
+        alt={alt}
+        className={className}
+      />
+    );
 
   // ======================
   // 🔄 SLIDER (MOBILE)
   // ======================
   const prevSlide = () => {
     setCurrent((prev) =>
-      prev === 0 ? displayImages.length - 1 : prev - 1
+      prev === 0 ? displayMedia.length - 1 : prev - 1
     );
   };
 
   const nextSlide = () => {
     setCurrent((prev) =>
-      prev === displayImages.length - 1 ? 0 : prev + 1
+      prev === displayMedia.length - 1 ? 0 : prev + 1
     );
   };
 
@@ -56,13 +80,13 @@ const Gallery = ({ images = [], available = false }) => {
 
   const nextModal = () => {
     setModalIndex((prev) =>
-      prev === displayImages.length - 1 ? 0 : prev + 1
+      prev === displayMedia.length - 1 ? 0 : prev + 1
     );
   };
 
   const prevModal = () => {
     setModalIndex((prev) =>
-      prev === 0 ? displayImages.length - 1 : prev - 1
+      prev === 0 ? displayMedia.length - 1 : prev - 1
     );
   };
 
@@ -89,11 +113,7 @@ const Gallery = ({ images = [], available = false }) => {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <img
-          src={displayImages[current]}
-          alt="Property"
-          className="w-full h-full object-cover"
-        />
+        {renderMedia(displayMedia[current], "w-full h-full object-cover", "Property video or image", true)}
 
         {available && (
           <div className="absolute top-4 left-4 bg-[#1db978] text-white px-4 py-2 rounded-full text-[11px] font-semibold flex items-center gap-2">
@@ -119,12 +139,12 @@ const Gallery = ({ images = [], available = false }) => {
 
         {/* Counter */}
         <div className="absolute top-4 right-4 bg-black/40 text-white px-4 py-1.5 rounded-full text-xs">
-          {current + 1} / {displayImages.length}
+          {current + 1} / {displayMedia.length}
         </div>
 
         {/* Dots */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {displayImages.map((_, index) => (
+          {displayMedia.map((_, index) => (
             <div
               key={index}
               className={`h-2 rounded-full ${
@@ -143,11 +163,12 @@ const Gallery = ({ images = [], available = false }) => {
           onClick={() => openModal(0)}
           className="col-span-2 row-span-2 relative rounded-xl overflow-hidden cursor-pointer"
         >
-          <img
-            src={displayImages[0]}
-            className="w-full h-full object-cover"
-            alt="Main"
-          />
+          {renderMedia(displayMedia[0], "w-full h-full object-cover", "Main property media")}
+          {displayMedia[0].type === "video" && (
+            <span className="pointer-events-none absolute bottom-4 right-4 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white">
+              Video
+            </span>
+          )}
 
           {available && (
             <div className="absolute top-6 left-6 bg-[#18B26A] text-white px-4 py-1.5 rounded-full text-sm flex items-center gap-2">
@@ -164,14 +185,20 @@ const Gallery = ({ images = [], available = false }) => {
             onClick={() => openModal(index)}
             className="relative overflow-hidden rounded-xl cursor-pointer"
           >
-            <img
-              src={
-                displayImages[index] ||
-                "https://via.placeholder.com/400x300"
-              }
-              className="w-full h-full object-cover"
-              alt={`View ${index}`}
-            />
+            {displayMedia[index] ? (
+              renderMedia(displayMedia[index], "w-full h-full object-cover", `Property media ${index + 1}`)
+            ) : (
+              <img
+                src="https://via.placeholder.com/400x300"
+                className="w-full h-full object-cover"
+                alt={`View ${index}`}
+              />
+            )}
+            {displayMedia[index]?.type === "video" && (
+              <span className="pointer-events-none absolute left-2 top-2 rounded bg-black/60 px-2 py-1 text-[10px] font-semibold text-white">
+                Video
+              </span>
+            )}
 
             {index === 4 && (
               <button
@@ -181,7 +208,7 @@ const Gallery = ({ images = [], available = false }) => {
                 }}
                 className="absolute bottom-4 right-4 bg-[#1e293b]/90 text-white px-4 py-2 rounded-lg text-xs"
               >
-               🖼️ View all {displayImages.length} photos
+               🖼️ View all {displayMedia.length} photos & videos
               </button>
             )}
           </div>
@@ -214,12 +241,17 @@ const Gallery = ({ images = [], available = false }) => {
           </button>
 
           {/* Image */}
-          <img
-            src={displayImages[modalIndex]}
+          <div
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[90vh] max-w-[90vw] object-contain"
-            alt="Preview"
-          />
+            className="flex max-h-[90vh] max-w-[90vw] items-center justify-center"
+          >
+            {renderMedia(
+              displayMedia[modalIndex],
+              "max-h-[90vh] max-w-[90vw] object-contain",
+              "Property media preview",
+              true
+            )}
+          </div>
 
           {/* Next */}
           <button
@@ -234,7 +266,7 @@ const Gallery = ({ images = [], available = false }) => {
 
           {/* Counter */}
           <div className="absolute bottom-6 text-white text-sm">
-            {modalIndex + 1} / {displayImages.length}
+            {modalIndex + 1} / {displayMedia.length}
           </div>
         </div>
       )}

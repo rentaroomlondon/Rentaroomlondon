@@ -1,10 +1,11 @@
 import Listing from "../Models/Listing.js";
 import { redis } from "../utils/redis.js";
 
-const HENDON_CACHE_KEY = "listings:hendon:v1";
+const HENDON_CACHE_KEY = "listings:hendon:v2";
 const HENDON_CACHE_TTL_SECONDS = 30 * 24 * 60 * 60;
 
 const hendonPropertyQuery = {
+  status: "available",
   $or: [
     {
       "location.address": /28\s+Babington Road/i,

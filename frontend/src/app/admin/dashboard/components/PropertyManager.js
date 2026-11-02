@@ -1,15 +1,42 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Plus, Loader2 } from "lucide-react";
+import { MoreVertical, Plus, Loader2 } from "lucide-react";
 import ListingForm from "./listingForm";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const PropertyManager = () => {
+const PropertyManager = ({ initialSlug, onInitialEditHandled }) => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedSlug, setSelectedSlug] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [openMenuSlug, setOpenMenuSlug] = useState(null);
+
+  useEffect(() => {
+    if (!initialSlug) return;
+
+    setSelectedSlug(initialSlug);
+    setShowForm(true);
+    onInitialEditHandled?.();
+  }, [initialSlug, onInitialEditHandled]);
+
+  useEffect(() => {
+    const closeMenuOnOutsideClick = (event) => {
+      if (!event.target.closest("[data-property-menu]")) {
+        setOpenMenuSlug(null);
+      }
+    };
+    const closeMenuOnEscape = (event) => {
+      if (event.key === "Escape") setOpenMenuSlug(null);
+    };
+
+    document.addEventListener("click", closeMenuOnOutsideClick);
+    document.addEventListener("keydown", closeMenuOnEscape);
+    return () => {
+      document.removeEventListener("click", closeMenuOnOutsideClick);
+      document.removeEventListener("keydown", closeMenuOnEscape);
+    };
+  }, []);
 
   // ================= FETCH =================
   const fetchProperties = async () => {
@@ -122,9 +149,57 @@ const PropertyManager = () => {
                 {/* CONTENT */}
                 <div className="p-4 space-y-2">
                   {/* TITLE */}
-                  <h2 className="text-base font-semibold text-slate-800 line-clamp-1">
-                    {item.title}
-                  </h2>
+                  <div className="flex items-start justify-between gap-2">
+                    <h2 className="text-base font-semibold text-slate-800 line-clamp-1">
+                      {item.title}
+                    </h2>
+                    <div className="relative shrink-0" data-property-menu>
+                      <button
+                        type="button"
+                        aria-label={`Actions for ${item.title || "property"}`}
+                        aria-haspopup="menu"
+                        aria-expanded={openMenuSlug === item.slug}
+                        onClick={() =>
+                          setOpenMenuSlug((currentSlug) =>
+                            currentSlug === item.slug ? null : item.slug
+                          )
+                        }
+                        className="rounded-md p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      >
+                        <MoreVertical size={18} />
+                      </button>
+                      {openMenuSlug === item.slug && (
+                        <div
+                          role="menu"
+                          className="absolute right-0 top-full z-10 mt-1 min-w-32 rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+                        >
+                          <button
+                            type="button"
+                            role="menuitem"
+                            onClick={() => {
+                              setSelectedSlug(item.slug);
+                              setOpenMenuSlug(null);
+                              setShowForm(true);
+                            }}
+                            className="block w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            role="menuitem"
+                            onClick={() => {
+                              setOpenMenuSlug(null);
+                              handleDelete(item.slug);
+                            }}
+                            className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
                   {/* ROOM LABEL (badge) */}
                   <span className="inline-block bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-md">
@@ -147,25 +222,6 @@ const PropertyManager = () => {
                     ID: {item.listingId || "N/A"}
                   </p>
 
-                  {/* ACTIONS */}
-                  <div className="flex gap-2 pt-3">
-                    <button
-                      onClick={() => {
-                        setSelectedSlug(item.slug);
-                        setShowForm(true);
-                      }}
-                      className="flex-1 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      onClick={() => handleDelete(item.slug)}
-                      className="flex-1 py-2 text-sm bg-red-500 text-white rounded-md hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                  </div>
                 </div>
               </div>
             ))}
