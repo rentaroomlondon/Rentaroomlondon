@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { BusFront, GraduationCap, ShoppingBag, TrainFront } from "lucide-react";
 import PropertyCard from "@/app/Shared/PropertyCard";
+import PropertyCardSkeleton from "@/app/Shared/PropertyCardSkeleton";
 
 const properties = [
   {
@@ -163,9 +164,12 @@ export default function HendonRooms() {
         {loading ? (
           <div
             role="status"
-            className="rounded-2xl border border-[#E8E4DF] bg-white p-8 text-center text-[#6B7280]"
+            aria-label="Loading available Hendon rooms"
+            className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
           >
-            Loading Hendon rooms…
+            {Array.from({ length: 3 }, (_, index) => (
+              <PropertyCardSkeleton key={index} />
+            ))}
           </div>
         ) : error ? (
           <div
