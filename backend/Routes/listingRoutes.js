@@ -10,6 +10,7 @@ import {
   getListingMeta,
   getNearbyListings,
 } from "../Controllers/listingController.js";
+import { getHendonListings } from "../Controllers/hendonListingController.js";
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.get("/", getAllListings);
 router.get("/meta", getListingMeta);
 router.get("/search", searchListings);
 router.get("/featured", getFeaturedListings);
+router.get("/hendon", getHendonListings);
 router.get("/nearby", getNearbyListings);
 router.get("/:slug", getListingBySlug);
 router.put("/:slug", updateListing);

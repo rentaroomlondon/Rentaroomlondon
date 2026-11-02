@@ -15,7 +15,11 @@ const PropertyCard = ({
   description,
   imageUrl,
 }) => {
-  const shortDescription = description.split(" ").slice(0, 5).join(" ") + "...";
+  const shortDescription =
+    (description || "").split(" ").slice(0, 5).join(" ") + "...";
+  const isAvailable = String(availability || "")
+    .toLowerCase()
+    .startsWith("available");
 
   const { isSaved, toggleWishlist, isLoaded } = useWishlist();
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -71,8 +75,12 @@ const PropertyCard = ({
           <div className="lg:hidden absolute top-3 left-3 bg-[#f38240] text-white px-4 py-1.5 rounded-lg font-bold text-[11px]">
             {price} PM
           </div>
-          <div className="lg:hidden absolute top-3 right-3 bg-[#22c55e] text-white px-4 py-1.5 rounded-lg font-bold text-[10px]">
-            NOW
+          <div
+            className={`lg:hidden absolute top-3 right-3 text-white px-4 py-1.5 rounded-lg font-bold text-[10px] ${
+              isAvailable ? "bg-[#22c55e]" : "bg-slate-700"
+            }`}
+          >
+            {availability || "CHECK AVAILABILITY"}
           </div>
 
           {/* Desktop Price Badge (Top Right) */}
