@@ -9,6 +9,7 @@ import {
   getFeaturedListings,
   getListingMeta,
   getNearbyListings,
+  getRoomDirectoryListings
 } from "../Controllers/listingController.js";
 import { getHendonListings } from "../Controllers/hendonListingController.js";
 
@@ -16,6 +17,7 @@ const router = express.Router();
 
 router.post("/", createListing);
 router.get("/", getAllListings);
+router.get("/directory", getRoomDirectoryListings);
 router.get("/meta", getListingMeta);
 router.get("/search", searchListings);
 router.get("/featured", getFeaturedListings);

@@ -161,6 +161,8 @@ const ListingForm = ({ slug, existingData }) => {
       coordinates: [0, 0],
     },
     propertyRef: "",
+    ownershipType: "company",
+    landlordName: "",
     epcRating: "",
     councilTaxBand: "",
     images: [],
@@ -282,6 +284,8 @@ const ListingForm = ({ slug, existingData }) => {
         coordinates: [0, 0],
       },
       propertyRef: data.propertyRef || "",
+      ownershipType: data.ownershipType || "company",
+      landlordName: data.landlordName || "",
       epcRating: data.epcRating || "",
       councilTaxBand: data.councilTaxBand || "",
       images: data.images || [],
@@ -676,6 +680,8 @@ const ListingForm = ({ slug, existingData }) => {
           type: "Point"
         },
         propertyRef: formData.propertyRef,
+        ownershipType: formData.ownershipType,
+        landlordName: formData.ownershipType === "landlord" ? formData.landlordName.trim() : "",
         epcRating: formData.epcRating,
         councilTaxBand: formData.councilTaxBand,
         images: formData.images,
@@ -736,6 +742,8 @@ const ListingForm = ({ slug, existingData }) => {
             coordinates: [0, 0],
           },
           propertyRef: "",
+          ownershipType: "company",
+          landlordName: "",
           epcRating: "",
           councilTaxBand: "",
           images: [],
@@ -859,6 +867,25 @@ const ListingForm = ({ slug, existingData }) => {
                     <input name="roomLabel" value={formData.roomLabel} onChange={handleChange} placeholder="e.g. Room A" className="input-style" />
                   </div>
                 </div>
+                <div>
+                  <label className="label-style">Property Owner</label>
+                  <select name="ownershipType" value={formData.ownershipType} onChange={handleChange} className="input-style">
+                    <option value="company">Our property</option>
+                    <option value="landlord">Other landlord</option>
+                  </select>
+                </div>
+                {formData.ownershipType === "landlord" && (
+                  <div>
+                    <label className="label-style">Landlord Name (optional)</label>
+                    <input
+                      name="landlordName"
+                      value={formData.landlordName}
+                      onChange={handleChange}
+                      placeholder="Enter the landlord's name"
+                      className="input-style"
+                    />
+                  </div>
+                )}
                 <div>
                   <label className="label-style">Description *</label>
                   <textarea 

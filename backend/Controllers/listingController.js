@@ -200,6 +200,60 @@ export const getAllListings = async (req, res) => {
   }
 };
 
+// Public room-directory feed: include the full catalogue so location pages can
+// show every room, including rented listings, with availability shown on-card.
+export const getRoomDirectoryListings = async (req, res) => {
+  try {
+    const query = {};
+    const roomTypes = ["single", "double", "ensuite", "ensuite_double", "studio"];
+    if (roomTypes.includes(req.query.roomType)) query.roomType = req.query.roomType;
+
+    const postcodeCodes = String(req.query.postcodes || "")
+      .split(",")
+      .map((postcode) => postcode.trim().toUpperCase())
+      .filter((postcode) => /^[A-Z]{1,2}\d{1,2}[A-Z]?$/.test(postcode));
+    if (postcodeCodes.length) {
+      query.$or = postcodeCodes.map((postcode) => ({
+        "location.postcode": { $regex: `^${postcode}`, $options: "i" },
+      }));
+    } else if (req.query.region) {
+      const prefixesByRegion = {
+        "East London": ["E"],
+        "North London": ["N", "NW", "HA"],
+        "South London": ["SE", "SW"],
+        "West London": ["W"],
+        "Central London": ["EC", "WC"],
+      };
+      const prefixes = prefixesByRegion[req.query.region];
+      if (prefixes) {
+        query.$or = prefixes.map((prefix) => ({
+          "location.postcode": { $regex: `^${prefix}\\d`, $options: "i" },
+        }));
+        if (req.query.region === "Central London") {
+          query.$or.push({ "location.city": /^(greater )?london$/i });
+        }
+      } else if (req.query.region === "Other locations") {
+        query["location.city"] = { $exists: true, $not: /^(greater )?london$/i };
+      }
+    } else if (typeof req.query.area === "string" && req.query.area.trim()) {
+      const area = req.query.area.trim().slice(0, 100).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      query.$or = ["location.address", "location.city", "location.postcode", "title"].map((field) => ({
+        [field]: { $regex: area, $options: "i" },
+      }));
+    }
+
+    const listings = await Listing.find(query)
+      .select("title description slug images location monthlyPrice availableImmediately availableFrom roomType listingId status occupancy furnished bathroomType")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return res.json({ success: true, count: listings.length, listings });
+  } catch (error) {
+    console.error("Room directory listings error:", error.message);
+    return res.status(500).json({ success: false, message: "Unable to load room listings" });
+  }
+};
+
 // ============================================
 // 🔍 SEARCH (NO CACHE - OPTIONAL)
 // ============================================

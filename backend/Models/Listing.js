@@ -25,8 +25,6 @@ const listingSchema = new mongoose.Schema(
       default: "single"
     },
 
-
-
     // ✅ SINGLE OCCUPANCY (NEW)
     occupancy: {
       type: String,
@@ -173,9 +171,17 @@ const listingSchema = new mongoose.Schema(
 
     // 🔹 IMAGES
     images: [String],
-    videos: [String],
     // 🔹 PROPERTY DETAILS
     propertyRef: String,
+    ownershipType: {
+      type: String,
+      enum: ["company", "landlord"],
+      default: "company",
+    },
+    landlordName: {
+      type: String,
+      trim: true,
+    },
     epcRating: {
       type: String,
       enum: ["A", "B", "C", "D", "E", "F", "G"],

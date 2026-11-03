@@ -14,6 +14,7 @@ const Listings = () => {
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all"); // 'all', 'available', 'rented', 'reserved'
+  const [ownershipFilter, setOwnershipFilter] = useState("all");
 
   // ================= FETCH =================
   const fetchProperties = async () => {
@@ -60,8 +61,12 @@ const Listings = () => {
       filtered = filtered.filter(property => property.status === statusFilter);
     }
 
+    if (ownershipFilter !== "all") {
+      filtered = filtered.filter(property => (property.ownershipType || "company") === ownershipFilter);
+    }
+
     setFilteredProperties(filtered);
-  }, [searchTerm, statusFilter, properties]);
+  }, [searchTerm, statusFilter, ownershipFilter, properties]);
 
 
   // ================= CLEAR SEARCH =================
@@ -73,6 +78,11 @@ const Listings = () => {
   const getStatusCount = (status) => {
     if (status === "all") return properties.length;
     return properties.filter(p => p.status === status).length;
+  };
+
+  const getOwnershipCount = (ownershipType) => {
+    if (ownershipType === "all") return properties.length;
+    return properties.filter(p => (p.ownershipType || "company") === ownershipType).length;
   };
 
   // ================= FORM VIEW =================
@@ -125,7 +135,7 @@ const Listings = () => {
 
         {/* SEARCH & FILTER SECTION */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col gap-4">
             {/* Search Input */}
             <div className="flex-1 relative">
               <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -147,7 +157,7 @@ const Listings = () => {
             </div>
 
             {/* Status Filter */}
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setStatusFilter("all")}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
@@ -189,6 +199,30 @@ const Listings = () => {
                 Reserved ({getStatusCount("reserved")})
               </button>
             </div>
+            <div className="flex flex-wrap gap-2 border-t border-gray-100 pt-4">
+              <span className="self-center text-sm font-medium text-gray-500">Owner:</span>
+              {[
+                { value: "all", label: "All", color: "orange" },
+                { value: "company", label: "Our properties", color: "blue" },
+                { value: "landlord", label: "Other landlords", color: "purple" },
+              ].map(option => (
+                <button
+                  key={option.value}
+                  onClick={() => setOwnershipFilter(option.value)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                    ownershipFilter === option.value
+                      ? option.color === "blue"
+                        ? "bg-blue-500 text-white shadow-sm"
+                        : option.color === "purple"
+                          ? "bg-purple-500 text-white shadow-sm"
+                          : "bg-orange-500 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  {option.label} ({getOwnershipCount(option.value)})
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -198,6 +232,7 @@ const Listings = () => {
             Found {filteredProperties.length} property{filteredProperties.length !== 1 ? 's' : ''}
             {searchTerm && ` matching "${searchTerm}"`}
             {statusFilter !== "all" && ` with status ${statusFilter}`}
+            {ownershipFilter !== "all" && ` owned by ${ownershipFilter === "company" ? "us" : "another landlord"}`}
           </div>
         )}
 
@@ -249,6 +284,13 @@ const Listings = () => {
                   }`}>
                     {item.status?.toUpperCase() || 'UNKNOWN'}
                   </div>
+                  <div className={`absolute top-2 left-2 px-2 py-1 rounded-lg text-xs font-bold ${
+                    item.ownershipType === "landlord"
+                      ? "bg-purple-600 text-white"
+                      : "bg-blue-600 text-white"
+                  }`}>
+                    {item.ownershipType === "landlord" ? "LANDLORD" : "OUR PROPERTY"}
+                  </div>
                 </div>
 
                 {/* CONTENT */}
@@ -267,6 +309,11 @@ const Listings = () => {
                       £{item.monthlyPrice?.toLocaleString() || '0'}/mo
                     </span>
                   </div>
+                  {item.ownershipType === "landlord" && item.landlordName && (
+                    <p className="text-xs text-purple-700 font-medium">
+                      Landlord: {item.landlordName}
+                    </p>
+                  )}
 
                   {/* ADDRESS */}
                   <p className="text-sm text-gray-500 line-clamp-1">
