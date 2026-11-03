@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import RoomDirectory from "./room-directory";
 
 export const metadata = {
-  title: "Rooms to Rent in London | Browse by Area and Room Type"
+  title: "Rooms to Rent in London | Browse by Area and Room Type",
   robots: { index: false, follow: false },
 };
 
