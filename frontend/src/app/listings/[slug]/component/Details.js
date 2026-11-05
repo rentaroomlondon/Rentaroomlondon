@@ -20,7 +20,7 @@ const Details = ({ listing }) => {
     { label: "Available From", value: formatDate(listing?.availableFrom), color: "text-[#10B981]", mobile: false },
     { label: "Furnishing", value: listing?.furnished ? "Fully Furnished" : "Unfurnished", mobile: true },
     { label: "Parking", value: listing?.parking?.available ? "Available" : "No Parking", mobile: false },
-    { label: "EPC Rating", value: `${listing?.epcRating} (Good)`, color: "text-[#10B981]", mobile: true },
+    ...(listing?.epcRating ? [{ label: "EPC Rating", value: `${listing.epcRating} (Good)`, color: "text-[#10B981]", mobile: true }] : []),
     // { label: "Council Tax Band", value: `Band ${listing?.councilTaxBand} (Shared)`, mobile: false },
   ];
 

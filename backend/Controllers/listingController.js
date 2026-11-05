@@ -1,5 +1,6 @@
 import Listing from "../Models/Listing.js";
 import slugify from "slugify";
+import { createHash } from "node:crypto";
 import { redis } from "../utils/redis.js";
 import { clearListingCache } from "../utils/clearCache.js";
 
@@ -204,19 +205,55 @@ export const getAllListings = async (req, res) => {
 // show every room, including rented listings, with availability shown on-card.
 export const getRoomDirectoryListings = async (req, res) => {
   try {
-    const query = {};
     const roomTypes = ["single", "double", "ensuite", "ensuite_double", "studio"];
-    if (roomTypes.includes(req.query.roomType)) query.roomType = req.query.roomType;
-
-    const postcodeCodes = String(req.query.postcodes || "")
+    const roomType = roomTypes.includes(req.query.roomType) ? req.query.roomType : "";
+    const postcodeCodes = [...new Set(String(req.query.postcodes || "")
       .split(",")
       .map((postcode) => postcode.trim().toUpperCase())
-      .filter((postcode) => /^[A-Z]{1,2}\d{1,2}[A-Z]?$/.test(postcode));
+      .filter((postcode) => /^[A-Z]{1,2}\d{1,2}[A-Z]?$/.test(postcode)))].sort();
+    const requestedRegion = typeof req.query.region === "string" ? req.query.region.trim() : "";
+    const supportedRegions = [
+      "East London",
+      "North London",
+      "South London",
+      "West London",
+      "Central London",
+      "Other locations",
+    ];
+    const region = supportedRegions.find((value) => value.toLowerCase() === requestedRegion.toLowerCase()) || requestedRegion;
+    const area = typeof req.query.area === "string" ? req.query.area.trim().slice(0, 100) : "";
+    const city = typeof req.query.city === "string" ? req.query.city.trim().slice(0, 100) : "";
+    const cacheKey = `listings:directory:${createHash("sha256")
+      .update(JSON.stringify({
+        roomType,
+        postcodes: postcodeCodes,
+        region: region.toLowerCase(),
+        area: area.toLowerCase(),
+        city: city.toLowerCase(),
+      }))
+      .digest("hex")}`;
+
+    if (redis) {
+      try {
+        const cached = await redis.get(cacheKey);
+        const payload = typeof cached === "string" ? JSON.parse(cached) : cached;
+        if (payload && Array.isArray(payload.listings)) {
+          res.set("X-Cache", "HIT");
+          return res.json(payload);
+        }
+      } catch (error) {
+        console.error("Room directory cache read failed:", error.message);
+      }
+    }
+
+    const query = {};
+    if (roomType) query.roomType = roomType;
+
     if (postcodeCodes.length) {
       query.$or = postcodeCodes.map((postcode) => ({
         "location.postcode": { $regex: `^${postcode}`, $options: "i" },
       }));
-    } else if (req.query.region) {
+    } else if (region) {
       const prefixesByRegion = {
         "East London": ["E"],
         "North London": ["N", "NW", "HA"],
@@ -224,30 +261,44 @@ export const getRoomDirectoryListings = async (req, res) => {
         "West London": ["W"],
         "Central London": ["EC", "WC"],
       };
-      const prefixes = prefixesByRegion[req.query.region];
+      const prefixes = prefixesByRegion[region];
       if (prefixes) {
         query.$or = prefixes.map((prefix) => ({
           "location.postcode": { $regex: `^${prefix}\\d`, $options: "i" },
         }));
-        if (req.query.region === "Central London") {
+        if (region === "Central London") {
           query.$or.push({ "location.city": /^(greater )?london$/i });
         }
-      } else if (req.query.region === "Other locations") {
+      } else if (region === "Other locations") {
         query["location.city"] = { $exists: true, $not: /^(greater )?london$/i };
       }
-    } else if (typeof req.query.area === "string" && req.query.area.trim()) {
-      const area = req.query.area.trim().slice(0, 100).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    } else if (area) {
+      const escapedArea = area.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       query.$or = ["location.address", "location.city", "location.postcode", "title"].map((field) => ({
-        [field]: { $regex: area, $options: "i" },
+        [field]: { $regex: escapedArea, $options: "i" },
       }));
     }
 
+    if (city) {
+      const escapedCity = city.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      query["location.city"] = { $regex: `^${escapedCity}$`, $options: "i" };
+    }
+
     const listings = await Listing.find(query)
-      .select("title description slug images location monthlyPrice availableImmediately availableFrom roomType listingId status occupancy furnished bathroomType")
+      .select("title description slug images location monthlyPrice availableImmediately availableFrom roomType listingId status bathroomType")
       .sort({ createdAt: -1 })
       .lean();
 
-    return res.json({ success: true, count: listings.length, listings });
+    const payload = { success: true, count: listings.length, listings };
+    if (redis) {
+      try {
+        await redis.set(cacheKey, payload, { ex: 300 });
+      } catch (error) {
+        console.error("Room directory cache write failed:", error.message);
+      }
+    }
+    res.set("X-Cache", "MISS");
+    return res.json(payload);
   } catch (error) {
     console.error("Room directory listings error:", error.message);
     return res.status(500).json({ success: false, message: "Unable to load room listings" });

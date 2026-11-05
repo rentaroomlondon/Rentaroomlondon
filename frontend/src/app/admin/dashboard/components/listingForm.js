@@ -587,12 +587,6 @@ const ListingForm = ({ slug, existingData }) => {
     const totalImages = formData.images.length;
     if (totalImages < 5) newErrors.images = `Minimum 5 images required (${totalImages}/5)`;
     
-    if (!formData.epcRating) newErrors.epcRating = "EPC rating is required";
-    
-    if (formData.billsIncluded.wifi && !formData.wifiSpeed?.trim()) {
-      newErrors.wifiSpeed = "WiFi speed is required when WiFi is included";
-    }
-    
     if (formData.parking.available && !formData.parking.type) {
       newErrors.parkingType = "Please select parking type";
     }
@@ -662,7 +656,7 @@ const ListingForm = ({ slug, existingData }) => {
         roomAmenities: formData.roomAmenities,
         propertyAmenities: formData.propertyAmenities,
         billsIncluded: formData.billsIncluded,
-        wifiSpeed: formData.wifiSpeed,
+        wifiSpeed: formData.wifiSpeed.trim() || null,
         parking: {
           available: formData.parking.available,
           ...(formData.parking.available && formData.parking.type && {
@@ -682,7 +676,7 @@ const ListingForm = ({ slug, existingData }) => {
         propertyRef: formData.propertyRef,
         ownershipType: formData.ownershipType,
         landlordName: formData.ownershipType === "landlord" ? formData.landlordName.trim() : "",
-        epcRating: formData.epcRating,
+        epcRating: formData.epcRating || null,
         councilTaxBand: formData.councilTaxBand,
         images: formData.images,
         videos: formData.videos,
@@ -1394,7 +1388,7 @@ const ListingForm = ({ slug, existingData }) => {
                     value={formData.wifiSpeed} 
                     onChange={handleChange}
                     onBlur={() => handleBlur('wifiSpeed')}
-                    placeholder="e.g. 400mbps Fiber *" 
+                    placeholder="Wi-Fi speed (optional), e.g. 400 Mbps"
                     className={`input-style ${hasError('wifiSpeed') ? 'border-red-300' : ''}`} 
                   />
                   {hasError('wifiSpeed') && <ErrorMessage message={errors.wifiSpeed} />}
@@ -1439,7 +1433,7 @@ const ListingForm = ({ slug, existingData }) => {
                   <input name="councilTaxBand" value={formData.councilTaxBand} onChange={handleChange} placeholder="Council Tax Band" className="input-style text-xs" />
                 </div>
                 <div>
-                  <label className="label-style">EPC Rating *</label>
+                  <label className="label-style">EPC Rating <span className="font-normal text-slate-400">(optional)</span></label>
                   <div className="flex gap-1">
                     {['A','B','C','D','E','F','G'].map(r => (
                       <button 

@@ -10,7 +10,7 @@ const Bills = ({ billsIncluded, wifiSpeed, councilTaxBand }) => {
     { key: 'electricity', label: 'Electricity', icon: '💡' },
     { key: 'gas', label: 'Gas', icon: '🔥' },
     { key: 'water', label: 'Water', icon: '💧' },
-    { key: 'wifi', label: `${wifiSpeed || '400'}Mbps Wi-Fi`, icon: '📶' },
+    { key: 'wifi', label: wifiSpeed ? `${wifiSpeed}Mbps Wi-Fi` : 'Wi-Fi', icon: '📶' },
   ];
 
   // Filter only those that are true in your data

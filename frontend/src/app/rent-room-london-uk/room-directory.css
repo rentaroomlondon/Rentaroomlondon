@@ -150,25 +150,26 @@
 .rd-room-type-row .rd-chips::-webkit-scrollbar { height: 6px; }
 .rd-room-type-row .rd-chips::-webkit-scrollbar-track { border-radius: 8px; background: #f2f3f5; }
 .rd-room-type-row .rd-chips::-webkit-scrollbar-thumb { border: 1px solid #f2f3f5; border-radius: 8px; background: linear-gradient(90deg, #ffad7c, #f16b37); }
-.rd-room-type-row .rd-chips button {
+.rd-room-type-row .rd-chips .rd-room-type-chip {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  gap: 9px;
-  min-height: 36px;
-  padding: 0 14px;
-  border: 1px solid #e3e7ed;
-  border-radius: 20px;
-  background: #fff;
-  color: #526175;
-  font: 600 11px var(--font-dm-sans), sans-serif;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 17px;
+  border: 1px solid #dfe5ec;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fff 0%, #f9fafb 100%);
+  box-shadow: 0 2px 5px rgb(15 37 59 / 7%);
+  color: #34465b;
+  font: 700 12px var(--font-dm-sans), sans-serif;
   cursor: pointer;
-  transition: border-color .18s, background .18s, color .18s, transform .18s;
+  text-decoration: none;
+  transition: border-color .18s, background .18s, color .18s, transform .18s, box-shadow .18s;
 }
-.rd-room-type-row .rd-chips button:hover { transform: translateY(-1px); border-color: #f1b18e; color: var(--rd-orange-dark); }
-.rd-room-type-row .rd-chips button span { color: #9aa5b2; font-size: 10px; }
-.rd-room-type-row .rd-chips button.selected { border-color: var(--rd-orange); background: var(--rd-peach); color: #c94b1b; font-weight: 800; }
-.rd-room-type-row .rd-chips button.selected span { color: #ca6a43; }
+.rd-room-type-row .rd-chips .rd-room-type-chip:hover { transform: translateY(-1px); border-color: #f1a77e; background: #fff7f2; box-shadow: 0 4px 10px rgb(242 122 61 / 13%); color: var(--rd-orange-dark); }
+.rd-room-type-row .rd-chips .rd-room-type-chip:focus-visible { outline: 3px solid rgb(242 122 61 / 30%); outline-offset: 2px; }
+.rd-room-type-row .rd-chips .rd-room-type-chip.selected { border-color: var(--rd-orange); background: linear-gradient(135deg, #ff6b35 0%, #ef5c2a 100%); box-shadow: 0 3px 9px rgb(242 122 61 / 24%); color: #fff; font-weight: 800; }
 .rd-listing-head { margin: 0 0 16px; }
 .rd-sort { position: relative; display: flex; align-items: center; gap: 8px; color: #8692a0; font-size: 10px; }
 .rd-sort select { appearance: none; min-width: 132px; padding: 9px 30px 9px 11px; border: 1px solid var(--rd-line); border-radius: 8px; outline: 0; background: #fff; color: #46566b; font: 600 10px var(--font-dm-sans), sans-serif; cursor: pointer; }
@@ -234,7 +235,7 @@
   .rd-result-count { font-size: 9px; }
   .rd-filter-row { margin-bottom: 26px; }
   .rd-room-type-row .rd-chips { gap: 7px; }
-  .rd-room-type-row .rd-chips button { min-height: 33px; padding: 0 11px; font-size: 10px; }
+  .rd-room-type-row .rd-chips .rd-room-type-chip { min-height: 36px; padding: 0 13px; font-size: 11px; }
   .rd-listing-head { align-items: center; }
   .rd-sort { font-size: 0; }
   .rd-sort select { min-width: 112px; font-size: 9px; }

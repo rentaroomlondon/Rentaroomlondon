@@ -1,3 +1,5 @@
+import { getDirectorySeoPages } from "./rent-room-london-uk/directory-route";
+
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -87,6 +89,12 @@ export default async function sitemap() {
         changeFrequency: "weekly",
         priority: 0.7,
       },
+      ...getDirectorySeoPages().map(({ path }) => ({
+        url: `${baseUrl}${path}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.75,
+      })),
 
       // 🏠 YOUR LISTED STATIC PROPERTY PAGES
       {

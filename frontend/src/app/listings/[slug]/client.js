@@ -54,7 +54,7 @@ const Client = ({ listing }) => {
         { label: "PROPERTY", value: listing?.propertySharing || "Shared", type: "shared" },
         { label: "BATHROOM", value: listing?.bathroomType || "Shared", type: "bath" },
         // { label: "MIN TENANCY", value: `${listing?.minTenancy || ""} Months`, type: "calendar" },
-        { label: "Energy Rating", value: `EPC: ${listing?.epcRating || ""}`, type: "rating" }, 
+        ...(listing?.epcRating ? [{ label: "Energy Rating", value: `EPC: ${listing.epcRating}`, type: "rating" }] : []),
     ];
 
     const getBillsText = (bills) => {
