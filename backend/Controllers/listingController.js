@@ -36,9 +36,7 @@ const generateUniqueSlug = async (value, { custom = false, excludeSlug = "" } = 
   let slug = baseSlug;
   let counter = 1;
 
-  while (await Listing.findOne({
-    slug: excludeSlug ? { $ne: excludeSlug } : slug,
-  })) {
+  while (slug !== excludeSlug && await Listing.findOne({ slug })) {
     slug = `${baseSlug}-${counter}`;
     counter++;
   }
