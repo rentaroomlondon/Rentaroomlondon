@@ -54,12 +54,14 @@ export async function generateMetadata({ params }) {
     `${baseUrl}/default-property.jpg`;
 
   // 🔥 Smart Description
-  const description = listing.description
+  const generatedDescription = listing.description
     ? `${listing.description.slice(0, 120)}... ${roomType} in ${city}. £${listing.monthlyPrice}/month. Book now.`
     : `${roomType} for rent in ${city}. £${listing.monthlyPrice}/month. Fully furnished property in London.`;
 
   // 🔥 SEO Title (HIGH CTR)
-  const title = `${listing.title} in ${city} ${postcode} | £${listing.monthlyPrice} PCM`;
+  const title = listing.metaTitle?.trim()
+    || `${listing.title} in ${city} ${postcode} | £${listing.monthlyPrice} PCM`;
+  const description = listing.metaDescription?.trim() || generatedDescription;
 
   return {
     metadataBase: new URL(baseUrl),

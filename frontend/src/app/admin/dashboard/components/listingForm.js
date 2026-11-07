@@ -152,6 +152,8 @@ const ListingForm = ({ slug, existingData }) => {
     title: "",
     slug: "",
     description: "",
+    metaTitle: "",
+    metaDescription: "",
     propertyType: "shared_house",
     roomType: "single",
     occupancy: "single",
@@ -281,6 +283,8 @@ const ListingForm = ({ slug, existingData }) => {
       title: data.title || "",
       slug: data.slug || "",
       description: data.description || "",
+      metaTitle: data.metaTitle || "",
+      metaDescription: data.metaDescription || "",
       propertyType: data.propertyType || "shared_house",
       roomType: data.roomType || "single",
       occupancy: data.occupancy || "single",
@@ -679,6 +683,8 @@ const ListingForm = ({ slug, existingData }) => {
         title: formData.title,
         slug: formData.slug.trim(),
         description: formData.description,
+        metaTitle: formData.metaTitle,
+        metaDescription: formData.metaDescription,
         propertyType: formData.propertyType,
         roomType: formData.roomType,
         occupancy: formData.occupancy,
@@ -747,6 +753,8 @@ const ListingForm = ({ slug, existingData }) => {
           title: "",
           slug: "",
           description: "",
+          metaTitle: "",
+          metaDescription: "",
           propertyType: "shared_house",
           roomType: "single",
           occupancy: "single",
@@ -959,6 +967,27 @@ const ListingForm = ({ slug, existingData }) => {
                     className={`input-style resize-none ${hasError('description') ? 'border-red-300' : ''}`}
                   />
                   {hasError('description') && <ErrorMessage message={errors.description} />}
+                </div>
+                <div>
+                  <label className="label-style">Meta Title</label>
+                  <input
+                    name="metaTitle"
+                    value={formData.metaTitle}
+                    onChange={handleChange}
+                    placeholder="Leave blank to use the listing title"
+                    className="input-style"
+                  />
+                </div>
+                <div>
+                  <label className="label-style">Meta Description</label>
+                  <textarea
+                    name="metaDescription"
+                    value={formData.metaDescription}
+                    onChange={handleChange}
+                    rows="3"
+                    placeholder="Leave blank to use the listing description"
+                    className="input-style resize-y"
+                  />
                 </div>
               </div>
             </Section>

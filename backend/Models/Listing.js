@@ -9,6 +9,14 @@ const listingSchema = new mongoose.Schema(
       trim: true,
     },
     description: String,
+    metaTitle: {
+      type: String,
+      trim: true,
+    },
+    metaDescription: {
+      type: String,
+      trim: true,
+    },
 
     // 🔹 PROPERTY INFO
     propertyType: {
