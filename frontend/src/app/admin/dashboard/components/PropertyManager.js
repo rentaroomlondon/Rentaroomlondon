@@ -192,6 +192,10 @@ const PropertyManager = ({ initialSlug, onInitialEditHandled }) => {
                     ID: {item.listingId || "N/A"}
                   </p>
 
+                  <p className="text-xs text-gray-500 break-all">
+                    Slug: /listings/{item.slug || "N/A"}
+                  </p>
+
                   {formatListingDate(item.updatedAt || item.createdAt) && (
                     <p className="text-xs text-gray-500">
                       Last updated: {formatListingDate(item.updatedAt || item.createdAt)}

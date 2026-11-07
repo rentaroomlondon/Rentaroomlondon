@@ -54,6 +54,21 @@ const PROPERTY_TYPE_OPTIONS = [
   { value: "house", label: "House" }
 ];
 
+const slugFromTitle = (title) => String(title || "")
+  .normalize("NFKD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase()
+  .replace(/&/g, " and ")
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/pound\d+/g, "")
+  .replace(/for-rent|to-rent/g, "")
+  .replace(/and|or/g, "")
+  .replace(/-+/g, "-")
+  .replace(/^-|-$/g, "")
+  .split("-")
+  .slice(0, 6)
+  .join("-");
+
 // ================= API SERVICE =================
 const apiService = {
   async request(url, options = {}) {
@@ -122,6 +137,7 @@ const ListingForm = ({ slug, existingData }) => {
   // Form data structured to match MongoDB schema
   const [formData, setFormData] = useState({
     title: "",
+    slug: "",
     description: "",
     propertyType: "shared_house",
     roomType: "single",
@@ -183,6 +199,8 @@ const ListingForm = ({ slug, existingData }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [activeField, setActiveField] = useState(null);
+  const [currentSlug, setCurrentSlug] = useState(slug);
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
   const fetchLocationSuggestions = async (query) => {
     if (!query || query.length < 4) {
@@ -233,6 +251,7 @@ const ListingForm = ({ slug, existingData }) => {
   const isEdit = !!slug;
 
   useEffect(() => {
+    setCurrentSlug(slug);
     if (isEdit && slug) {
       fetchListingData();
     } else if (existingData) {
@@ -244,8 +263,10 @@ const ListingForm = ({ slug, existingData }) => {
   const populateFormData = (data) => {
      // Log the data to debug
   console.log('Populating form with:', data);
+    setSlugManuallyEdited(false);
     setFormData({
       title: data.title || "",
+      slug: data.slug || "",
       description: data.description || "",
       propertyType: data.propertyType || "shared_house",
       roomType: data.roomType || "single",
@@ -518,6 +539,10 @@ const ListingForm = ({ slug, existingData }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    if (name === "slug") {
+      setSlugManuallyEdited(Boolean(value.trim()));
+    }
     
     if (name.startsWith('location.')) {
       const field = name.split('.')[1];
@@ -542,7 +567,9 @@ const ListingForm = ({ slug, existingData }) => {
     } else {
       setFormData(prev => ({
         ...prev,
-        [name]: type === "checkbox" ? checked : value
+        ...(name === "title" && !slugManuallyEdited
+          ? { title: value, slug: slugFromTitle(value) }
+          : { [name]: type === "checkbox" ? checked : value })
       }));
     }
     
@@ -637,6 +664,7 @@ const ListingForm = ({ slug, existingData }) => {
     try {
       const submitData = {
         title: formData.title,
+        slug: formData.slug.trim(),
         description: formData.description,
         propertyType: formData.propertyType,
         roomType: formData.roomType,
@@ -683,16 +711,20 @@ const ListingForm = ({ slug, existingData }) => {
         councilTaxBand: formData.councilTaxBand,
         images: formData.images,
         videos: formData.videos,
-        slug: formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
       };
       
       let response;
       if (isEdit) {
-        response = await apiService.update(slug, submitData);
+        response = await apiService.update(currentSlug || slug, submitData);
       } else {
         response = await apiService.create(submitData);
       }
       
+      if (response.listing?.slug) {
+        setCurrentSlug(response.listing.slug);
+        setFormData((current) => ({ ...current, slug: response.listing.slug }));
+      }
+
       console.log('Success:', response);
       alert(isEdit ? 'Listing updated successfully!' : 'Listing created successfully!');
       
@@ -700,6 +732,7 @@ const ListingForm = ({ slug, existingData }) => {
         // Reset form for new listing
         setFormData({
           title: "",
+          slug: "",
           description: "",
           propertyType: "shared_house",
           roomType: "single",
@@ -747,6 +780,7 @@ const ListingForm = ({ slug, existingData }) => {
           images: [],
           videos: [],
         });
+        setSlugManuallyEdited(false);
         setPendingImages([]);
         setPendingVideos([]);
         setUploadProgress({});
@@ -848,6 +882,22 @@ const ListingForm = ({ slug, existingData }) => {
                     className={`input-style ${hasError('title') ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10' : ''}`}
                   />
                   {hasError('title') && <ErrorMessage message={errors.title} />}
+                </div>
+                <div>
+                  <label className="label-style">URL Slug</label>
+                  <input
+                    name="slug"
+                    value={formData.slug}
+                    onChange={handleChange}
+                    placeholder="Leave blank to generate from the title"
+                    maxLength={120}
+                    className="input-style"
+                  />
+                  <p className="mt-1 text-xs text-slate-500">
+                    {formData.slug
+                      ? `Listing URL: /listings/${formData.slug}`
+                      : "The URL slug is generated from the listing title. Enter a custom slug to override it."}
+                  </p>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>

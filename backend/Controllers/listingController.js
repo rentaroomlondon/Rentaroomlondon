@@ -26,15 +26,19 @@ const cleanSlug = (title) => {
 // ============================================
 // 🔥 UNIQUE SLUG
 // ============================================
-const generateUniqueSlug = async (title) => {
-  let baseSlug = cleanSlug(title);
+const generateUniqueSlug = async (value, { custom = false, excludeSlug = "" } = {}) => {
+  let baseSlug = custom
+    ? slugify(value, { lower: true, strict: true, trim: true })
+    : cleanSlug(value);
 
-  if (!baseSlug) baseSlug = "listing";
+  if (!baseSlug) return "";
 
   let slug = baseSlug;
   let counter = 1;
 
-  while (await Listing.findOne({ slug })) {
+  while (await Listing.findOne({
+    slug: excludeSlug ? { $ne: excludeSlug } : slug,
+  })) {
     slug = `${baseSlug}-${counter}`;
     counter++;
   }
@@ -55,9 +59,16 @@ const generateListingId = () => {
 // ============================================
 export const createListing = async (req, res) => {
   try {
-    const data = req.body;
+    const data = { ...req.body };
 
-    data.slug = await generateUniqueSlug(data.title);
+    const customSlug = typeof data.slug === "string" ? data.slug.trim() : "";
+    data.slug = await generateUniqueSlug(customSlug || data.title, { custom: Boolean(customSlug) });
+    if (!data.slug) {
+      return res.status(400).json({
+        success: false,
+        message: "The custom slug must contain at least one letter or number.",
+      });
+    }
     data.listingId = generateListingId();
 
     const listing = await Listing.create(data);
@@ -90,17 +101,24 @@ export const updateListing = async (req, res) => {
       });
     }
 
-    // ❌ REMOVE THIS BLOCK (IMPORTANT)
-    // if (req.body.title && req.body.title !== listing.title) {
-    //   req.body.slug = await generateUniqueSlug(req.body.title);
-    // }
-
-    // ✅ NEVER update slug
-    delete req.body.slug;
+    const updateData = { ...req.body };
+    if (Object.prototype.hasOwnProperty.call(updateData, "slug")) {
+      const customSlug = typeof updateData.slug === "string" ? updateData.slug.trim() : "";
+      updateData.slug = await generateUniqueSlug(customSlug || updateData.title || listing.title, {
+        custom: Boolean(customSlug),
+        excludeSlug: listing.slug,
+      });
+      if (!updateData.slug) {
+        return res.status(400).json({
+          success: false,
+          message: "The custom slug must contain at least one letter or number.",
+        });
+      }
+    }
 
     listing = await Listing.findOneAndUpdate(
       { slug },
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     );
 
