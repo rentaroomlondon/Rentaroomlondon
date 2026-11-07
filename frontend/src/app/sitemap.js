@@ -1,4 +1,4 @@
-import { getDirectorySeoPages } from "./rent-room-london-uk/directory-route";
+import { getDirectoryAreaPages, getDirectorySeoPages } from "./rent-room-london-uk/directory-route";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -15,13 +15,18 @@ export default async function sitemap() {
     const properties = data.listings || [];
 
     const propertyUrls = properties
-      .filter((p) => p.slug)
-      .map((p) => ({
-        url: `${baseUrl}/property/${p.slug}`,
-        lastModified: new Date(p.updatedAt || Date.now()),
-        changeFrequency: "daily",
-        priority: 0.9,
-      }));
+      .filter((p) => p.slug && p.indexable !== false)
+      .map((p) => {
+        const modifiedAt = p.updatedAt || p.createdAt;
+        const parsedModifiedAt = modifiedAt ? new Date(modifiedAt) : null;
+
+        return {
+          url: `${baseUrl}/listings/${p.slug}`,
+          ...(parsedModifiedAt && !Number.isNaN(parsedModifiedAt.getTime())
+            ? { lastModified: parsedModifiedAt }
+            : {}),
+        };
+      });
 
     // 📝 BLOG POSTS
     let blogUrls = [];
@@ -90,6 +95,12 @@ export default async function sitemap() {
         priority: 0.7,
       },
       ...getDirectorySeoPages().map(({ path }) => ({
+        url: `${baseUrl}${path}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.75,
+      })),
+      ...getDirectoryAreaPages().map(({ path }) => ({
         url: `${baseUrl}${path}`,
         lastModified: new Date(),
         changeFrequency: "weekly",

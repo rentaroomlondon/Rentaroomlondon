@@ -12,12 +12,14 @@ import {
   getRoomDirectoryListings
 } from "../Controllers/listingController.js";
 import { getHendonListings } from "../Controllers/hendonListingController.js";
+import { getPostcodeAreas } from "../Controllers/locationController.js";
 
 const router = express.Router();
 
 router.post("/", createListing);
 router.get("/", getAllListings);
 router.get("/directory", getRoomDirectoryListings);
+router.get("/locations", getPostcodeAreas);
 router.get("/meta", getListingMeta);
 router.get("/search", searchListings);
 router.get("/featured", getFeaturedListings);

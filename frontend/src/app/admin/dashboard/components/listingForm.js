@@ -129,6 +129,7 @@ const ListingForm = ({ slug, existingData }) => {
     furnished: true,
     availableImmediately: false,
     featured: false,
+    indexable: true,
     monthlyPrice: "",
     deposit: "",
     holdingDeposit: "",
@@ -252,6 +253,7 @@ const ListingForm = ({ slug, existingData }) => {
       furnished: data.furnished ?? true,
       availableImmediately: data.availableImmediately ?? false,
       featured: data.featured ?? false,
+      indexable: data.indexable ?? true,
       monthlyPrice: data.monthlyPrice || "",
       deposit: data.deposit || "",
       holdingDeposit: data.holdingDeposit || "",
@@ -642,6 +644,7 @@ const ListingForm = ({ slug, existingData }) => {
         furnished: formData.furnished,
         availableImmediately: formData.availableImmediately,
         featured: formData.featured,
+        indexable: formData.indexable,
         monthlyPrice: parseFloat(formData.monthlyPrice),
         deposit: formData.deposit ? parseFloat(formData.deposit) : undefined,
         holdingDeposit: formData.holdingDeposit ? parseFloat(formData.holdingDeposit) : undefined,
@@ -704,6 +707,7 @@ const ListingForm = ({ slug, existingData }) => {
           furnished: true,
           availableImmediately: false,
           featured: false,
+          indexable: true,
           monthlyPrice: "",
           deposit: "",
           holdingDeposit: "",
@@ -984,6 +988,7 @@ const ListingForm = ({ slug, existingData }) => {
                 <Toggle label="Fully Furnished" checked={formData.furnished} onChange={(e)=>handleChange({target:{name:"furnished",type:"checkbox",checked:e.target.checked}})} />
                 <Toggle label="Available Immediately" checked={formData.availableImmediately} onChange={(e)=>handleChange({target:{name:"availableImmediately",type:"checkbox",checked:e.target.checked}})} />
                 <Toggle label="Featured Property" checked={formData.featured} onChange={(e)=>handleChange({target:{name:"featured",type:"checkbox",checked:e.target.checked}})} />
+                <Toggle label="Allow search engines to index" checked={formData.indexable} onChange={(e)=>handleChange({target:{name:"indexable",type:"checkbox",checked:e.target.checked}})} />
               </div>
             </Section>
 

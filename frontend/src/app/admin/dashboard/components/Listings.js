@@ -5,6 +5,13 @@ import ListingForm from "./listingForm";
 import Link from "next/link";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const formatListingDate = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? ""
+    : new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(date);
+};
 
 const Listings = () => {
   const [properties, setProperties] = useState([]);
@@ -330,6 +337,11 @@ const Listings = () => {
                   <p className="text-xs text-gray-400 font-mono">
                     ID: {item.listingId || "N/A"}
                   </p>
+                  {formatListingDate(item.updatedAt || item.createdAt) && (
+                    <p className="text-xs text-gray-500">
+                      Last updated: {formatListingDate(item.updatedAt || item.createdAt)}
+                    </p>
+                  )}
                   
                 </div>
                 </Link>

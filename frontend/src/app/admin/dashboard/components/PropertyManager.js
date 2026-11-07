@@ -1,16 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MoreVertical, Plus, Loader2 } from "lucide-react";
+import { Pencil, Plus, Trash2, Loader2 } from "lucide-react";
 import ListingForm from "./listingForm";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const formatListingDate = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? ""
+    : new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(date);
+};
 
 const PropertyManager = ({ initialSlug, onInitialEditHandled }) => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedSlug, setSelectedSlug] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [openMenuSlug, setOpenMenuSlug] = useState(null);
 
   useEffect(() => {
     if (!initialSlug) return;
@@ -19,24 +25,6 @@ const PropertyManager = ({ initialSlug, onInitialEditHandled }) => {
     setShowForm(true);
     onInitialEditHandled?.();
   }, [initialSlug, onInitialEditHandled]);
-
-  useEffect(() => {
-    const closeMenuOnOutsideClick = (event) => {
-      if (!event.target.closest("[data-property-menu]")) {
-        setOpenMenuSlug(null);
-      }
-    };
-    const closeMenuOnEscape = (event) => {
-      if (event.key === "Escape") setOpenMenuSlug(null);
-    };
-
-    document.addEventListener("click", closeMenuOnOutsideClick);
-    document.addEventListener("keydown", closeMenuOnEscape);
-    return () => {
-      document.removeEventListener("click", closeMenuOnOutsideClick);
-      document.removeEventListener("keydown", closeMenuOnEscape);
-    };
-  }, []);
 
   // ================= FETCH =================
   const fetchProperties = async () => {
@@ -66,13 +54,18 @@ const PropertyManager = ({ initialSlug, onInitialEditHandled }) => {
     if (!confirmDelete) return;
 
     try {
-      await fetch(`${API_URL}/listings/${slug}`, {
+      const response = await fetch(`${API_URL}/listings/${slug}`, {
         method: "DELETE",
       });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || "Could not delete the property.");
+      }
 
       setProperties((prev) => prev.filter((p) => p.slug !== slug));
     } catch (err) {
       console.error("Delete failed:", err);
+      alert(err.message || "Could not delete the property. Please try again.");
     }
   };
 
@@ -153,52 +146,29 @@ const PropertyManager = ({ initialSlug, onInitialEditHandled }) => {
                     <h2 className="text-base font-semibold text-slate-800 line-clamp-1">
                       {item.title}
                     </h2>
-                    <div className="relative shrink-0" data-property-menu>
-                      <button
-                        type="button"
-                        aria-label={`Actions for ${item.title || "property"}`}
-                        aria-haspopup="menu"
-                        aria-expanded={openMenuSlug === item.slug}
-                        onClick={() =>
-                          setOpenMenuSlug((currentSlug) =>
-                            currentSlug === item.slug ? null : item.slug
-                          )
-                        }
-                        className="rounded-md p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      >
-                        <MoreVertical size={18} />
-                      </button>
-                      {openMenuSlug === item.slug && (
-                        <div
-                          role="menu"
-                          className="absolute right-0 top-full z-10 mt-1 min-w-32 rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
-                        >
-                          <button
-                            type="button"
-                            role="menuitem"
-                            onClick={() => {
-                              setSelectedSlug(item.slug);
-                              setOpenMenuSlug(null);
-                              setShowForm(true);
-                            }}
-                            className="block w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            role="menuitem"
-                            onClick={() => {
-                              setOpenMenuSlug(null);
-                              handleDelete(item.slug);
-                            }}
-                            className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                  </div>
+
+                  {/* ACTIONS */}
+                  <div className="flex gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedSlug(item.slug);
+                        setShowForm(true);
+                      }}
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    >
+                      <Pencil size={15} />
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(item.slug)}
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    >
+                      <Trash2 size={15} />
+                      Delete
+                    </button>
                   </div>
 
                   {/* ROOM LABEL (badge) */}
@@ -221,6 +191,12 @@ const PropertyManager = ({ initialSlug, onInitialEditHandled }) => {
                   <p className="text-xs text-gray-400">
                     ID: {item.listingId || "N/A"}
                   </p>
+
+                  {formatListingDate(item.updatedAt || item.createdAt) && (
+                    <p className="text-xs text-gray-500">
+                      Last updated: {formatListingDate(item.updatedAt || item.createdAt)}
+                    </p>
+                  )}
 
                 </div>
               </div>

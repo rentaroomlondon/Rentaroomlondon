@@ -1,3 +1,5 @@
+import { areaNameForPostcode, areaSlug, postcodeAliases, postcodeByArea, postcodeDistrictFromValue } from "./directory-areas";
+
 const slugify = (value) => value.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const titleCase = (value) => value.split(/[-_]/).filter(Boolean).map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
 const londonAreaSlugs = new Set([
@@ -11,6 +13,7 @@ const londonAreaSlugs = new Set([
 ]);
 
 const seoSlug = (value) => value.toLowerCase().replace(/['’]/g, "").replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const isPostcodeDistrict = (value) => Boolean(postcodeDistrictFromValue(value));
 const seoPage = (title, location = "London", filter = "") => {
   const slug = seoSlug(title);
   return {
@@ -128,9 +131,78 @@ export function getDirectorySeoPages() {
   return seoPages;
 }
 
+export function getDirectoryAreaPages() {
+  return [...Object.entries(postcodeByArea), ...Object.entries(postcodeAliases)].map(([location, postcodes]) => {
+    const slug = `${areaSlug(location)}-${areaSlug(postcodes[0])}`;
+    return { location, slug, path: `/rent-room-london-uk/${slug}` };
+  });
+}
+
 export function getDirectoryLocation(segments = [], legacy = false) {
   if (!segments.length) {
     return { city: "", location: "all-uk", label: "the UK", path: "/rent-room-london-uk" };
+  }
+
+  if (segments.length === 1) {
+    const slug = segments[0].toLowerCase();
+    const seoPage = getDirectorySeoPage(slug);
+    if (seoPage) {
+      return {
+        city: "London",
+        location: seoPage.location,
+        label: seoPage.location === "London" ? "London" : `${seoPage.location}, London`,
+        path: seoPage.path,
+        seoPage,
+      };
+    }
+
+    const postcode = postcodeDistrictFromValue(slug);
+    if (postcode) {
+      const areaName = areaNameForPostcode(postcode);
+      return {
+        city: "London",
+        location: postcode,
+        label: areaName === postcode ? "London" : `${areaName}, London`,
+        path: `/rent-room-london-uk/${slug}`,
+        areaPostcodePage: true,
+      };
+    }
+
+    const areaPostcode = slug.match(/^(.+)-([a-z]{1,2}\d{1,2}[a-z]?)$/i);
+    if (areaPostcode) {
+      const [, areaSlugPart, rawPostcode] = areaPostcode;
+      const postcode = postcodeDistrictFromValue(rawPostcode);
+      if (!postcode) return { city: "London", location: "", label: "London", path: "/rent-room-london-uk" };
+      const knownArea = [...Object.entries(postcodeByArea), ...Object.entries(postcodeAliases)]
+        .find(([area, postcodes]) =>
+          areaSlug(area) === areaSlugPart
+          && postcodes.some((district) => district === postcode)
+        )?.[0];
+      return {
+        city: "London",
+        location: postcode,
+        label: `${knownArea || titleCase(areaSlugPart)}, London`,
+        path: `/rent-room-london-uk/${knownArea ? areaSlug(knownArea) : areaSlugPart}-${postcode}`,
+        areaPostcodePage: true,
+        areaNamedPostcodePage: true,
+      };
+    }
+
+    const matchedArea = [...Object.entries(postcodeByArea), ...Object.entries(postcodeAliases)].find(([area, postcodes]) =>
+      postcodes.some((postcode) => slug === `${areaSlug(area)}-${areaSlug(postcode)}`)
+    );
+    if (matchedArea) {
+      const [location, postcodes] = matchedArea;
+      const canonicalSlug = `${areaSlug(location)}-${areaSlug(postcodes[0])}`;
+      return {
+        city: "London",
+        location,
+        label: `${location}, London`,
+        path: `/rent-room-london-uk/${canonicalSlug}`,
+        areaPostcodePage: true,
+      };
+    }
+
   }
 
   const seoSlug = segments.length === 2 && segments[0].toLowerCase() === "london"
@@ -147,13 +219,28 @@ export function getDirectoryLocation(segments = [], legacy = false) {
     };
   }
 
+  if (segments.length === 2 && segments[0].toLowerCase() === "london") {
+    const postcode = segments[1].toLowerCase().replace(/^london[_-]/, "");
+    const normalizedPostcode = postcodeDistrictFromValue(postcode);
+    if (normalizedPostcode) {
+      const areaName = areaNameForPostcode(normalizedPostcode);
+      return {
+        city: "London",
+        location: normalizedPostcode,
+        label: areaName === normalizedPostcode ? "London" : `${areaName}, London`,
+        path: `/rent-room-london-uk/${postcode}`,
+        areaPostcodePage: true,
+      };
+    }
+  }
+
   if (segments.length === 1 && legacy && londonAreaSlugs.has(segments[0].toLowerCase())) {
     const location = segments[0];
     return {
       city: "London",
       location,
       label: `${titleCase(location)}, London`,
-      path: `/rent-room-london-uk/london/london_${location}`,
+      path: `/rent-room-london-uk/${areaSlug(location)}`,
     };
   }
 
@@ -164,14 +251,52 @@ export function getDirectoryLocation(segments = [], legacy = false) {
     return { city, location: "", label: city, path: cityPath };
   }
 
-  const areaSlug = segments[1].toLowerCase().replace(new RegExp(`^${slugify(city)}[_-]?`), "");
-  const location = areaSlug.replace(/_/g, "-");
+  const areaPart = segments[1].toLowerCase().replace(new RegExp(`^${slugify(city)}[_-]?`), "");
+  const location = areaPart.replace(/_/g, "-");
   return {
     city,
     location,
     label: `${titleCase(location)}, ${city}`,
-    path: `${cityPath}/${segments[1]}`,
+    path: `${cityPath}/${citySlug}-${location}`,
   };
+}
+
+export async function resolvePostcodeAreaNames(postcodes) {
+  const uniquePostcodes = [...new Set(postcodes.map(postcodeDistrictFromValue))]
+    .filter(isPostcodeDistrict);
+  const localNames = Object.fromEntries(uniquePostcodes
+    .map((postcode) => [postcode, areaNameForPostcode(postcode)])
+    .filter(([postcode, area]) => area && area !== postcode)
+    .map(([postcode, area]) => [postcode, { area, outcode: postcode }]));
+  const unresolvedPostcodes = uniquePostcodes.filter((postcode) => !localNames[postcode]);
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!apiUrl || !unresolvedPostcodes.length) {
+    for (const postcode of unresolvedPostcodes) localNames[postcode] = { area: "", outcode: postcode };
+    return localNames;
+  }
+
+  try {
+    const response = await fetch(
+      `${apiUrl.replace(/\/$/, "")}/listings/locations?postcodes=${encodeURIComponent(unresolvedPostcodes.join(","))}`,
+      { next: { revalidate: 86400 } }
+    );
+    if (!response.ok) {
+      throw new Error(`Postcode area service returned HTTP ${response.status}`);
+    }
+    const payload = await response.json();
+    const resolvedNames = { ...localNames };
+    for (const [postcode, location] of Object.entries(payload.locations || {})) {
+      if (unresolvedPostcodes.includes(postcode)) resolvedNames[postcode] = location;
+    }
+    for (const postcode of payload.unresolved || []) {
+      resolvedNames[postcode] = { area: "", outcode: postcode };
+    }
+    return resolvedNames;
+  } catch (error) {
+    console.error("Could not resolve postcode area names:", error);
+    for (const postcode of unresolvedPostcodes) localNames[postcode] = { area: "", outcode: postcode };
+    return localNames;
+  }
 }
 
 export function directoryMetadata(route, searchParams = {}) {

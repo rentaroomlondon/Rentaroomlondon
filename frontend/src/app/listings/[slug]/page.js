@@ -74,7 +74,7 @@ export async function generateMetadata({ params }) {
 
     // ✅ Robots
     robots: {
-      index: true,
+      index: listing.indexable !== false,
       follow: true,
     },
 

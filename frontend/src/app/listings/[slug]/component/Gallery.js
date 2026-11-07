@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const Gallery = ({ images = [], videos = [], available = false }) => {
+const Gallery = ({ images = [], videos = [], available = false, listingTitle = "Room listing" }) => {
   const [current, setCurrent] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
@@ -19,6 +19,12 @@ const Gallery = ({ images = [], videos = [], available = false }) => {
     mediaItems.length > 0
       ? mediaItems
       : [{ type: "image", url: "https://via.placeholder.com/800x600?text=No+Image" }];
+  const mediaLabel = (index) => {
+    if (!mediaItems.length) return "";
+    const item = displayMedia[index];
+    const mediaType = item?.type === "video" ? "video" : "photo";
+    return `${mediaType === "video" ? "Video" : "Photo"} ${index + 1} of ${listingTitle}`;
+  };
 
   const renderMedia = (item, className, alt, controls = false) =>
     item.type === "video" ? (
@@ -113,7 +119,7 @@ const Gallery = ({ images = [], videos = [], available = false }) => {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {renderMedia(displayMedia[current], "w-full h-full object-cover", "Property video or image", true)}
+        {renderMedia(displayMedia[current], "w-full h-full object-cover", mediaLabel(current), true)}
 
         {available && (
           <div className="absolute top-4 left-4 bg-[#1db978] text-white px-4 py-2 rounded-full text-[11px] font-semibold flex items-center gap-2">
@@ -163,7 +169,7 @@ const Gallery = ({ images = [], videos = [], available = false }) => {
           onClick={() => openModal(0)}
           className="col-span-2 row-span-2 relative rounded-xl overflow-hidden cursor-pointer"
         >
-          {renderMedia(displayMedia[0], "w-full h-full object-cover", "Main property media")}
+          {renderMedia(displayMedia[0], "w-full h-full object-cover", mediaLabel(0))}
           {displayMedia[0].type === "video" && (
             <span className="pointer-events-none absolute bottom-4 right-4 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white">
               Video
@@ -186,12 +192,12 @@ const Gallery = ({ images = [], videos = [], available = false }) => {
             className="relative overflow-hidden rounded-xl cursor-pointer"
           >
             {displayMedia[index] ? (
-              renderMedia(displayMedia[index], "w-full h-full object-cover", `Property media ${index + 1}`)
+              renderMedia(displayMedia[index], "w-full h-full object-cover", mediaLabel(index))
             ) : (
               <img
                 src="https://via.placeholder.com/400x300"
                 className="w-full h-full object-cover"
-                alt={`View ${index}`}
+                alt=""
               />
             )}
             {displayMedia[index]?.type === "video" && (
@@ -248,7 +254,7 @@ const Gallery = ({ images = [], videos = [], available = false }) => {
             {renderMedia(
               displayMedia[modalIndex],
               "max-h-[90vh] max-w-[90vw] object-contain",
-              "Property media preview",
+              mediaLabel(modalIndex),
               true
             )}
           </div>

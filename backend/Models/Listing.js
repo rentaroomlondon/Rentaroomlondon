@@ -197,6 +197,10 @@ const listingSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    indexable: {
+      type: Boolean,
+      default: true,
+    },
     listingId: {
       type: String,
       unique: true,

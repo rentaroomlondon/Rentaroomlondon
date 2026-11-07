@@ -81,6 +81,7 @@ const Client = ({ listing }) => {
         images={listing?.images || []}
         videos={listing?.videos || []}
         available={listing?.availableImmediately}
+        listingTitle={listing?.title || "Room listing"}
       />
 
       <div className="max-w-300 mx-auto px-4 md:px-6 py-2">
