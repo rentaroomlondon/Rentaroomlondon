@@ -74,7 +74,7 @@ const Client = ({ listing }) => {
 
   return (
     <>
-    <div className="relative pb-6 md:pb-0">
+    <div className="relative bg-white text-slate-900 pb-6 md:pb-0">
 
       {/* 🔥 FULL WIDTH GALLERY */}
       <Gallery
