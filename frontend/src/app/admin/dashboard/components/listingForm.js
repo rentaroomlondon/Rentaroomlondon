@@ -196,7 +196,6 @@ const ListingForm = ({ slug, existingData }) => {
     epcRating: "",
     councilTaxBand: "",
     images: [],
-    imageNames: [],
     videos: [],
   });
 
@@ -326,7 +325,6 @@ const ListingForm = ({ slug, existingData }) => {
       epcRating: data.epcRating || "",
       councilTaxBand: data.councilTaxBand || "",
       images: data.images || [],
-      imageNames: data.images?.map((url, index) => data.imageNames?.[index] || getImageNameFromUrl(url)) || [],
       videos: data.videos || [],
     });
   };
@@ -379,7 +377,6 @@ const ListingForm = ({ slug, existingData }) => {
       setFormData(prev => ({
         ...prev,
         images: [...prev.images, result.url],
-        imageNames: [...prev.imageNames, file.name],
       }));
       
       return result.url;
@@ -426,9 +423,7 @@ const ListingForm = ({ slug, existingData }) => {
     if (isExisting) {
       const newImages = [...formData.images];
       newImages.splice(index, 1);
-      const newImageNames = [...formData.imageNames];
-      newImageNames.splice(index, 1);
-      setFormData(prev => ({ ...prev, images: newImages, imageNames: newImageNames }));
+      setFormData(prev => ({ ...prev, images: newImages }));
     } else {
       setPendingImages(prev => prev.filter((_, i) => i !== index));
       setUploadProgress(prev => {
@@ -448,10 +443,7 @@ const ListingForm = ({ slug, existingData }) => {
       const images = [...prev.images];
       const [image] = images.splice(fromIndex, 1);
       images.splice(toIndex, 0, image);
-      const imageNames = [...prev.imageNames];
-      const [imageName] = imageNames.splice(fromIndex, 1);
-      imageNames.splice(toIndex, 0, imageName);
-      return { ...prev, images, imageNames };
+      return { ...prev, images };
     });
   };
 
@@ -731,7 +723,6 @@ const ListingForm = ({ slug, existingData }) => {
         epcRating: formData.epcRating || null,
         councilTaxBand: formData.councilTaxBand,
         images: formData.images,
-        imageNames: formData.imageNames,
         videos: formData.videos,
       };
       
@@ -800,7 +791,6 @@ const ListingForm = ({ slug, existingData }) => {
           epcRating: "",
           councilTaxBand: "",
           images: [],
-          imageNames: [],
           videos: [],
         });
         setSlugManuallyEdited(false);
@@ -1156,7 +1146,7 @@ const ListingForm = ({ slug, existingData }) => {
                         >
                           <img
                             src={url}
-                            alt={formData.imageNames[index] || getImageNameFromUrl(url)}
+                            alt={getImageNameFromUrl(url)}
                             draggable={false}
                             className="w-full h-24 rounded-lg object-cover"
                           />
@@ -1168,9 +1158,9 @@ const ListingForm = ({ slug, existingData }) => {
                           <div className="mt-2 flex min-w-0 items-center justify-between gap-1">
                             <span
                               className="min-w-0 flex-1 truncate text-[11px] text-slate-500"
-                              title={formData.imageNames[index] || getImageNameFromUrl(url)}
+                              title={getImageNameFromUrl(url)}
                             >
-                              {formData.imageNames[index] || getImageNameFromUrl(url)}
+                              {getImageNameFromUrl(url)}
                             </span>
                             <div className="flex shrink-0 items-center gap-1">
                               <button
