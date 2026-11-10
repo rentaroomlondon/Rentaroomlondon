@@ -1,4 +1,5 @@
 "use client";
+import { hideDoorNumber } from "@/app/utils/formatAddress";
 import React, { useEffect, useState } from "react";
 import { MapPin, Home, Loader2, Train, Bus, Navigation, TramFront } from "lucide-react";
 
@@ -141,7 +142,7 @@ const LocationTransport = ({ listing }) => {
           <div className="absolute bottom-4 left-4 right-4 bg-slate-900/95 backdrop-blur-md text-white py-3 px-5 rounded-2xl flex items-center gap-3 z-10">
             <MapPin className="w-4 h-4 text-red-400" />
             <span className="text-xs font-bold truncate">
-              {listing?.location?.address}, {listing?.location?.postcode}
+              {hideDoorNumber(listing?.location?.address)}, {listing?.location?.postcode}
             </span>
           </div>
         </div>

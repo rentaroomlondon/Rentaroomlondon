@@ -1,4 +1,5 @@
 "use client";
+import { hideDoorNumber } from "@/app/utils/formatAddress";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -19,7 +20,7 @@ const knownAreas = Object.entries(postcodeByArea).flatMap(([area, postcodes]) =>
 const areaDescriptions = { Hackney: "Find rooms in Hackney, close to Dalston, London Fields and the East London transport network.", Stratford: "Explore rooms in Stratford near the Elizabeth Line, Queen Elizabeth Olympic Park and Leyton.", "Canary Wharf": "Browse rooms around Canary Wharf, with easy access to the Isle of Dogs and the Elizabeth Line.", Camden: "Find a room in Camden near King's Cross, Regent's Park and central London connections.", London: "Browse rooms across London, from East London neighbourhoods to central and south London." };
 const first = (...values) => values.find((value) => value !== undefined && value !== null && value !== "");
 const priceOf = (room) => Number(first(room.monthlyPrice, room.price, room.rent, 0));
-const locationOf = (room) => [room.location?.address, room.location?.postcode, room.location?.city].filter(Boolean).join(", ");
+const locationOf = (room) => [hideDoorNumber(room.location?.address), room.location?.postcode, room.location?.city].filter(Boolean).join(", ");
 const normalizePostcode = (room) => String(room.location?.postcode || "").toUpperCase().replace(/\s/g, "");
 const postcodeDistrict = (room) => postcodeDistrictFromValue(normalizePostcode(room));
 const areaDetails = (room, postcodeAreas = {}) => {

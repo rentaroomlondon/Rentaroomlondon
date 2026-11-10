@@ -1,3 +1,4 @@
+import { hideDoorNumber } from "@/app/utils/formatAddress";
 import React, { useState } from 'react';
 import { 
   Phone, 
@@ -23,7 +24,7 @@ const PricingCard = ({ listing, monthlyPrice }) => {
             slug: listing?.slug,
             title: listing?.title,
             price: monthlyPrice,
-            location: listing?.location?.address,
+            location: hideDoorNumber(listing?.location?.address),
             imageUrl: listing?.images?.[0],
             listingId:listing?.listingId,
             availability: listing?.availableImmediately
@@ -90,7 +91,7 @@ const handleEmail = () => {
   const body = `
 🏡 ${listing?.title || ""}
 💷 £${monthlyPrice} per month
-📍 ${listing?.location?.address || ""}
+📍 ${hideDoorNumber(listing?.location?.address)}
 
 👉 ${url}
   `;
@@ -106,7 +107,7 @@ const handleWhatsApp = () => {
 
   const message = `🏡 ${listing?.title || ""}
     💷 £${monthlyPrice} per month
-    📍 ${listing?.location?.address || ""}
+    📍 ${hideDoorNumber(listing?.location?.address)}
 
 👉 ${url}`;
 

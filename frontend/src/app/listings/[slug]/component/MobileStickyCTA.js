@@ -1,3 +1,4 @@
+import { hideDoorNumber } from "@/app/utils/formatAddress";
 import React, { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '@/app/utils/useWishlist';
@@ -18,7 +19,7 @@ const MobileStickyCTA = ({price, billsText, listing}) => {
       slug: listing?.slug,
       title: listing?.title,
       price: price, // ✅ FIXED (was monthlyPrice)
-      location: listing?.location?.address,
+      location: hideDoorNumber(listing?.location?.address),
       imageUrl: listing?.images?.[0],
       listingId: listing?.listingId,
       availability: listing?.availableImmediately

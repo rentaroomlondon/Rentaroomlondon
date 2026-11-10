@@ -1,4 +1,5 @@
 "use client";
+import { hideDoorNumber } from "@/app/utils/formatAddress";
 import React, { useState } from "react";
 import Gallery from "./component/Gallery";
 import PricingCard from "./component/PricingCard";
@@ -103,7 +104,7 @@ const Client = ({ listing }) => {
             <div className="flex items-center gap-1 text-gray-400 mb-8">
               <MapPin size={16} className="text-red-500" />
               <p className="text-sm font-medium">
-                {listing?.location?.address}, {listing?.location?.postcode}, {listing?.location?.city}
+                {hideDoorNumber(listing?.location?.address)}, {listing?.location?.postcode}, {listing?.location?.city}
               </p>
             </div>
 

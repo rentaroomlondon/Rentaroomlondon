@@ -1,4 +1,5 @@
 "use client";
+import { hideDoorNumber } from "@/app/utils/formatAddress";
 
 import { useEffect, useState } from "react";
 import {
@@ -80,7 +81,7 @@ export default function HendonRoomCard({ listing }) {
     ? "Immediately"
     : formatDate(listing.availableFrom) || "Ask for availability";
   const location = [
-    listing.location?.address,
+    hideDoorNumber(listing.location?.address),
     listing.location?.postcode,
     listing.location?.city,
   ]

@@ -1,4 +1,5 @@
 "use client"
+import { hideDoorNumber } from "@/app/utils/formatAddress";
 import React, { useState } from 'react';
 import { Heart, ArrowRight, Check } from 'lucide-react';
 import { useWishlist } from '@/app/utils/useWishlist';
@@ -27,7 +28,7 @@ const PropertyCard = ({ data }) => {
   const shortDescription = data.description.split(" ").slice(0, 5).join(" ") + "...";
 
   // Build a specific WhatsApp message for this accommodation
-  const whatsappMessage = `Hello! I am interested in booking this room:\n\n🏠 ${data.title}\n📍 ${data.location?.address || ""}, ${data.location?.postcode || ""}, ${data.location?.city || ""}\n🆔 Listing ID: ${data.listingId || "N/A"}\n\nPlease share more details.`;
+  const whatsappMessage = `Hello! I am interested in booking this room:\n\n🏠 ${data.title}\n📍 ${hideDoorNumber(data.location?.address)}, ${data.location?.postcode || ""}, ${data.location?.city || ""}\n🆔 Listing ID: ${data.listingId || "N/A"}\n\nPlease share more details.`;
 
   const whatsappUrl = `https://api.whatsapp.com/send/?phone=%2B447419990126&text=${encodeURIComponent(whatsappMessage)}&type=phone_number&app_absent=0`;
 
@@ -100,7 +101,7 @@ const PropertyCard = ({ data }) => {
               📍
               <span className="text-xs md:text-[13px] font-normal text-[#6B7280]">
                 {data.listingId && <span className="font-semibold mr-1">{data.listingId} ·</span>}
-                {data.location?.address}, {data.location?.postcode}, {data.location?.city}
+                {hideDoorNumber(data.location?.address)}, {data.location?.postcode}, {data.location?.city}
               </span>
             </div>
 

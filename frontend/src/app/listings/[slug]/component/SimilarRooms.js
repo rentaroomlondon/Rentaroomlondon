@@ -1,3 +1,4 @@
+import { hideDoorNumber } from "@/app/utils/formatAddress";
 import React, { useState, useEffect } from 'react';
 import { MapPin, Heart, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -51,7 +52,7 @@ const RoomCard = ({ room, index }) => {
         <div className="flex items-center gap-1 text-[#9CA3AF] mb-3">
           <MapPin size={13} className="text-[#E5484D] shrink-0" />
           <span className="text-[12px] font-medium truncate">
-            {room.location?.address}, {room.location?.postcode}
+            {hideDoorNumber(room.location?.address)}, {room.location?.postcode}
           </span>
         </div>
 

@@ -1,3 +1,4 @@
+import { hideDoorNumber } from "@/app/utils/formatAddress";
 const SITE_URL = "https://rentaroomlondon.co.uk";
 
 const ListingSchema = ({ listing }) => {
@@ -39,7 +40,7 @@ const ListingSchema = ({ listing }) => {
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     address: {
       "@type": "PostalAddress",
-      ...(listing.location?.address ? { streetAddress: listing.location.address } : {}),
+      ...(listing.location?.address ? { streetAddress: hideDoorNumber(listing.location.address) } : {}),
       ...(listing.location?.city ? { addressLocality: listing.location.city } : {}),
       ...(listing.location?.postcode ? { postalCode: listing.location.postcode } : {}),
       addressCountry: "GB",

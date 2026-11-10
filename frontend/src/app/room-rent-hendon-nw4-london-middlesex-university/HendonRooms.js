@@ -1,4 +1,5 @@
 "use client";
+import { hideDoorNumber } from "@/app/utils/formatAddress";
 
 import { useEffect, useState } from "react";
 import { BusFront, GraduationCap, ShoppingBag, TrainFront } from "lucide-react";
@@ -248,7 +249,7 @@ export default function HendonRooms() {
                           Hendon · {firstListing.location?.postcode} · Zone 3
                         </p>
                         <h4 className="mt-3 font-playfair text-2xl font-bold text-[#1A2332]">
-                          {firstListing.location?.address || property.address}
+                          {hideDoorNumber(firstListing.location?.address || property.address)}
                         </h4>
                         <div className="mt-6 space-y-3">
                           {[
