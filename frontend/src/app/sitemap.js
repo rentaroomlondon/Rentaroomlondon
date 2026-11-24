@@ -94,6 +94,12 @@ export default async function sitemap() {
         changeFrequency: "weekly",
         priority: 0.7,
       },
+      {
+        url: `${baseUrl}/rent-room-london-uk`,
+        lastModified: new Date(),
+        changeFrequency: "daily",
+        priority: 0.8,
+      },
       ...getDirectorySeoPages().map(({ path }) => ({
         url: `${baseUrl}${path}`,
         lastModified: new Date(),
