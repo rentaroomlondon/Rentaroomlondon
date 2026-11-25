@@ -8,8 +8,8 @@ import AreaGuide from './components/AreaGuide';
 
 
 export const metadata = {
-  title: "Affordable Rooms for Rent in Leyton E10 | Single & Double Rooms",
-  description: "Find comfortable single and double rooms in Leyton, East London. Ideal for professionals and students, with easy access to Central London.",
+  title: "Rooms to Rent Leyton E10 | Single & Double Rooms London",
+  description: "Looking for rooms to rent in Leyton? Rent a single or double room in Leyton, London E10. Furnished shared house/flatshare with bills included near the Tube.",
   alternates: {
     canonical: "https://rentaroomlondon.co.uk/rent-single-double-rooms-leyton-e10-london", // Adjust to your actual URL
   },

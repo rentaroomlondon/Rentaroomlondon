@@ -8,8 +8,8 @@ import AreaGuide from './components/AreaGuide';
 
 
 export const metadata = {
-  title: "Affordable Rooms for Rent in Greenwich, London SE10 — Bills Included",
-  description: "Furnished rooms to rent in Greenwich SE10 with all bills included. DLR, Elizabeth line and Southeastern rail on your doorstep — ideal for students and professionals in south-east London.",
+  title: "Rooms to Rent in Greenwich | House & Flatshare London",
+  description: "Rooms to rent in Greenwich in house share. Single rooms for rent in Greenwich with bills included and great Central London links.",
   alternates: {
     canonical: "https://rentaroomlondon.co.uk/best-rental-rooms-greenwich-university-se10-london", // Adjust to your actual URL
   },

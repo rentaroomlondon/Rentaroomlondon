@@ -8,8 +8,8 @@ import AreaGuide from './components/AreaGuide';
 
 
 export const metadata = {
-  title: "Properties to Rent in East Ham, E6 – Bills Included",
-  description: "Find Properties to Rent in East Ham E6 Station, from Private Landlords with no hidden fee. Rental Room London is the best way to find your next home.",
+  title: "Rooms to Rent in East Ham, London E6 — All Bills Included",
+  description: "Rooms to rent in East Ham, London E6 with all bills included. Rent furnished rooms in a clean shared house near East Ham Station. Book a viewing today!",
   alternates: {
     canonical: "https://rentaroomlondon.co.uk/east-ham-e6-properties-rent-bills-included", // Adjust to your actual URL
   },

@@ -26,7 +26,7 @@ const HeroSection = () => {
             
 
             <h1 className="text-white mb-6 font-playfair text-[36px] leading-[1.1] md:text-[60px] font-bold">
-               Property to Rent in{" "}
+               Single Rooms to Rent {" "}
               <span className="text-[#FF6B35] italic font-playfair">
                 East Ham, London E6 — Bills Included
               </span>{" "}

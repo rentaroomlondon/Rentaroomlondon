@@ -41,7 +41,7 @@ const PropertiesSection = () => {
               Available Rooms
             </h3>
             <h2 className="text-[32px] md:text-[42px] font-semibold text-[#1A2332] font-playfair">
-              List of Rental Rooms in East Ham, London
+              List of Room for Rent in East Ham, London
             </h2>
           </div>
         </div>
