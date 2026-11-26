@@ -8,8 +8,6 @@ import Icon from "../../ui/Icon";
 import CityMap from "./CityMap";
 import "../../styles/coverage.css";
 
-const MISSING_PINS_NOTE = "[Send this region's postcodes to pin them on the map]";
-
 /** Coverage map — pick a region, then an area; the area card links to that area's page. */
 export default function Coverage() {
   const [regionIndex, setRegionIndex] = useState(0);
@@ -18,7 +16,6 @@ export default function Coverage() {
   const areas = REGIONS[regionIndex].areas;
   const activeIndex = Math.min(areaIndex, areas.length - 1);
   const current = areas[activeIndex];
-  const showPins = regionIndex === 0;
   const areaHref = current.href || `/find-a-room?search=${encodeURIComponent(current.code)}`;
 
   return (
@@ -57,8 +54,7 @@ export default function Coverage() {
                 <span className="mapstage__dot"></span>Rooms available
               </span>
             </div>
-            <CityMap areas={areas} activeIndex={activeIndex} showPins={showPins} onSelectArea={setAreaIndex} />
-            {!showPins && <div className="mapstage__note">{MISSING_PINS_NOTE}</div>}
+            <CityMap areas={areas} activeIndex={activeIndex} showPins onSelectArea={setAreaIndex} />
             <p className="mapstage__caption">Illustrative map — not to scale</p>
           </div>
 
