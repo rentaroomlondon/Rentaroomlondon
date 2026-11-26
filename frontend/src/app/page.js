@@ -1,15 +1,6 @@
 import React from 'react';
-import Testimonials from './components/Testimonial';
-import HeroSection from './components/HeroSection';
-import RoomTypeSection from './components/RoomTypeSection';
-import RoomRentalServices from './components/RoomRentalServices';
-import LocationDirectory from './components/LocationDirectory';
-import RentalProcess from './components/RentalProcess';
-import RentalFAQ from './components/RentalFAQ';
-
-import dynamic from "next/dynamic";
-
-const GallerySection = dynamic(() => import("./components/GallerySection"));
+import HomePage from './components/home/HomePage';
+import { getHomeRooms } from './components/home/lib/listings';
 
 export const metadata = {
   title: "Rent a Room in London | Student Accommodation With Bills Included",
@@ -51,7 +42,10 @@ export const metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  // Live rooms for the "Rooms ready to move into" carousel (cached 5 min)
+  const rooms = await getHomeRooms();
+
   const structuredData = [
     // Organization Schema
     {
@@ -87,14 +81,7 @@ export default function Home() {
         }}
       />
 
-      <HeroSection />
-      <RoomTypeSection />
-      <RoomRentalServices />
-      <LocationDirectory />
-      <RentalProcess />
-      <Testimonials />
-      <GallerySection />
-      <RentalFAQ />
+      <HomePage rooms={rooms} />
       
     </div>
   );

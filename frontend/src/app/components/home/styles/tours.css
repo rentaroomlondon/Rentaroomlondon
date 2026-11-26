@@ -1,0 +1,259 @@
+/* Room video tours. */
+@layer rrl-design {
+  .rrl-home .ph-dark {
+    background-color:#1D2C4F;
+    background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 12px,transparent 12px 24px);
+  }
+  .rrl-home .tour-main {
+    position:relative;
+    min-height:400px;
+    border-radius:32px;
+    overflow:hidden;
+    background:#14213D;
+  }
+  .rrl-home .playring {
+    position:absolute;
+    inset:0;
+    border-radius:999px;
+    border:2px solid #F26A36;
+    animation:rrl-ring 1.8s ease-out infinite;
+  }
+  @media (max-width:700px) {
+    .rrl-home .tour-main {
+      min-height:240px;
+      border-radius:24px;
+    }
+    .rrl-home .tour-main > button {
+      width:64px !important;
+      height:64px !important;
+      top:38% !important;
+    }
+    .rrl-home .tour-main > div:last-child {
+      left:18px !important;
+      right:18px !important;
+      bottom:16px !important;
+      gap:4px !important;
+    }
+    .rrl-home .tour-main > div:last-child > span:last-child {
+      font-size:13px !important;
+    }
+    .rrl-home .tour-thumb {
+      width:76px !important;
+      height:56px !important;
+      border-radius:12px !important;
+    }
+    .rrl-home #tours > div:last-child > div:last-child {
+      gap:8px !important;
+    }
+    .rrl-home #tours > div:last-child > div:last-child > button {
+      padding:8px !important;
+      border-radius:18px !important;
+    }
+    .rrl-home #tours > div:last-child > div:last-child > a {
+      padding:16px 18px !important;
+      border-radius:18px !important;
+    }
+    .rrl-home .tour-main {
+      min-height:190px;
+    }
+    .rrl-home .tour-thumb {
+      width:64px !important;
+      height:44px !important;
+    }
+    .rrl-home #tours > div:first-child > a {
+      padding:4px 4px 4px 16px !important;
+      font-size:14px !important;
+    }
+    .rrl-home #tours > div:last-child > div:last-child > button {
+      padding:6px !important;
+      gap:12px !important;
+    }
+    .rrl-home #tours > div:last-child > div:last-child > button > span:last-child {
+      gap:2px !important;
+    }
+    .rrl-home #tours > div:last-child > div:last-child > a {
+      padding:12px 16px !important;
+    }
+    .rrl-home .tour-main {
+      min-height:170px;
+    }
+    .rrl-home .tour-main > button {
+      width:56px !important;
+      height:56px !important;
+      top:34% !important;
+    }
+    .rrl-home .tour-main > span {
+      top:14px !important;
+      left:16px !important;
+    }
+    .rrl-home #tours > div:last-child > div:last-child {
+      gap:6px !important;
+    }
+  }
+}
+
+.rrl-home .tours__layout {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: stretch;
+}
+.rrl-home .tour-main {
+  flex: 999 1 600px;
+  min-width: 0;
+}
+.rrl-home .tour-main__poster {
+  position: absolute;
+  inset: 0;
+}
+.rrl-home .tour-main__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 21, 48, 0) 45%, rgba(10, 21, 48, .85) 100%);
+}
+.rrl-home .tour-main__placeholder {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  color: #B7C2D9;
+  font-size: 12px;
+  font-weight: 600;
+}
+.rrl-home .tour-main__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 92px;
+  height: 92px;
+  border-radius: 999px;
+  border: 0;
+  background: #F26A36;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 40px -10px rgba(242, 106, 54, .7);
+}
+.rrl-home .tour-main__caption {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #FFFFFF;
+}
+.rrl-home .tour-tag {
+  align-self: flex-start;
+  background: #F26A36;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+.rrl-home .tour-main__title {
+  font-size: clamp(22px, 2.6vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.rrl-home .tour-main__body {
+  font-size: 15px;
+  color: #DCE3F0;
+}
+
+.rrl-home .tours__list {
+  flex: 1 1 320px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rrl-home .tour-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  border-radius: 22px;
+  border: 1.5px solid transparent;
+  background: rgba(255, 255, 255, .5);
+  cursor: pointer;
+  transition: all .25s;
+}
+.rrl-home .tour-item--active {
+  border-color: #F26A36;
+  background: #FFFFFF;
+}
+.rrl-home .tour-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: 112px;
+  height: 80px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.rrl-home .tour-thumb__play {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.rrl-home .tour-item--active .tour-thumb__play { background: #F26A36; }
+.rrl-home .tour-item__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rrl-home .tour-item__title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #14213D;
+}
+.rrl-home .tour-item__tag {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #C2410C;
+}
+.rrl-home .tours__cta {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 22px;
+  border-radius: 22px;
+  background: #14213D;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+.rrl-home .tours__cta-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rrl-home .tours__cta-title {
+  font-size: 17px;
+  font-weight: 800;
+}
+.rrl-home .tours__cta-sub {
+  font-size: 13px;
+  color: #B7C2D9;
+}
+.rrl-home .tours__cta-arrow {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+}

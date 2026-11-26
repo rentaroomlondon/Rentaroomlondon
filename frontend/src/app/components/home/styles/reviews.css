@@ -1,0 +1,98 @@
+/* Tenant reviews. */
+@layer rrl-design {
+  .rrl-home .tq {
+    animation:rrl-pvin .5s cubic-bezier(.2,.8,.2,1);
+  }
+  @media (max-width:700px) {
+    .rrl-home .tq-text {
+      font-size:19px !important;
+      line-height:1.45 !important;
+    }
+    .rrl-home #reviews img {
+      height:56px !important;
+    }
+    .rrl-home #reviews figure {
+      gap:16px !important;
+    }
+    .rrl-home #reviews > div:last-child > div {
+      margin-top:20px !important;
+    }
+    .rrl-home #reviews .tq-text {
+      font-size:18px !important;
+    }
+  }
+}
+
+.rrl-home .reviews__badge {
+  display: inline-block;
+  margin-top: 8px;
+}
+.rrl-home .reviews__badge img {
+  display: block;
+  height: 72px;
+  width: auto;
+}
+.rrl-home .reviews__body { margin-top: 36px; }
+.rrl-home .tq {
+  margin: 0 auto;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+}
+.rrl-home .tq-text {
+  margin: 0;
+  font-size: clamp(22px, 2.5vw, 32px);
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #14213D;
+  max-width: 860px;
+}
+.rrl-home .tq-text mark {
+  background: linear-gradient(180deg, transparent 58%, #FFD3BD 58%);
+  color: inherit;
+  padding: 0 2px;
+}
+.rrl-home .reviews__caption {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 15px;
+}
+.rrl-home .reviews__name {
+  font-weight: 800;
+  color: #14213D;
+}
+.rrl-home .reviews__source { color: #5B6472; }
+.rrl-home .reviews__footer {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.rrl-home .reviews__controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.rrl-home .reviews__count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5B6472;
+  min-width: 44px;
+}
+.rrl-home .reviews__all {
+  font-size: 15px;
+  font-weight: 700;
+  color: #14213D;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1.5px;
+  padding: 10px 0;
+}

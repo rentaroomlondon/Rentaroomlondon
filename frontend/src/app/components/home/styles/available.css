@@ -1,0 +1,145 @@
+/* Available rooms carousel. */
+@layer rrl-design {
+  .rrl-home .ls-view {
+    overflow:hidden;
+  }
+  .rrl-home .ls-track {
+    display:flex;
+    gap:20px;
+    transform:translateX(calc(var(--i) * -1 * (25% + 5px)));
+    transition:transform .6s cubic-bezier(.2,.8,.2,1);
+  }
+  .rrl-home .ls-card {
+    flex:0 0 calc((100% - 60px) / 4);
+    min-width:0;
+  }
+  .rrl-home .ls-img {
+    display:block;
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    border-radius:22px;
+    background:#E3E8F0;
+    transition:transform .4s;
+  }
+  .rrl-home .ls-card:hover .ls-img {
+    transform:scale(1.02);
+  }
+  .rrl-home .ls-heart {
+    position:absolute;
+    top:8px;
+    right:8px;
+    width:44px;
+    height:44px;
+    border:0;
+    background:transparent;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));
+    transition:transform .2s;
+  }
+  .rrl-home .ls-heart:hover {
+    transform:scale(1.1);
+  }
+  @media (max-width:900px) {
+    .rrl-home .ls-view {
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+    }
+    .rrl-home .ls-track {
+      transform:none !important;
+    }
+    .rrl-home .ls-card {
+      flex-basis:72%;
+      scroll-snap-align:start;
+    }
+    .rrl-home .ls-nav {
+      display:none !important;
+    }
+  }
+  @media (max-width:700px) {
+    .rrl-home .ls-card {
+      flex-basis:78%;
+    }
+    .rrl-home .ls-img {
+      aspect-ratio:4 / 3;
+      border-radius:18px;
+    }
+    .rrl-home .ls-card {
+      flex-basis:86%;
+    }
+    .rrl-home .ls-img {
+      aspect-ratio:1 / 1;
+      border-radius:22px;
+    }
+    .rrl-home #available .ls-card a span:first-child {
+      font-size:18px !important;
+    }
+    .rrl-home #available .ls-card a span {
+      font-size:15px !important;
+    }
+  }
+}
+
+.rrl-home .available__body { margin-top: 32px; }
+.rrl-home .available__empty {
+  margin: 0;
+  text-align: center;
+  color: #5B6472;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.rrl-home .available__nav {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.rrl-home .ls-card__media { position: relative; }
+.rrl-home .ls-card__image-link { display: block; }
+.rrl-home .ls-card__badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: #FFFFFF;
+  color: #14213D;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 7px 12px;
+  box-shadow: 0 4px 12px rgba(20, 33, 61, .12);
+}
+.rrl-home .ls-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 4px 0;
+  text-decoration: none;
+  text-align: left;
+}
+/* Live listing titles are long SEO titles; keep them on one line like the design's short titles. */
+.rrl-home .ls-card__title {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #14213D;
+}
+.rrl-home .ls-card__meta {
+  font-size: 14px;
+  color: #5B6472;
+}
+.rrl-home .ls-card__price {
+  font-size: 14px;
+  color: #14213D;
+}
+.rrl-home .ls-card__price strong { font-weight: 800; }

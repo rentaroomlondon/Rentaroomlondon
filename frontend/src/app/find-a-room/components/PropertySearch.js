@@ -114,7 +114,7 @@ export default function PropertySearchPage() {
       <PropertyHeader
         filters={filters}
         setFilters={setFilters}
-        onSearch={() => fetchListings()}
+        onSearch={(nextFilters) => fetchListings(nextFilters || filters)}
       />
 
       <div className="flex flex-col lg:flex-row">

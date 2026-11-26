@@ -1,0 +1,183 @@
+/* FAQ accordion. */
+@layer rrl-design {
+  .rrl-home .faq-a {
+    animation:rrl-pvin .35s cubic-bezier(.2,.8,.2,1);
+  }
+  @media (max-width:600px) {
+    .rrl-home .faq-a {
+      padding:0 20px 20px 20px !important;
+    }
+  }
+  @media (max-width:700px) {
+    .rrl-home #faq > div:nth-child(2) button {
+      padding:8px 12px !important;
+      gap:10px !important;
+    }
+    .rrl-home #faq > div:nth-child(2) button > span:nth-child(2) {
+      font-size:15px !important;
+    }
+    .rrl-home #faq > div:nth-child(2) button > span:first-child {
+      width:34px !important;
+      height:34px !important;
+    }
+    .rrl-home .faq-a {
+      padding:0 16px 16px 16px !important;
+    }
+    .rrl-home #faq > div:nth-child(2) {
+      gap:6px !important;
+    }
+    .rrl-home #faq > div:nth-child(2) button {
+      min-height:50px !important;
+      padding:6px 12px !important;
+    }
+    .rrl-home #faq > div:nth-child(2) button > span:nth-child(2) {
+      font-size:14px !important;
+    }
+    .rrl-home #faq > div:nth-child(2) button > span:first-child {
+      width:30px !important;
+      height:30px !important;
+      border-radius:10px !important;
+    }
+    .rrl-home #faq > div:nth-child(2) button > span:last-child {
+      width:30px !important;
+      height:30px !important;
+    }
+    .rrl-home .faq-a {
+      font-size:14px !important;
+      padding:0 14px 14px 14px !important;
+    }
+    .rrl-home #faq > div:last-child > div {
+      padding:12px 14px !important;
+      gap:6px 12px !important;
+      flex-wrap:nowrap !important;
+      justify-content:space-between !important;
+      text-align:left !important;
+    }
+    .rrl-home #faq > div:last-child > div > span:nth-child(2) {
+      display:none;
+    }
+    .rrl-home #faq > div:last-child > div > a {
+      min-height:40px !important;
+      flex:0 0 auto;
+    }
+    .rrl-home #faq > div:nth-child(2) {
+      gap:4px !important;
+    }
+    .rrl-home #faq > div:nth-child(2) button {
+      min-height:46px !important;
+      padding:4px 12px !important;
+    }
+    .rrl-home #faq > div:last-child {
+      display:none;
+    }
+  }
+}
+
+.rrl-home .faq__list {
+  max-width: 860px;
+  margin: 36px auto 0;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rrl-home .faq-item {
+  border-radius: 22px;
+  background: #F6F8FB;
+  border: 1.5px solid #EEF1F5;
+  transition: background .3s, border-color .3s;
+}
+.rrl-home .faq-item--open {
+  background: #F26A36;
+  border-color: #F26A36;
+}
+.rrl-home .faq-item__question {
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 18px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+.rrl-home .faq-item__icon {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #FFFFFF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.rrl-home .faq-item--open .faq-item__icon { background: rgba(255, 255, 255, .2); }
+.rrl-home .faq-item__text {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #14213D;
+}
+.rrl-home .faq-item--open .faq-item__text { color: #FFFFFF; }
+.rrl-home .faq-item__toggle {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: #FFFFFF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(0deg);
+  transition: transform .3s;
+}
+.rrl-home .faq-item--open .faq-item__toggle { transform: rotate(45deg); }
+.rrl-home .faq-a {
+  margin: 0;
+  padding: 0 72px 18px 72px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #FFF4EE;
+}
+
+.rrl-home .faq__help {
+  max-width: 860px;
+  margin: 28px auto 0;
+  padding: 0 24px;
+}
+.rrl-home .faq__help-box {
+  background: #FFF3EA;
+  border-radius: 24px;
+  padding: 22px 26px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px 20px;
+  text-align: center;
+}
+.rrl-home .faq__help-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #14213D;
+}
+.rrl-home .faq__help-text {
+  font-size: 14px;
+  color: #5B5148;
+}
+.rrl-home .faq__help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: #14213D;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}

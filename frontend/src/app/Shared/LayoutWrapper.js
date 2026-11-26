@@ -15,8 +15,11 @@ export default function LayoutWrapper({ children }) {
   const isHendonPage =
     pathname === "/room-rent-hendon-nw4-london-middlesex-university";
 
-  const hideHeader = isAdminPage || isLandingPage || isHendonPage;
-  const hideFooter = isAdminPage || isLandingPage;
+  // The home page design has its own header (in the hero) and footer
+  const isHomePage = pathname === "/";
+
+  const hideHeader = isAdminPage || isLandingPage || isHendonPage || isHomePage;
+  const hideFooter = isAdminPage || isLandingPage || isHomePage;
 
   return (
     <>

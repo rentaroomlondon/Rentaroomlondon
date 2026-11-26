@@ -1,0 +1,188 @@
+/* Section 1 — feature panels. */
+@layer rrl-design {
+  .rrl-home .vtext {
+    writing-mode:vertical-rl;
+    transform:rotate(180deg);
+  }
+  @media (max-width:700px) {
+    .rrl-home .feat-row {
+      flex-direction:column;
+      height:auto !important;
+    }
+    .rrl-home .feat-row > button {
+      flex:none !important;
+      height:68px;
+      width:100%;
+    }
+    .rrl-home .feat-row > button[aria-expanded="true"] {
+      height:420px;
+    }
+    .rrl-home .feat-row .vtext {
+      writing-mode:horizontal-tb !important;
+      transform:translateY(-50%) !important;
+      left:68px !important;
+      top:50% !important;
+      bottom:auto !important;
+      margin:0 !important;
+      font-size:16px !important;
+    }
+    .rrl-home .feat-row > button[aria-expanded="false"] > span:not(.vtext) {
+      left:14px !important;
+      top:50% !important;
+      transform:translateY(-50%) !important;
+    }
+    .rrl-home .feat-row > button,
+    .rrl-home .pv-card {
+      box-sizing:border-box;
+    }
+    .rrl-home .feat-row {
+      gap:8px !important;
+    }
+    .rrl-home .feat-row > button {
+      height:56px;
+    }
+    .rrl-home .feat-row > button[aria-expanded="true"] {
+      height:300px;
+    }
+    .rrl-home .feat-row .vtext {
+      left:60px !important;
+      font-size:15px !important;
+    }
+    .rrl-home .feat-row > button[aria-expanded="false"] > span:not(.vtext) {
+      left:10px !important;
+      width:36px !important;
+      height:36px !important;
+    }
+    .rrl-home .feat-copy {
+      padding:20px !important;
+      gap:8px !important;
+    }
+    .rrl-home .feat-copy > span:first-child {
+      width:36px !important;
+      height:36px !important;
+    }
+    .rrl-home .feat-title {
+      font-size:24px !important;
+    }
+    .rrl-home .feat-copy > span:last-child {
+      font-size:14px !important;
+      line-height:1.5 !important;
+    }
+    .rrl-home .feat-row > button {
+      height:52px;
+    }
+    .rrl-home .feat-row > button[aria-expanded="true"] {
+      height:260px;
+    }
+  }
+}
+
+.rrl-home .features {
+  z-index: 2;
+  box-shadow: 0 -24px 60px -20px rgba(6, 17, 43, .35);
+}
+
+.rrl-home .feat-row {
+  max-width: 1180px;
+  margin: 32px auto 0;
+  padding: 0 24px;
+  display: flex;
+  gap: 14px;
+  height: 400px;
+}
+.rrl-home .feat-panel {
+  min-width: 0;
+  position: relative;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #14213D;
+  text-align: left;
+  font-family: inherit;
+  transition: flex .45s cubic-bezier(.2, .7, .2, 1);
+}
+.rrl-home .feat-panel__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .8s cubic-bezier(.2, .7, .2, 1);
+}
+.rrl-home .feat-panel__shade {
+  position: absolute;
+  inset: 0;
+  transition: background .45s;
+}
+.rrl-home .feat-panel__counter {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.rrl-home .feat-panel__counter span {
+  background: #FFF1E8;
+  color: #C2410C;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+.rrl-home .feat-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: linear-gradient(180deg, rgba(20, 33, 61, 0) 0%, rgba(20, 33, 61, .95) 55%);
+}
+.rrl-home .feat-copy__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #F26A36;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.rrl-home .feat-title {
+  color: #FFFFFF;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.rrl-home .feat-copy__body {
+  color: #DCE3F0;
+  font-size: 16px;
+  line-height: 1.55;
+  max-width: 460px;
+}
+.rrl-home .feat-panel__chip {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.rrl-home .feat-panel__label {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  margin-left: -12px;
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: 700;
+  white-space: nowrap;
+}

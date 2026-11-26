@@ -342,22 +342,20 @@ export const searchListings = async (req, res) => {
     let query = {};
     let andConditions = [];
 
-    const extractPostcode = (text) => {
+    // Postcode district (outward code) found anywhere in the search text:
+    //   "NW4" -> NW4, "NW4 3AB" / "nw43ab" -> NW4, "Hendon, NW4" -> NW4, "E16AN" -> E1
+    // A full postcode searches its whole district, so nearby rooms are shown too.
+    const extractDistrict = (text) => {
       if (!text) return null;
 
-      const clean = text.toUpperCase().trim();
+      const clean = text.toUpperCase();
 
-      const full = clean.match(/[A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2}/);
-      if (full) return full[0].replace(/\s+/g, "");
+      const full = clean.match(/\b([A-Z]{1,2}\d[A-Z\d]?)\s*\d[A-Z]{2}\b/);
+      if (full) return full[1];
 
-      const prefix = clean.match(/^[A-Z]{1,2}\d{1,2}[A-Z]?/);
-      if (prefix) return prefix[0];
-
-      return null;
+      const district = clean.match(/\b([A-Z]{1,2}\d[A-Z\d]?)\b/);
+      return district ? district[1] : null;
     };
-
-    const normalizePostcode = (postcode) =>
-      postcode.replace(/\s+/g, "").toUpperCase();
 
     // ===============================
     // ✅ SEARCH
@@ -366,36 +364,19 @@ export const searchListings = async (req, res) => {
 
     if (search && search.trim() !== "") {
       const clean = search.trim();
-      const extractedPostcode = extractPostcode(clean);
+      const district = extractDistrict(clean);
 
-      if (extractedPostcode) {
+      if (district) {
         isPostcodeSearch = true;
 
-        if (extractedPostcode.length > 4) {
-          // FULL postcode (normalized match)
-          andConditions.push({
-            $expr: {
-              $eq: [
-                {
-                  $replaceAll: {
-                    input: "$location.postcode",
-                    find: " ",
-                    replacement: "",
-                  },
-                },
-                extractedPostcode,
-              ],
-            },
-          });
-        } else {
-          // PREFIX search (NW2)
-          andConditions.push({
-            "location.postcode": {
-              $regex: "^" + extractedPostcode,
-              $options: "i",
-            },
-          });
-        }
+        // Match the district exactly: "N1" must not match N10–N19 and "W1" must not match W12,
+        // but "W1" does include sub-districts like W1U and "SW1" includes SW1A.
+        andConditions.push({
+          "location.postcode": {
+            $regex: `^${district}([A-Z]?\\s|[A-Z]?$|[A-Z]?\\d[A-Z]{2}$)`,
+            $options: "i",
+          },
+        });
       } else {
 
         const cityAliases = {

@@ -1,0 +1,247 @@
+/*
+ * Home page (Option D design) — base styles.
+ *
+ * How the home page CSS is organised
+ * ----------------------------------
+ * - Everything is scoped under `.rrl-home`, so nothing leaks into other pages.
+ * - `rrl-reset`  : undoes Tailwind's preflight inside the home page (the design was built on browser defaults).
+ * - `rrl-design` : the design file's own rules (hover states, animations, responsive overrides).
+ * - Unlayered    : component styles. They sit above the design layer, exactly like the design's inline styles did,
+ *                  while the design's `!important` responsive rules still win on small screens.
+ * Each section has its own file in this folder and is imported by that section's component.
+ */
+@layer theme, base, components, utilities, rrl-reset, rrl-design;
+
+@layer rrl-reset {
+  :where(.rrl-home),
+  :where(.rrl-home) :where(*:not(svg, svg *)),
+  :where(.rrl-home) :where(*:not(svg, svg *))::before,
+  :where(.rrl-home) :where(*:not(svg, svg *))::after {
+    all: revert;
+  }
+  :where(.rrl-home) svg {
+    display: revert;
+    vertical-align: revert;
+    box-sizing: revert;
+  }
+  :where(.rrl-home) ::placeholder {
+    color: revert;
+    opacity: revert;
+  }
+  :where(.rrl-home) ::-webkit-date-and-time-value {
+    min-height: revert;
+    text-align: revert;
+  }
+  :where(.rrl-home) ::-webkit-datetime-edit {
+    display: revert;
+    padding-block: revert;
+  }
+  :where(.rrl-home) ::-webkit-datetime-edit-fields-wrapper {
+    padding: revert;
+  }
+  :where(.rrl-home) ::-webkit-datetime-edit-year-field,
+  :where(.rrl-home) ::-webkit-datetime-edit-month-field,
+  :where(.rrl-home) ::-webkit-datetime-edit-day-field {
+    padding-block: revert;
+  }
+}
+
+@keyframes rrl-blink { 50%{opacity:0} }
+@keyframes rrl-drive { 0%{offset-distance:0%}85%,100%{offset-distance:100%} }
+@keyframes rrl-fillw { from{width:0} }
+@keyframes rrl-hpzoom { from{transform:scale(1)}to{transform:scale(1.08)} }
+@keyframes rrl-pop { from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1} }
+@keyframes rrl-pvfade { from{opacity:.4;transform:scale(1.04)}to{opacity:1;transform:none} }
+@keyframes rrl-pvfloat { 0%,100%{transform:rotateX(4deg) rotateY(-6deg) translateY(0)}50%{transform:rotateX(2deg) rotateY(-3deg) translateY(-8px)} }
+@keyframes rrl-pvin { from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none} }
+@keyframes rrl-ring { 0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.35)} }
+
+@layer rrl-design {
+  .rrl-home {
+    margin:0;
+    background:#0A1530;
+  }
+  .rrl-home a {
+    color:#14213D;
+  }
+  .rrl-home a:hover {
+    color:#E85A24;
+  }
+  .rrl-home .rv-btn {
+    width:48px;
+    height:48px;
+    border-radius:999px;
+    border:1.5px solid #D5DBE5;
+    background:#FFFFFF;
+    color:#14213D;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .2s;
+  }
+  .rrl-home .rv-btn:hover {
+    background:#14213D;
+    border-color:#14213D;
+    color:#FFFFFF;
+  }
+  .rrl-home input,
+  .rrl-home select,
+  .rrl-home button {
+    font-family:inherit;
+  }
+  @media (max-width:700px) {
+    .rrl-home section[id] {
+      margin-left:0 !important;
+      margin-right:0 !important;
+    }
+    .rrl-home section[id]:not(#contact) {
+      border-radius:28px 28px 0 0 !important;
+      margin-top:-28px !important;
+      padding:44px 0 56px !important;
+    }
+    .rrl-home section[id] > div {
+      padding-left:16px !important;
+      padding-right:16px !important;
+    }
+    .rrl-home section[id]:not(#contact) > div + div {
+      margin-top:22px !important;
+    }
+    .rrl-home section[id] > div:first-child {
+      gap:12px !important;
+    }
+    .rrl-home section[id] h2 {
+      font-size:28px !important;
+      line-height:1.08 !important;
+    }
+    .rrl-home section[id] > div:first-child p {
+      font-size:15px !important;
+    }
+    .rrl-home section[id]:not(#contact) {
+      min-height:100vh;
+      min-height:100lvh;
+      box-sizing:border-box;
+    }
+    .rrl-home section[id]:not(#contact) {
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding:40px 0 52px !important;
+    }
+    .rrl-home section[id]:not(#contact) > div {
+      width:100%;
+      box-sizing:border-box;
+    }
+    .rrl-home section[id]:not(#contact) {
+      padding:36px 0 48px !important;
+    }
+    .rrl-home #rooms > div:first-child > a {
+      display:none !important;
+    }
+  }
+}
+
+/* ---------- Page root ---------- */
+.rrl-home {
+  font-family: var(--font-manrope), Manrope, system-ui, sans-serif;
+  color: #14213D;
+  background: #0A1530;
+  width: 100%;
+  overflow: hidden;
+  line-height: normal;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  tab-size: 8;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}
+
+/* ---------- Section "sheets" (rounded panels that overlap each other) ---------- */
+.rrl-home .rh-sheet {
+  position: relative;
+  border-radius: 44px 44px 0 0;
+  margin: -44px 16px 0;
+  padding: 72px 0 84px;
+}
+.rrl-home .rh-sheet--white { background: #FFFFFF; }
+.rrl-home .rh-sheet--grey { background: #EEF2F8; }
+.rrl-home .rh-sheet--peach { background: #FFF3EA; }
+
+.rrl-home .rh-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---------- Section heading ---------- */
+.rrl-home .rh-section-head {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+.rrl-home .rh-section-head--split { gap: 20px; }
+.rrl-home .rh-section-head__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 720px;
+}
+.rrl-home .rh-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #C2410C;
+}
+.rrl-home .rh-title {
+  margin: 0;
+  font-size: clamp(30px, 3.6vw, 48px);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+}
+.rrl-home .rh-title--wide { max-width: 1000px; }
+.rrl-home .rh-title__strong { color: #14213D; }
+.rrl-home .rh-title__muted--cool { color: #7C8698; }
+.rrl-home .rh-title__muted--warm { color: #8A6E5E; }
+.rrl-home .rh-intro {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.rrl-home .rh-intro--cool { color: #5B6472; }
+.rrl-home .rh-intro--warm { color: #5B5148; }
+
+/* ---------- Buttons & links ---------- */
+.rrl-home .rh-arrow-circle {
+  border-radius: 999px;
+  background: #F26A36;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.rrl-home .rh-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 999px;
+}
+.rrl-home .rh-pill--outline {
+  color: #C2410C;
+  padding: 6px 6px 6px 20px;
+  border: 2px solid #FFB896;
+  background: #FFFFFF;
+}
+.rrl-home .rh-pill--navy {
+  color: #FFFFFF;
+  background: #14213D;
+  padding: 6px 6px 6px 22px;
+}
