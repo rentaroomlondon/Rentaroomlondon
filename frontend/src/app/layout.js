@@ -1,4 +1,5 @@
-import { DM_Sans, Playfair_Display, Manrope } from "next/font/google";
+import { DM_Sans, Playfair_Display } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { AuthProvider } from "./Context/AuthContext";
 import { ToastContainer } from "./Shared/Nexttoast";
@@ -21,12 +22,16 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-// Font used by the home page design (Option D)
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+// Font used by the home page design (Option D).
+// Self-hosted (variable font, weights 200–800, latin) instead of next/font/google:
+// Google sometimes returns "/l/font?kit=...&skey=..." URLs that Turbopack fails to build.
+const manrope = localFont({
+  src: "./fonts/manrope-latin-variable.woff2",
+  weight: "200 800",
+  style: "normal",
   variable: "--font-manrope",
   display: "swap",
+  fallback: ["system-ui", "-apple-system", "Segoe UI", "Arial", "sans-serif"],
 });
 
 export const metadata = {
