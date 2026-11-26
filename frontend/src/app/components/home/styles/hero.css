@@ -587,3 +587,36 @@
   letter-spacing: 0.12em;
   color: #DCE6FF;
 }
+
+/* ---------- Sticky header (SiteHeader.js adds .nav-shell--stuck after scrolling past it) ---------- */
+.rrl-home .nav-slot {
+  position: relative;
+  z-index: 5;
+}
+.rrl-home .nav-shell--stuck {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  animation: rrl-nav-drop .3s ease;
+}
+.rrl-home .nav-shell--stuck .glass-nav {
+  /* keeps its normal top margin (18px desktop / 12px mobile) as the gap above it */
+  background: rgba(10, 21, 48, .82);
+}
+.rrl-home .nav-shell--stuck .glass-nav__logo img {
+  height: 48px;
+}
+@media (max-width: 860px) {
+  .rrl-home .nav-shell--stuck .glass-nav img {
+    height: 40px !important;
+  }
+}
+@keyframes rrl-nav-drop {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rrl-home .nav-shell--stuck { animation: none; }
+}
