@@ -297,3 +297,11 @@
   display: flex;
   gap: 20px;
 }
+
+/* ---------- Footer reused on other pages (Shared/HomeFooter.js) ---------- */
+.rrl-home.rrl-site-footer {
+  background: transparent;
+}
+.rrl-home.rrl-site-footer #contact {
+  margin-top: 0 !important;
+}

@@ -2,12 +2,12 @@
 
 import { usePathname } from "next/navigation";
 import Header from "./Header";
-import Footer from "./Footer";
+import HomeFooter from "./HomeFooter";
 
 export default function LayoutWrapper({ children }) {
   const pathname = usePathname();
 
-  // Paths where Header and Footer should NOT render
+  // Paths where the Header should NOT render
   const isAdminPage = pathname.startsWith("/admin");
   const isLandingPage = pathname.startsWith(
     "/rent-a-rooms-in-london-with-bills-included"
@@ -19,7 +19,8 @@ export default function LayoutWrapper({ children }) {
   const isHomePage = pathname === "/";
 
   const hideHeader = isAdminPage || isLandingPage || isHendonPage || isHomePage;
-  const hideFooter = isAdminPage || isLandingPage || isHomePage;
+  // Every page except the admin panel gets the home page footer (home renders its own)
+  const hideFooter = isAdminPage || isHomePage;
 
   return (
     <>
@@ -27,7 +28,7 @@ export default function LayoutWrapper({ children }) {
 
       {children}
 
-      {!hideFooter && <Footer minimal={isHendonPage} />}
+      {!hideFooter && <HomeFooter />}
     </>
   );
 }
